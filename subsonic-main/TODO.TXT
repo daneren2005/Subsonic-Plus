@@ -27,6 +27,14 @@ Share on Google+
 
 TODO IN 4.6
 -----------------
+Estimate content-length for transcoded audio.
+  https://mail.google.com/mail/?shva=1#inbox/132d043e46168fed
+License is for private non-commercial use.
+Perisonic
+  https://mail.google.com/mail/?shva=1#inbox/13252226af8e3b3f
+Submariner
+  https://mail.google.com/mail/?shva=1#inbox/132b43fe0edffd46
+  http://www.read-write.fr/subapp/index.php
 Show license details in About.
 Support custom domain name in sharing (Settings > Advanced)
 Fix permission issue on Win7.
@@ -756,6 +764,7 @@ ant release
 ### jarsigner -verbose -keystore subsonic.keystore -signedjar bin/subsonic.apk bin/SubsonicActivity-unsigned.apk subsonic
 Upload to market
 http://market.android.com/publish/Home
+Update amazon
 Update
     http://appoke.com
     http://appslib.com/developers/index.html
