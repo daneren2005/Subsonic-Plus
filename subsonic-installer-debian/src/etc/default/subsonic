@@ -18,8 +18,6 @@ SUBSONIC_ARGS="--max-memory=100"
 
 
 # The user which should run the Subsonic process. Default "root".
-# If changing this property, make sure to change owner of some Subsonic
-# directories: chown -R <username> /var/subsonic /tmp/subsonic
 # Note that non-root users are by default not allowed to use ports
 # below 1024. Also make sure to grant the user write permissions in
 # the music directories, otherwise changing album art and tags will fail.

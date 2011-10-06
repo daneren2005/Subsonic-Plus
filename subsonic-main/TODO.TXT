@@ -24,9 +24,9 @@ Menu broken in "Settings > Shared media" when logged in as admin.
 Stronger license check.  Verify asynch with backend.
 Share on Google+
 
-
 TODO IN 4.6
 -----------------
+Tighten security in Linux packages.
 Estimate content-length for transcoded audio.
   https://mail.google.com/mail/?shva=1#inbox/132d043e46168fed
 License is for private non-commercial use.
@@ -36,6 +36,8 @@ Submariner
   https://mail.google.com/mail/?shva=1#inbox/132b43fe0edffd46
   http://www.read-write.fr/subapp/index.php
 Show license details in About.
+Update list of premium features.
+Improve logging of license validation failure.
 Support custom domain name in sharing (Settings > Advanced)
 Fix permission issue on Win7.
 Rename "offsetSeconds" to "timeOffset" in StreamController, and update API doc.
