@@ -129,29 +129,23 @@ public class StreamController implements Controller {
                 playlist.addFiles(true, file);
                 player.setPlaylist(playlist);
 
-                response.setHeader("ETag", StringUtil.utf8HexEncode(path));
-                response.setHeader("Accept-Ranges", "bytes");
-
-                long contentLength;
-                range = getRange(request, file);
-                if (range != null) {
-                    response.setStatus(HttpServletResponse.SC_PARTIAL_CONTENT);
-                    contentLength = file.length() - range.getMinimumLong();
-                    LOG.info("Got range: " + range);
-                } else {
-                    contentLength = file.length();
+                if (!file.isVideo()) {
+                    response.setHeader("ETag", StringUtil.utf8HexEncode(path));
+                    response.setHeader("Accept-Ranges", "bytes");
                 }
 
-                boolean transcodingRequired = transcodingService.isTranscodingRequired(file, player);
-                boolean downsamplingRequired = transcodingService.isDownsamplingRequired(file, player, maxBitRate);
-                if (!transcodingRequired && !downsamplingRequired) {
-                    Util.setContentLength(response, contentLength);
-                    if (range != null) {
-                        long entityLength = file.length();
-                        long firstBytePos = range.getMinimumLong();
-                        long lastBytePos = entityLength - 1;
-                        response.setHeader("Content-Range", "bytes " + firstBytePos + "-" + lastBytePos + "/" + entityLength);
-                    }
+                long fileLength = getFileLength(file, player, maxBitRate);
+
+                range = getRange(request, file);
+                if (range != null) {
+                    LOG.info("Got range: " + range);
+                    response.setStatus(HttpServletResponse.SC_PARTIAL_CONTENT);
+                    Util.setContentLength(response, fileLength - range.getMinimumLong());
+                    long firstBytePos = range.getMinimumLong();
+                    long lastBytePos = fileLength - 1;
+                    response.setHeader("Content-Range", "bytes " + firstBytePos + "-" + lastBytePos + "/" + fileLength);
+                } else if (!file.isVideo()) {
+                    Util.setContentLength(response, fileLength);
                 }
 
                 String transcodedSuffix = transcodingService.getSuffix(player, file, preferredTargetFormat);
@@ -230,6 +224,22 @@ public class StreamController implements Controller {
             IOUtils.closeQuietly(in);
         }
         return null;
+    }
+
+    private long getFileLength(MusicFile file, Player player, Integer maxBitRate) {
+        boolean transcodingRequired = transcodingService.isTranscodingRequired(file, player);
+        boolean downsamplingRequired = transcodingService.isDownsamplingRequired(file, player, maxBitRate);
+
+        if (!transcodingRequired && !downsamplingRequired) {
+            return file.length();
+        }
+        Integer duration = file.getMetaData().getDuration();
+
+//        todo
+        player.get
+        bitrate = ...;
+        return duration*bitrate;
+
     }
 
     private LongRange getRange(HttpServletRequest request, MusicFile file) {
