@@ -26,10 +26,10 @@ Stronger license check.  Verify asynch with backend.
 Share on Google+
 Estimate content-length for transcoded audio.
   https://mail.google.com/mail/?shva=1#inbox/132d043e46168fed
+Tighten security in Linux packages.
 
 TODO IN 4.6
 -----------------
-Tighten security in Linux packages.
 License is for private non-commercial use.
 Update screenshots for SonicAir
   https://mail.google.com/mail/?ui=2&shva=1#inbox/132dddd2ee947182

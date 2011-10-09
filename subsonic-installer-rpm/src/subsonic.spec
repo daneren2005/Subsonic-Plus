@@ -39,6 +39,7 @@ exit 0
 
 %post
 ln -sf /usr/share/subsonic/subsonic.sh /usr/bin/subsonic
+chmod 750 /var/subsonic
 
 # Clear jetty cache.
 rm -rf /var/subsonic/jetty
