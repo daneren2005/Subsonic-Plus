@@ -20,6 +20,7 @@ New transcoding framework.
 New video transcoding.
 Updated Dutch translation, courtesy of Muiz.
 Updated German translation, courtesy of deejay.
+Added UK English translation, courtesy of Brian Aust.
 REST: include files in root folders.
 Menu broken in "Settings > Shared media" when logged in as admin.
 Stronger license check.  Verify asynch with backend.
