@@ -110,9 +110,10 @@ public class StreamController implements Controller {
 
             String preferredTargetFormat = request.getParameter("format");
             Integer maxBitRate = ServletRequestUtils.getIntParameter(request, "maxBitRate");
-            if (maxBitRate != null && maxBitRate == 0) {
-                maxBitRate = Integer.MAX_VALUE;
+            if (Integer.valueOf(0).equals(maxBitRate)) {
+                maxBitRate = null;
             }
+
             VideoTranscodingSettings videoTranscodingSettings = null;
 
             // If "path" request parameter is set, this is a request for a single file
@@ -134,7 +135,8 @@ public class StreamController implements Controller {
                     response.setHeader("Accept-Ranges", "bytes");
                 }
 
-                long fileLength = getFileLength(file, player, maxBitRate);
+                TranscodingService.Parameters parameters = transcodingService.getParameters(file, player, maxBitRate, preferredTargetFormat, videoTranscodingSettings);
+                long fileLength = getFileLength(parameters);
 
                 range = getRange(request, file);
                 if (range != null) {
@@ -226,20 +228,26 @@ public class StreamController implements Controller {
         return null;
     }
 
-    private long getFileLength(MusicFile file, Player player, Integer maxBitRate) {
-        boolean transcodingRequired = transcodingService.isTranscodingRequired(file, player);
-        boolean downsamplingRequired = transcodingService.isDownsamplingRequired(file, player, maxBitRate);
+    private long getFileLength(TranscodingService.Parameters parameters) {
+        MusicFile file = parameters.getMusicFile();
 
-        if (!transcodingRequired && !downsamplingRequired) {
+        if (!parameters.isDownsample() && !parameters.isTranscode()) {
             return file.length();
         }
         Integer duration = file.getMetaData().getDuration();
+        Integer maxBitRate = parameters.getMaxBitRate();
 
-//        todo
-        player.get
-        bitrate = ...;
-        return duration*bitrate;
+        if (duration == null) {
+            LOG.warn("Unknown duration for " + file + ". Unable to estimate transcoded size.");
+            return file.length();
+        }
 
+        if (maxBitRate == null) {
+            LOG.error("Unknown bit rate for " + file + ". Unable to estimate transcoded size.");
+            return file.length();
+        }
+
+        return duration * maxBitRate * 1000L / 8L;
     }
 
     private LongRange getRange(HttpServletRequest request, MusicFile file) {

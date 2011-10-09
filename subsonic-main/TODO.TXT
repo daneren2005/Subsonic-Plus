@@ -17,19 +17,22 @@ TRANSCODING
 DONE IN 4.6
 ----------------
 New transcoding framework.
+New video transcoding.
 Updated Dutch translation, courtesy of Muiz.
 Updated German translation, courtesy of deejay.
 REST: include files in root folders.
 Menu broken in "Settings > Shared media" when logged in as admin.
 Stronger license check.  Verify asynch with backend.
 Share on Google+
+Estimate content-length for transcoded audio.
+  https://mail.google.com/mail/?shva=1#inbox/132d043e46168fed
 
 TODO IN 4.6
 -----------------
 Tighten security in Linux packages.
-Estimate content-length for transcoded audio.
-  https://mail.google.com/mail/?shva=1#inbox/132d043e46168fed
 License is for private non-commercial use.
+Update screenshots for SonicAir
+  https://mail.google.com/mail/?ui=2&shva=1#inbox/132dddd2ee947182
 Perisonic
   https://mail.google.com/mail/?shva=1#inbox/13252226af8e3b3f
 Submariner
@@ -789,6 +792,8 @@ HOW TO CREATE subsonic.keystore
 ================================
 keytool -genkey -v -keystore subsonic.keystore -alias subsonic -storepass subsonic -keyalg RSA -validity 100000 -dname "CN=subsonic.org, O=Subsonic"
 keytool -list -v -keystore subsonic.keystore -storepass subsonic
+
+wget -S  --tries=1 'http://localhost:8080/rest/stream.view?u=admin&p=admin&v=1.6&c=android&id=2f55736572732f73696e6472652f4d757369632f44696d6d7520426f726769722f41627261686164616272612f3036202d2052697475616c6973742e6d7033&maxBitRate=96'
 
 SEARCH
 ------

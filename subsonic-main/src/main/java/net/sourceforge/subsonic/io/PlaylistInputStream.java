@@ -129,7 +129,9 @@ public class PlaylistInputStream extends InputStream {
             if (player.getClientId() == null) {  // Don't scrobble REST players.
                 audioScrobblerService.register(file, player.getUsername(), false);
             }
-            currentInputStream = transcodingService.getTranscodedInputStream(file, player, maxBitRate, preferredTargetFormat, videoTranscodingSettings);
+
+            TranscodingService.Parameters parameters = transcodingService.getParameters(file, player, maxBitRate, preferredTargetFormat, videoTranscodingSettings);
+            currentInputStream = transcodingService.getTranscodedInputStream(parameters);
             currentFile = file;
             status.setFile(currentFile.getFile());
         }
