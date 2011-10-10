@@ -31,6 +31,8 @@ Tighten security in Linux packages.
 
 TODO IN 4.6
 -----------------
+ VLC.app/Contents/MacOS/VLC -I dummy  /Users/sindre/Music/test/wma/beyonthepain907z.wma  --sout='#transcode{acodec=mp3}:std{access=file,mux=ps,dst="-"}' vlc://quit > /tmp/bar.mp3
+
 License is for private non-commercial use.
 Update screenshots for SonicAir
   https://mail.google.com/mail/?ui=2&shva=1#inbox/132dddd2ee947182
