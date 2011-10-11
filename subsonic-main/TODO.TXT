@@ -31,8 +31,9 @@ Tighten security in Linux packages.
 
 TODO IN 4.6
 -----------------
- VLC.app/Contents/MacOS/VLC -I dummy  /Users/sindre/Music/test/wma/beyonthepain907z.wma  --sout='#transcode{acodec=mp3}:std{access=file,mux=ps,dst="-"}' vlc://quit > /tmp/bar.mp3
+vlc -I dummy %s --sout=#transcode{acodec=mp3,ab=%b}:standard{mux=raw,dst=-} vlc://quit
 
+/Applications/VLC.app/Contents/MacOS/VLC -I dummy  /Users/sindre/Music/test/wma/beyonthepain907z.wma  --sout='#transcode{acodec=mp3,ab=192}:standard{mux=raw,dst=-}' vlc://quit > /tmp/bar2.mp3
 License is for private non-commercial use.
 Update screenshots for SonicAir
   https://mail.google.com/mail/?ui=2&shva=1#inbox/132dddd2ee947182
@@ -105,6 +106,7 @@ Linux locale issue
 
 DONE IN ANDROID 3.3
 --------------------
+Bugfix: Improve buffering of downsampled songs (don't buffer for too long)
 
 TODO IN ANDROID 3.3
 --------------------

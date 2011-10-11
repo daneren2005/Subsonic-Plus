@@ -54,16 +54,16 @@ public class DownloadFile {
     private CancellableTask downloadTask;
     private boolean save;
     private boolean failed;
-    private int bitrate;
+    private int bitRate;
 
     public DownloadFile(Context context, MusicDirectory.Entry song, boolean save) {
         this.context = context;
         this.song = song;
         this.save = save;
         saveFile = FileUtil.getSongFile(context, song);
-        bitrate = Util.getMaxBitrate(context);
+        bitRate = Util.getMaxBitrate(context);
         partialFile = new File(saveFile.getParent(), FileUtil.getBaseName(saveFile.getName()) +
-                "." + bitrate + ".partial." + FileUtil.getExtension(saveFile.getName()));
+                "." + bitRate + ".partial." + FileUtil.getExtension(saveFile.getName()));
         completeFile = new File(saveFile.getParent(), FileUtil.getBaseName(saveFile.getName()) +
                 ".complete." + FileUtil.getExtension(saveFile.getName()));
         mediaStoreService = new MediaStoreService(context);
@@ -71,6 +71,16 @@ public class DownloadFile {
 
     public MusicDirectory.Entry getSong() {
         return song;
+    }
+
+    /**
+     * Returns the effective bit rate.
+     */
+    public int getBitRate() {
+        if (bitRate > 0) {
+            return bitRate;
+        }
+        return song.getBitRate() == null ? 160 : song.getBitRate();
     }
 
     public synchronized void download() {
@@ -209,7 +219,7 @@ public class DownloadFile {
                 MusicService musicService = MusicServiceFactory.getMusicService(context);
 
                 // Attempt partial HTTP GET, appending to the file if it exists.
-                HttpResponse response = musicService.getDownloadInputStream(context, song, partialFile.length(), bitrate, DownloadTask.this);
+                HttpResponse response = musicService.getDownloadInputStream(context, song, partialFile.length(), bitRate, DownloadTask.this);
                 in = response.getEntity().getContent();
                 boolean partial = response.getStatusLine().getStatusCode() == HttpStatus.SC_PARTIAL_CONTENT;
                 if (partial) {

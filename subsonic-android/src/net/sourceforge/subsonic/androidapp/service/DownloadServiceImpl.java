@@ -829,10 +829,7 @@ public class DownloadServiceImpl extends Service implements DownloadService {
             partialFile = downloadFile.getPartialFile();
 
             // Calculate roughly how many bytes BUFFER_LENGTH_SECONDS corresponds to.
-            Integer bitRate = downloadFile.getSong().getBitRate();
-            if (bitRate == null) {
-                bitRate = 160;
-            }
+            int bitRate = downloadFile.getBitRate();
             long byteCount = Math.max(100000, bitRate * 1024 / 8 * BUFFER_LENGTH_SECONDS);
 
             // Find out how large the file should grow before resuming playback.
