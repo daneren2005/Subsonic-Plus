@@ -28,15 +28,11 @@ Share on Google+
 Estimate content-length for transcoded audio.
   https://mail.google.com/mail/?shva=1#inbox/132d043e46168fed
 Tighten security in Linux packages.
+Update screenshots for SonicAir
 
 TODO IN 4.6
 -----------------
-vlc -I dummy %s --sout=#transcode{acodec=mp3,ab=%b}:standard{mux=raw,dst=-} vlc://quit
-
-/Applications/VLC.app/Contents/MacOS/VLC -I dummy  /Users/sindre/Music/test/wma/beyonthepain907z.wma  --sout='#transcode{acodec=mp3,ab=192}:standard{mux=raw,dst=-}' vlc://quit > /tmp/bar2.mp3
 License is for private non-commercial use.
-Update screenshots for SonicAir
-  https://mail.google.com/mail/?ui=2&shva=1#inbox/132dddd2ee947182
 Perisonic
   https://mail.google.com/mail/?shva=1#inbox/13252226af8e3b3f
 Submariner
