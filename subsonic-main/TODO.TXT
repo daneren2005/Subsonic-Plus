@@ -29,15 +29,11 @@ Estimate content-length for transcoded audio.
   https://mail.google.com/mail/?shva=1#inbox/132d043e46168fed
 Tighten security in Linux packages.
 Update screenshots for SonicAir
+Submariner
 
 TODO IN 4.6
 -----------------
 License is for private non-commercial use.
-Perisonic
-  https://mail.google.com/mail/?shva=1#inbox/13252226af8e3b3f
-Submariner
-  https://mail.google.com/mail/?shva=1#inbox/132b43fe0edffd46
-  http://www.read-write.fr/subapp/index.php
 Show license details in About.
 Update list of premium features.
 Improve logging of license validation failure.
