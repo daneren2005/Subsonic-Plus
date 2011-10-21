@@ -54,12 +54,12 @@ public class AvatarUploadController extends ParameterizableViewController {
     private static final int MAX_AVATAR_SIZE = 64;
 
     private SettingsService settingsService;
-    private SecurityService secturityService;
+    private SecurityService securityService;
 
     @Override
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-        String username = secturityService.getCurrentUsername(request);
+        String username = securityService.getCurrentUsername(request);
 
         // Check that we have a file upload request.
         if (!ServletFileUpload.isMultipartContent(request)) {
@@ -134,7 +134,7 @@ public class AvatarUploadController extends ParameterizableViewController {
         this.settingsService = settingsService;
     }
 
-    public void setSecturityService(SecurityService secturityService) {
-        this.secturityService = secturityService;
+    public void setSecurityService(SecurityService securityService) {
+        this.securityService = securityService;
     }
 }

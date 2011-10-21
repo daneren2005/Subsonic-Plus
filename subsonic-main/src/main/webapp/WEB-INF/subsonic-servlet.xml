@@ -216,7 +216,7 @@
     <bean id="avatarUploadController" class="net.sourceforge.subsonic.controller.AvatarUploadController">
         <property name="viewName" value="avatarUploadResult"/>
         <property name="settingsService" ref="settingsService"/>
-        <property name="secturityService" ref="securityService"/>
+        <property name="securityService" ref="securityService"/>
     </bean>
     <bean id="userSettingsController" class="net.sourceforge.subsonic.controller.UserSettingsController">
         <property name="sessionForm" value="true"/>

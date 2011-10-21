@@ -33,6 +33,16 @@ Submariner
 
 TODO IN 4.6
 -----------------
+Avoid dock icon on Mac
+  https://mail.google.com/mail/?shva=1#inbox/13313eda791ccb67
+  Update installation.jsp
+Coniq:
+  http://forum.subsonic.org/forum/viewtopic.php?f=4&t=8042
+subcl:
+  http://forum.subsonic.org/forum/viewtopic.php?f=4&t=7897
+Better video quality when sharing
+  http://forum.subsonic.org/forum/viewtopic.php?f=8&t=7646
+Use UTF-8 for m3u files.
 License is for private non-commercial use.
 Show license details in About.
 Update list of premium features.
@@ -102,6 +112,9 @@ Bugfix: Improve buffering of downsampled songs (don't buffer for too long)
 
 TODO IN ANDROID 3.3
 --------------------
+Test BlackBerry runtime
+Android 4.0: Support Audio remote controls
+Test native video player
 Handle files in root folder.
 Improve behavior on player error.
 EQ resets when switching between online/offline.
