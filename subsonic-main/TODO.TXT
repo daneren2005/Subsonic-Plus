@@ -33,6 +33,8 @@ Submariner
 
 TODO IN 4.6
 -----------------
+Add BUUF theme
+  http://forum.subsonic.org/forum/viewtopic.php?f=8&t=5554
 Avoid dock icon on Mac
   https://mail.google.com/mail/?shva=1#inbox/13313eda791ccb67
   Update installation.jsp
