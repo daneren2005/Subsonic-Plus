@@ -49,7 +49,7 @@ public class AudioPlayer {
     private final InputStream in;
     private final Listener listener;
     private final SourceDataLine line;
-    private final AtomicReference<State> state = new AtomicReference<State>(STOPPED);
+    private final AtomicReference<State> state = new AtomicReference<State>(PAUSED);
     private float gain;
     private FloatControl gainControl;
 
@@ -75,34 +75,34 @@ public class AudioPlayer {
 
     /**
      * Starts (or resumes) the player.  This only has effect if the current state is
-     * {@link State#STOPPED}.
+     * {@link State#PAUSED}.
      */
-    public synchronized void start() {
-        if (state.get() == STOPPED) {
+    public synchronized void play() {
+        if (state.get() == PAUSED) {
             line.start();
-            setState(STARTED);
+            setState(PLAYING);
         }
     }
 
     /**
-     * Stops (pauses) the player.  This only has effect if the current state is
-     * {@link State#STARTED}.
+     * Pauses the player.  This only has effect if the current state is
+     * {@link State#PLAYING}.
      */
-    public synchronized void stop() {
-        if (state.get() == STARTED) {
-            setState(STOPPED);
+    public synchronized void pause() {
+        if (state.get() == PLAYING) {
+            setState(PAUSED);
             line.stop();
             line.flush();
         }
     }
 
     /**
-     * Resets the player, releasing all resources. After this the player state is
-     * {@link State#COMPLETED}.
+     * Closes the player, releasing all resources. After this the player state is
+     * {@link State#CLOSED} (unless the current state is {@link State#EOM}).
      */
-    public synchronized void reset() {
-        if (state.get() != COMPLETED) {
-            setState(COMPLETED);
+    public synchronized void close() {
+        if (state.get() != CLOSED && state.get() != EOM) {
+            setState(CLOSED);
 
             try {
                 line.stop();
@@ -151,7 +151,7 @@ public class AudioPlayer {
 
     private void setState(State state) {
         if (this.state.getAndSet(state) != state && listener != null) {
-            listener.stateChanged(state);
+            listener.stateChanged(this, state);
         }
     }
 
@@ -168,14 +168,16 @@ public class AudioPlayer {
                 while (true) {
 
                     switch (state.get()) {
-                        case COMPLETED:
+                        case CLOSED:
+                        case EOM:
                             return;
-                        case STOPPED:
+                        case PAUSED:
                             Thread.sleep(250);
                             break;
-                        case STARTED:
+                        case PLAYING:
                             int n = in.read(buffer);
                             if (n == -1) {
+                                setState(EOM);
                                 return;
                             }
                             line.write(buffer, 0, n);
@@ -185,18 +187,19 @@ public class AudioPlayer {
             } catch (Throwable x) {
                 LOG.warn("Error when copying audio data: " + x, x);
             } finally {
-                reset();
+                close();
             }
         }
     }
 
     public interface Listener {
-        void stateChanged(State state);
+        void stateChanged(AudioPlayer player, State state);
     }
 
     public static enum State {
-        STOPPED,
-        STARTED,
-        COMPLETED
+        PAUSED,
+        PLAYING,
+        CLOSED,
+        EOM
     }
 }

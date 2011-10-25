@@ -34,17 +34,17 @@ public class PlayerTest implements AudioPlayer.Listener {
 
         startButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                player.start();
+                player.play();
             }
         });
         stopButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                player.stop();
+                player.pause();
             }
         });
         resetButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                player.reset();
+                player.close();
             }
         });
         gainSlider.addChangeListener(new ChangeListener() {
@@ -68,7 +68,7 @@ public class PlayerTest implements AudioPlayer.Listener {
         new PlayerTest();
     }
 
-    public void stateChanged(AudioPlayer.State state) {
+    public void stateChanged(AudioPlayer player, AudioPlayer.State state) {
         System.out.println(state);
     }
 }

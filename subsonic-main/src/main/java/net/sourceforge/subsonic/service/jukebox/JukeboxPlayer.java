@@ -18,7 +18,6 @@
  */
 package net.sourceforge.subsonic.service.jukebox;
 
-import java.io.IOException;
 import java.io.InputStream;
 
 import net.sourceforge.subsonic.Logger;
@@ -26,6 +25,8 @@ import net.sourceforge.subsonic.domain.MusicFile;
 import net.sourceforge.subsonic.domain.Playlist;
 import net.sourceforge.subsonic.domain.Transcoding;
 import net.sourceforge.subsonic.service.TranscodingService;
+
+import static net.sourceforge.subsonic.service.jukebox.AudioPlayer.State.EOM;
 
 /**
  * @author Sindre Mehus
@@ -42,13 +43,14 @@ public class JukeboxPlayer implements AudioPlayer.Listener {
     private Playlist playlist;
 
     public void play(Playlist playlist) throws Exception {
+        System.out.println("play(playlist)");
         this.playlist = playlist;
         playNext();
     }
 
     public synchronized void reset() {
         if (audioPlayer != null) {
-            audioPlayer.reset();
+            audioPlayer.close();
         }
     }
 
@@ -63,8 +65,10 @@ public class JukeboxPlayer implements AudioPlayer.Listener {
         }
     }
 
-    public void stateChanged(AudioPlayer.State state) {
-        if (playlist != null && state == AudioPlayer.State.COMPLETED) {
+    public void stateChanged(AudioPlayer player, AudioPlayer.State state) {
+        System.out.println(state + " " + player); // TODO
+        if (playlist != null && state == EOM) {
+            System.out.println("song completed, playing next");
             playlist.next();
             playNext();
         }
@@ -74,7 +78,7 @@ public class JukeboxPlayer implements AudioPlayer.Listener {
         try {
 
             if (audioPlayer != null) {
-                audioPlayer.reset();
+                audioPlayer.close();
             } 
 
             MusicFile file = this.playlist.getCurrentFile();
@@ -85,7 +89,7 @@ public class JukeboxPlayer implements AudioPlayer.Listener {
                 InputStream in = transcodingService.getTranscodedInputStream(parameters);
                 audioPlayer = new AudioPlayer(in, this);
                 audioPlayer.setGain(gain);
-                audioPlayer.start();
+                audioPlayer.play();
             }
         } catch (Exception x) {
             LOG.error("Error in jukebox: " + x, x);
