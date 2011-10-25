@@ -18,27 +18,12 @@
  */
 package net.sourceforge.subsonic.service;
 
-import javazoom.jlgui.basicplayer.BasicController;
-import javazoom.jlgui.basicplayer.BasicPlayer;
-import javazoom.jlgui.basicplayer.BasicPlayerEvent;
-import javazoom.jlgui.basicplayer.BasicPlayerException;
-import javazoom.jlgui.basicplayer.BasicPlayerListener;
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.Player;
 import net.sourceforge.subsonic.domain.Playlist;
 import net.sourceforge.subsonic.domain.TransferStatus;
 import net.sourceforge.subsonic.domain.User;
-import net.sourceforge.subsonic.io.PlaylistInputStream;
 import net.sourceforge.subsonic.service.jukebox.JukeboxPlayer;
-
-import org.apache.commons.io.IOUtils;
-
-import javax.sound.sampled.UnsupportedAudioFileException;
-import javax.sound.sampled.AudioSystem;
-import java.io.InputStream;
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.util.Map;
 
 /**
  * Plays music on the local audio device.
@@ -56,12 +41,13 @@ public class JukeboxService {
     private SearchService searchService;
     private AudioScrobblerService audioScrobblerService;
     private JukeboxPlayer jukeboxPlayer;
+    private TransferStatus status;
 
     /**
-    * Start playing the playlist of the given player on the local audio device.
-    *
-    * @param player The player in question.
-    */
+     * Start playing the playlist of the given player on the local audio device.
+     *
+     * @param player The player in question.
+     */
     public synchronized void play(Player player) throws Exception {
         User user = securityService.getUserByName(player.getUsername());
         if (!user.isJukeboxRole()) {
@@ -73,7 +59,10 @@ public class JukeboxService {
 
         if (player.getPlaylist().getStatus() == Playlist.Status.PLAYING) {
             LOG.info("Starting jukebox player on behalf of " + player.getUsername());
-            jukeboxPlayer.play(player.getPlaylist());
+
+            status = statusService.createStreamStatus(player);
+
+            jukeboxPlayer.play(player.getPlaylist(), status);
         }
     }
 
@@ -82,6 +71,9 @@ public class JukeboxService {
      */
     private synchronized void stop() {
         jukeboxPlayer.reset();
+        if (status != null) {
+            statusService.removeStreamStatus(status);
+        }
     }
 
     public float getGain() {

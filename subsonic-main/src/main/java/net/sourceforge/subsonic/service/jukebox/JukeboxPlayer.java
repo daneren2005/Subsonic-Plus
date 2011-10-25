@@ -24,6 +24,8 @@ import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.MusicFile;
 import net.sourceforge.subsonic.domain.Playlist;
 import net.sourceforge.subsonic.domain.Transcoding;
+import net.sourceforge.subsonic.domain.TransferStatus;
+import net.sourceforge.subsonic.service.StatusService;
 import net.sourceforge.subsonic.service.TranscodingService;
 
 import static net.sourceforge.subsonic.service.jukebox.AudioPlayer.State.EOM;
@@ -41,10 +43,11 @@ public class JukeboxPlayer implements AudioPlayer.Listener {
     private AudioPlayer audioPlayer;
     private TranscodingService transcodingService;
     private Playlist playlist;
+    private TransferStatus status;
 
-    public void play(Playlist playlist) throws Exception {
-        System.out.println("play(playlist)");
+    public void play(Playlist playlist, TransferStatus status) throws Exception {
         this.playlist = playlist;
+        this.status = status;
         playNext();
     }
 
@@ -66,9 +69,7 @@ public class JukeboxPlayer implements AudioPlayer.Listener {
     }
 
     public void stateChanged(AudioPlayer player, AudioPlayer.State state) {
-        System.out.println(state + " " + player); // TODO
         if (playlist != null && state == EOM) {
-            System.out.println("song completed, playing next");
             playlist.next();
             playNext();
         }
@@ -83,6 +84,7 @@ public class JukeboxPlayer implements AudioPlayer.Listener {
 
             MusicFile file = this.playlist.getCurrentFile();
             if (file != null) {
+                status.setFile(file.getFile());
                 TranscodingService.Parameters parameters = new TranscodingService.Parameters(file, null);
                 // TODO
                 parameters.setTranscoding(new Transcoding(null, null, null, null, "ffmpeg -i %s -v 0 -f au -", null, null));
@@ -99,4 +101,5 @@ public class JukeboxPlayer implements AudioPlayer.Listener {
     public void setTranscodingService(TranscodingService transcodingService) {
         this.transcodingService = transcodingService;
     }
+
 }
