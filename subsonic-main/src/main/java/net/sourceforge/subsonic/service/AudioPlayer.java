@@ -24,26 +24,33 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.LineEvent;
-import javax.sound.sampled.LineListener;
+import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.SourceDataLine;
 
 import org.apache.commons.io.IOUtils;
 
+import net.sourceforge.subsonic.Logger;
+
 import static net.sourceforge.subsonic.service.AudioPlayer.State.*;
 
 /**
- * todo
+ * A simple wrapper for playing sound from an input stream.
+ * <p/>
+ * Supports pause and resume, but not restarting.
  *
  * @author Sindre Mehus
  * @version $Id$
  */
-public class AudioPlayer implements LineListener {
+public class AudioPlayer {
+
+    private static final Logger LOG = Logger.getLogger(JukeboxService.class);
 
     private final InputStream in;
     private final Listener listener;
     private final SourceDataLine line;
     private final AtomicReference<State> state = new AtomicReference<State>(STOPPED);
+    private float gain;
+    private FloatControl gainControl;
 
     public AudioPlayer(InputStream in, Listener listener) throws Exception {
         this.in = new BufferedInputStream(in);
@@ -51,13 +58,24 @@ public class AudioPlayer implements LineListener {
 
         AudioFormat format = AudioSystem.getAudioFileFormat(this.in).getFormat();
         line = AudioSystem.getSourceDataLine(format);
-        line.addLineListener(this);
         line.open(format);
-        System.out.println(format); // TODO
 
+        if (line.isControlSupported(FloatControl.Type.VOLUME)) {
+            gainControl = (FloatControl) line.getControl(FloatControl.Type.VOLUME);
+
+            System.out.println(gainControl);
+        }
+        if (line.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
+            gainControl = (FloatControl) line.getControl(FloatControl.Type.MASTER_GAIN);
+            setGain(0.5f);
+        }
         new AudioDataWriter();
     }
 
+    /**
+     * Starts (or resumes) the player.  This only has effect if the current state is
+     * {@link State#STOPPED}.
+     */
     public synchronized void start() {
         if (state.get() == STOPPED) {
             line.start();
@@ -65,34 +83,75 @@ public class AudioPlayer implements LineListener {
         }
     }
 
+    /**
+     * Stops (pauses) the player.  This only has effect if the current state is
+     * {@link State#STARTED}.
+     */
     public synchronized void stop() {
         if (state.get() == STARTED) {
             setState(STOPPED);
             line.stop();
-            line.flush(); // TODO
+            line.flush();
         }
     }
 
+    /**
+     * Resets the player, releasing all resources. After this the player state is
+     * {@link State#COMPLETED}.
+     */
     public synchronized void reset() {
         if (state.get() != COMPLETED) {
             setState(COMPLETED);
 
-            // TODO: Catch exceptions
-            line.stop();
-            line.close();
+            try {
+                line.stop();
+            } catch (Throwable x) {
+                LOG.warn("Failed to stop player: " + x, x);
+            }
+            try {
+                line.close();
+            } catch (Throwable x) {
+                LOG.warn("Failed to close player: " + x, x);
+            }
             IOUtils.closeQuietly(in);
         }
+    }
+
+    /**
+     * Sets the gain.
+     *
+     * @param gain The gain between 0.0 and 1.0.
+     */
+    public void setGain(float gain) {
+        this.gain = gain;
+        if (gainControl != null) {
+
+            double minGainDB = gainControl.getMinimum();
+            double maxGainDB = gainControl.getMaximum();
+            double ampGainDB = maxGainDB - minGainDB;
+            double cste = Math.log(10.0) / 20;
+            double valueDB = minGainDB + (1 / cste) * Math.log(1 + (Math.exp(cste * ampGainDB) - 1) * gain);
+
+            valueDB = Math.min(valueDB, maxGainDB);
+            valueDB = Math.max(valueDB, minGainDB);
+
+            gainControl.setValue((float) valueDB);
+        }
+    }
+
+    /**
+     * Returns the gain.
+     *
+     * @return gain The gain between 0.0 and 1.0.
+     */
+    public float getGain() {
+        return gain;
     }
 
     private void setState(State state) {
         if (this.state.getAndSet(state) != state && listener != null) {
             listener.stateChanged(state);
         }
-    }
-
-    public void update(LineEvent event) {
-        // TODO
-        System.out.println(event);
     }
 
     private class AudioDataWriter implements Runnable {
@@ -111,8 +170,7 @@ public class AudioPlayer implements LineListener {
                         case COMPLETED:
                             return;
                         case STOPPED:
-                            System.out.println("sleep");
-                            Thread.sleep(1000);
+                            Thread.sleep(250);
                             break;
                         case STARTED:
                             int n = in.read(buffer);
@@ -123,12 +181,10 @@ public class AudioPlayer implements LineListener {
                             break;
                     }
                 }
-            } catch (Exception e) {
-//                TODO
-                e.printStackTrace();
+            } catch (Throwable x) {
+                LOG.warn("Error when copying audio data: " + x, x);
             } finally {
                 reset();
-                System.out.println("Thread exiting.");
             }
         }
     }

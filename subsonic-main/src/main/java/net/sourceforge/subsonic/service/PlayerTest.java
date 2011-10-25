@@ -11,6 +11,9 @@ import javax.sound.sampled.LineEvent;
 import javax.sound.sampled.LineListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JSlider;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 /**
  * @author Sindre Mehus
@@ -22,8 +25,8 @@ public class PlayerTest implements AudioPlayer.Listener {
 
     public PlayerTest() throws Exception {
 
-//        player = new AudioPlayer(new FileInputStream("d:\\music\\test\\wav\\foo.wav"));
-        player = new AudioPlayer(new FileInputStream("c:\\progs\\JavaSoundDemo\\audio\\1-welcome.wav"), this);
+        player = new AudioPlayer(new FileInputStream("d:\\music\\test\\wav\\foo.wav"), this);
+//        player = new AudioPlayer(new FileInputStream("c:\\progs\\JavaSoundDemo\\audio\\1-welcome.wav"), this);
 //        line.start();
 //
 //        Thread.sleep(Long.MAX_VALUE);
@@ -38,6 +41,7 @@ public class PlayerTest implements AudioPlayer.Listener {
         JButton startButton = new JButton("Start");
         JButton stopButton = new JButton("Stop");
         JButton resetButton = new JButton("Reset");
+        final JSlider gainSlider = new JSlider(0, 1000);
 
         startButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -54,11 +58,18 @@ public class PlayerTest implements AudioPlayer.Listener {
                 player.reset();
             }
         });
+        gainSlider.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                float gain = (float) gainSlider.getValue() / 1000.0F;
+                player.setGain(gain);
+            }
+        });
 
         frame.setLayout(new FlowLayout());
         frame.add(startButton);
         frame.add(stopButton);
         frame.add(resetButton);
+        frame.add(gainSlider);
 
         frame.pack();
         frame.setVisible(true);
