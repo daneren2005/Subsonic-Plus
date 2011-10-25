@@ -16,7 +16,7 @@
 
  Copyright 2009 (C) Sindre Mehus
  */
-package net.sourceforge.subsonic.service;
+package net.sourceforge.subsonic.service.jukebox;
 
 import java.io.BufferedInputStream;
 import java.io.InputStream;
@@ -30,8 +30,9 @@ import javax.sound.sampled.SourceDataLine;
 import org.apache.commons.io.IOUtils;
 
 import net.sourceforge.subsonic.Logger;
+import net.sourceforge.subsonic.service.JukeboxService;
 
-import static net.sourceforge.subsonic.service.AudioPlayer.State.*;
+import static net.sourceforge.subsonic.service.jukebox.AudioPlayer.State.*;
 
 /**
  * A simple wrapper for playing sound from an input stream.
@@ -128,7 +129,7 @@ public class AudioPlayer {
 
             double minGainDB = gainControl.getMinimum();
             double maxGainDB = gainControl.getMaximum();
-            double ampGainDB = maxGainDB - minGainDB;
+            double ampGainDB = 0.5f * maxGainDB - minGainDB;
             double cste = Math.log(10.0) / 20;
             double valueDB = minGainDB + (1 / cste) * Math.log(1 + (Math.exp(cste * ampGainDB) - 1) * gain);
 

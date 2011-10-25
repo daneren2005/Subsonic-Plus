@@ -13,7 +13,6 @@ TRANSCODING
 
 /var/subsonic/transcode/ffmpeg -ss 0 -i /Users/sindre/Movies/Test/Sample.wtv -async 1 -b 1000k -s 480x360 -ar 44100 -ac 2 -f flv -scodec copy -vcodec libx264 -preset veryfast -threads 0 foo.flv
 
-
 DONE IN 4.6
 ----------------
 New transcoding framework.
