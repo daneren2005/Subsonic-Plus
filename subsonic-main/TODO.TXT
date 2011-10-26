@@ -33,12 +33,8 @@ Submariner
 TODO IN 4.6
 -----------------
 Jukebox
-  Support progress
-  Support skip position
-  Update statistics.
-  Merge JukeboxService and JukeboxPlayer?
-  Improve logging
-
+  Support skip position?
+  Configurable output audio device?
 
 Add BUUF theme
   http://forum.subsonic.org/forum/viewtopic.php?f=8&t=5554
@@ -121,9 +117,12 @@ Bugfix: Improve buffering of downsampled songs (don't buffer for too long)
 
 TODO IN ANDROID 3.3
 --------------------
+Jukebox (remote control) support
+  meld0
+  Øyvind https://mail.google.com/mail/?shva=1#inbox/1333cf771f5fb9fd
+  
 Test BlackBerry runtime
 Android 4.0: Support Audio remote controls
-Test native video player
 Handle files in root folder.
 Improve behavior on player error.
 EQ resets when switching between online/offline.
