@@ -109,6 +109,10 @@ public class JukeboxPlayer implements AudioPlayer.Listener {
         return gain;
     }
 
+    public synchronized int getPosition() {
+        return audioPlayer == null ? 0 : audioPlayer.getPosition();
+    }
+
     private void onSongStart(MusicFile file) {
         status = statusService.createStreamStatus(player);
         status.setFile(file.getFile());

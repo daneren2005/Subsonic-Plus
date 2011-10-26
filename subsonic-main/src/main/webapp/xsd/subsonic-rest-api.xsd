@@ -185,7 +185,9 @@
             <xs:element name="entry" type="sub:Child" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
         <xs:attribute name="currentIndex" type="xs:int" use="required"/>
+        <xs:attribute name="playing" type="xs:boolean" use="required"/>
         <xs:attribute name="gain" type="xs:float" use="required"/>
+        <xs:attribute name="position" type="xs:int" use="optional"/> <!--Added in 1.7.0-->
     </xs:complexType>
 
     <xs:complexType name="ChatMessages">

@@ -429,7 +429,9 @@ public class RESTController extends MultiActionController {
                 Playlist playlist = player.getPlaylist();
                 Iterable<Attribute> attrs = Arrays.asList(new Attribute("currentIndex", playlist.getIndex()),
                         new Attribute("playing", playlist.getStatus() == Playlist.Status.PLAYING),
-                        new Attribute("gain", jukeboxService.getGain()));
+                        new Attribute("gain", jukeboxService.getGain()),
+                        new Attribute("position", jukeboxService.getPosition()));
+
                 builder.add("jukeboxPlaylist", attrs, false);
                 for (MusicFile musicFile : playlist.getFiles()) {
                     File coverArt = musicFileService.getCoverArt(musicFile.getParent());

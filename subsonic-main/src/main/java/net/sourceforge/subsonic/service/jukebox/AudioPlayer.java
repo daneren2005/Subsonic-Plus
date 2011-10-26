@@ -50,7 +50,6 @@ public class AudioPlayer {
     private final Listener listener;
     private final SourceDataLine line;
     private final AtomicReference<State> state = new AtomicReference<State>(PAUSED);
-    private float gain;
     private FloatControl gainControl;
 
     public AudioPlayer(InputStream in, Listener listener) throws Exception {
@@ -61,11 +60,6 @@ public class AudioPlayer {
         line = AudioSystem.getSourceDataLine(format);
         line.open(format);
 
-        if (line.isControlSupported(FloatControl.Type.VOLUME)) {
-            gainControl = (FloatControl) line.getControl(FloatControl.Type.VOLUME);
-
-            System.out.println(gainControl);
-        }
         if (line.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
             gainControl = (FloatControl) line.getControl(FloatControl.Type.MASTER_GAIN);
             setGain(0.5f);
@@ -131,7 +125,6 @@ public class AudioPlayer {
      * @param gain The gain between 0.0 and 1.0.
      */
     public void setGain(float gain) {
-        this.gain = gain;
         if (gainControl != null) {
 
             double minGainDB = gainControl.getMinimum();
@@ -148,12 +141,10 @@ public class AudioPlayer {
     }
 
     /**
-     * Returns the gain.
-     *
-     * @return gain The gain between 0.0 and 1.0.
+     * Returns the position in seconds.
      */
-    public float getGain() {
-        return gain;
+    public int getPosition() {
+        return (int) (line.getMicrosecondPosition() / 1000000L);
     }
 
     private void setState(State state) {

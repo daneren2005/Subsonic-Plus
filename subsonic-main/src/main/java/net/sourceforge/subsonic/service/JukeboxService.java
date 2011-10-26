@@ -54,7 +54,6 @@ public class JukeboxService {
         } else {
             jukeboxPlayer.pause();
         }
-
     }
 
     public float getGain() {
@@ -63,6 +62,10 @@ public class JukeboxService {
 
     public void setGain(float gain) {
         jukeboxPlayer.setGain(gain);
+    }
+
+    public int getPosition() {
+        return jukeboxPlayer.getPosition();
     }
 
     public void setSecurityService(SecurityService securityService) {
