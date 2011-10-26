@@ -145,6 +145,7 @@
         <property name="statusService" ref="statusService"/>
         <property name="transcodingService" ref="transcodingService"/>
         <property name="audioScrobblerService" ref="audioScrobblerService"/>
+        <property name="musicInfoService" ref="musicInfoService"/>
     </bean>
 
     <bean id="jukeboxService" class="net.sourceforge.subsonic.service.JukeboxService">

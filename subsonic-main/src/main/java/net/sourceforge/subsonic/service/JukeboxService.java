@@ -49,7 +49,6 @@ public class JukeboxService {
         }
 
         if (player.getPlaylist().getStatus() == Playlist.Status.PLAYING) {
-            LOG.info("Starting jukebox player on behalf of " + player.getUsername());
             jukeboxPlayer.play(player);
         } else {
             jukeboxPlayer.pause();

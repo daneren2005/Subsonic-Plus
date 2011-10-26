@@ -25,9 +25,12 @@ import net.sourceforge.subsonic.domain.MusicFile;
 import net.sourceforge.subsonic.domain.Player;
 import net.sourceforge.subsonic.domain.Transcoding;
 import net.sourceforge.subsonic.domain.TransferStatus;
+import net.sourceforge.subsonic.domain.VideoTranscodingSettings;
 import net.sourceforge.subsonic.service.AudioScrobblerService;
+import net.sourceforge.subsonic.service.MusicInfoService;
 import net.sourceforge.subsonic.service.StatusService;
 import net.sourceforge.subsonic.service.TranscodingService;
+import net.sourceforge.subsonic.util.FileUtil;
 
 import static net.sourceforge.subsonic.service.jukebox.AudioPlayer.State.EOM;
 
@@ -45,6 +48,7 @@ public class JukeboxPlayer implements AudioPlayer.Listener {
     private TranscodingService transcodingService;
     private AudioScrobblerService audioScrobblerService;
     private StatusService statusService;
+    private MusicInfoService musicInfoService;
 
     private Player player;
     private TransferStatus status;
@@ -80,9 +84,8 @@ public class JukeboxPlayer implements AudioPlayer.Listener {
                 }
 
                 if (file != null) {
-                    TranscodingService.Parameters parameters = new TranscodingService.Parameters(file, null);
-                    // TODO
-                    parameters.setTranscoding(new Transcoding(null, null, null, null, "ffmpeg -i %s -v 0 -f au -", null, null));
+                    TranscodingService.Parameters parameters = new TranscodingService.Parameters(file, new VideoTranscodingSettings(0, 0, 0));
+                    parameters.setTranscoding(new Transcoding(null, null, null, null, "ffmpeg -ss %o -i %s -v 0 -f au -", null, null));
                     InputStream in = transcodingService.getTranscodedInputStream(parameters);
                     audioPlayer = new AudioPlayer(in, this);
                     audioPlayer.setGain(gain);
@@ -114,18 +117,31 @@ public class JukeboxPlayer implements AudioPlayer.Listener {
     }
 
     private void onSongStart(MusicFile file) {
+        LOG.info(player.getUsername() + " starting jukebox for \"" + FileUtil.getShortPath(file.getFile()) + "\"");
         status = statusService.createStreamStatus(player);
         status.setFile(file.getFile());
         status.addBytesTransfered(file.length());
-
+        updateStatistics(file);
         scrobble(file, false);
     }
 
     private void onSongEnd(MusicFile file) {
+        LOG.info(player.getUsername() + " stopping jukebox for \"" + FileUtil.getShortPath(file.getFile()) + "\"");
         if (status != null) {
             statusService.removeStreamStatus(status);
         }
         scrobble(file, true);
+    }
+
+    private void updateStatistics(MusicFile file) {
+        try {
+            MusicFile folder = file.getParent();
+            if (!folder.isRoot()) {
+                musicInfoService.incrementPlayCount(folder);
+            }
+        } catch (Exception x) {
+            LOG.warn("Failed to update statistics for " + file, x);
+        }
     }
 
     private void scrobble(MusicFile file, boolean submission) {
@@ -151,5 +167,9 @@ public class JukeboxPlayer implements AudioPlayer.Listener {
 
     public void setStatusService(StatusService statusService) {
         this.statusService = statusService;
+    }
+
+    public void setMusicInfoService(MusicInfoService musicInfoService) {
+        this.musicInfoService = musicInfoService;
     }
 }
