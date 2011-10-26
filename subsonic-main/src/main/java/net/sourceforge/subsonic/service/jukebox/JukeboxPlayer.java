@@ -23,7 +23,6 @@ import java.io.InputStream;
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.MusicFile;
 import net.sourceforge.subsonic.domain.Player;
-import net.sourceforge.subsonic.domain.Playlist;
 import net.sourceforge.subsonic.domain.Transcoding;
 import net.sourceforge.subsonic.domain.TransferStatus;
 import net.sourceforge.subsonic.service.AudioScrobblerService;
@@ -47,8 +46,8 @@ public class JukeboxPlayer implements AudioPlayer.Listener {
     private Player player;
     private TransferStatus status;
 
-    public void play(Player playlist, TransferStatus status) throws Exception {
-        this.player = playlist;
+    public void play(Player player, TransferStatus status) throws Exception {
+        this.player = player;
         this.status = status;
         playNext();
     }
@@ -93,6 +92,8 @@ public class JukeboxPlayer implements AudioPlayer.Listener {
             MusicFile file = player.getPlaylist().getCurrentFile();
             if (file != null) {
                 status.setFile(file.getFile());
+                status.addBytesTransfered(file.length());
+
                 TranscodingService.Parameters parameters = new TranscodingService.Parameters(file, null);
                 // TODO
                 parameters.setTranscoding(new Transcoding(null, null, null, null, "ffmpeg -i %s -v 0 -f au -", null, null));
@@ -104,7 +105,6 @@ public class JukeboxPlayer implements AudioPlayer.Listener {
                 if (player.getClientId() == null) {  // Don't scrobble REST players.
                     audioScrobblerService.register(file, player.getUsername(), false);
                 }
-
             }
         } catch (Exception x) {
             LOG.error("Error in jukebox: " + x, x);

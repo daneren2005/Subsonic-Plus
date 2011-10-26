@@ -62,7 +62,7 @@ public class JukeboxService {
 
             status = statusService.createStreamStatus(player);
 
-            jukeboxPlayer.play(player.getPlaylist(), status);
+            jukeboxPlayer.play(player, status);
         }
     }
 
