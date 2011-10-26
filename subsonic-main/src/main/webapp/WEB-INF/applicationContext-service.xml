@@ -141,16 +141,13 @@
         <property name="adInterval" value="4"/>
     </bean>
 
-    <bean id="jukeboxPlayer" class="net.sourceforge.subsonic.service.jukebox.JukeboxPlayer">
+    <bean id="jukeboxService" class="net.sourceforge.subsonic.service.JukeboxService">
         <property name="statusService" ref="statusService"/>
         <property name="transcodingService" ref="transcodingService"/>
         <property name="audioScrobblerService" ref="audioScrobblerService"/>
         <property name="musicInfoService" ref="musicInfoService"/>
-    </bean>
-
-    <bean id="jukeboxService" class="net.sourceforge.subsonic.service.JukeboxService">
+        <property name="settingsService" ref="settingsService"/>
         <property name="securityService" ref="securityService"/>
-        <property name="jukeboxPlayer" ref="jukeboxPlayer"/>
     </bean>
 
     <bean id="metaDataParserFactory" class="net.sourceforge.subsonic.service.metadata.MetaDataParserFactory" init-method="init">

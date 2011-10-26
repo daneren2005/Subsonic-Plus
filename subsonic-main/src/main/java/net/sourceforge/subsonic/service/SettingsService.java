@@ -96,6 +96,7 @@ public class SettingsService {
     private static final String KEY_LICENSE_CODE = "LicenseCode";
     private static final String KEY_LICENSE_DATE = "LicenseDate";
     private static final String KEY_DOWNSAMPLING_COMMAND = "DownsamplingCommand2";
+    private static final String KEY_JUKEBOX_COMMAND = "JukeboxCommand";
     private static final String KEY_REWRITE_URL = "RewriteUrl";
     private static final String KEY_LDAP_ENABLED = "LdapEnabled";
     private static final String KEY_LDAP_URL = "LdapUrl";
@@ -153,6 +154,7 @@ public class SettingsService {
     private static final String DEFAULT_LICENSE_CODE = null;
     private static final String DEFAULT_LICENSE_DATE = null;
     private static final String DEFAULT_DOWNSAMPLING_COMMAND = "lame -S -h --resample 44.1 -b %b --tt %t --ta %a --tl %l %s -";
+    private static final String DEFAULT_JUKEBOX_COMMAND = "ffmpeg -ss %o -i %s -v 0 -f au -";
     private static final boolean DEFAULT_REWRITE_URL = true;
     private static final boolean DEFAULT_LDAP_ENABLED = false;
     private static final String DEFAULT_LDAP_URL = "ldap://host.domain.com:389/cn=Users,dc=domain,dc=com";
@@ -599,6 +601,10 @@ public class SettingsService {
 
     public void setDownsamplingCommand(String command) {
         setProperty(KEY_DOWNSAMPLING_COMMAND, command);
+    }
+
+    public String getJukeboxCommand() {
+        return properties.getProperty(KEY_JUKEBOX_COMMAND, DEFAULT_JUKEBOX_COMMAND);
     }
 
     public boolean isRewriteUrlEnabled() {
