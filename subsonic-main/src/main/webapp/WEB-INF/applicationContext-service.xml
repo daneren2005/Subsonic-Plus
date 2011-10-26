@@ -143,6 +143,7 @@
 
     <bean id="jukeboxPlayer" class="net.sourceforge.subsonic.service.jukebox.JukeboxPlayer">
         <property name="transcodingService" ref="transcodingService"/>
+        <property name="audioScrobblerService" ref="audioScrobblerService"/>
     </bean>
 
     <bean id="jukeboxService" class="net.sourceforge.subsonic.service.JukeboxService">

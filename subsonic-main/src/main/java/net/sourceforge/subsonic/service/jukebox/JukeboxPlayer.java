@@ -22,10 +22,11 @@ import java.io.InputStream;
 
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.MusicFile;
+import net.sourceforge.subsonic.domain.Player;
 import net.sourceforge.subsonic.domain.Playlist;
 import net.sourceforge.subsonic.domain.Transcoding;
 import net.sourceforge.subsonic.domain.TransferStatus;
-import net.sourceforge.subsonic.service.StatusService;
+import net.sourceforge.subsonic.service.AudioScrobblerService;
 import net.sourceforge.subsonic.service.TranscodingService;
 
 import static net.sourceforge.subsonic.service.jukebox.AudioPlayer.State.EOM;
@@ -42,11 +43,12 @@ public class JukeboxPlayer implements AudioPlayer.Listener {
 
     private AudioPlayer audioPlayer;
     private TranscodingService transcodingService;
-    private Playlist playlist;
+    private AudioScrobblerService audioScrobblerService;
+    private Player player;
     private TransferStatus status;
 
-    public void play(Playlist playlist, TransferStatus status) throws Exception {
-        this.playlist = playlist;
+    public void play(Player playlist, TransferStatus status) throws Exception {
+        this.player = playlist;
         this.status = status;
         playNext();
     }
@@ -68,9 +70,15 @@ public class JukeboxPlayer implements AudioPlayer.Listener {
         }
     }
 
-    public void stateChanged(AudioPlayer player, AudioPlayer.State state) {
-        if (playlist != null && state == EOM) {
-            playlist.next();
+    public void stateChanged(AudioPlayer audioPlayer, AudioPlayer.State state) {
+        if (player != null && state == EOM) {
+
+            MusicFile currentFile = player.getPlaylist().getCurrentFile();
+            if (player.getClientId() == null && currentFile != null) {  // Don't scrobble REST players.
+                audioScrobblerService.register(currentFile, player.getUsername(), true);
+            }
+
+            player.getPlaylist().next();
             playNext();
         }
     }
@@ -82,7 +90,7 @@ public class JukeboxPlayer implements AudioPlayer.Listener {
                 audioPlayer.close();
             } 
 
-            MusicFile file = this.playlist.getCurrentFile();
+            MusicFile file = player.getPlaylist().getCurrentFile();
             if (file != null) {
                 status.setFile(file.getFile());
                 TranscodingService.Parameters parameters = new TranscodingService.Parameters(file, null);
@@ -92,6 +100,11 @@ public class JukeboxPlayer implements AudioPlayer.Listener {
                 audioPlayer = new AudioPlayer(in, this);
                 audioPlayer.setGain(gain);
                 audioPlayer.play();
+
+                if (player.getClientId() == null) {  // Don't scrobble REST players.
+                    audioScrobblerService.register(file, player.getUsername(), false);
+                }
+
             }
         } catch (Exception x) {
             LOG.error("Error in jukebox: " + x, x);
@@ -102,4 +115,7 @@ public class JukeboxPlayer implements AudioPlayer.Listener {
         this.transcodingService = transcodingService;
     }
 
+    public void setAudioScrobblerService(AudioScrobblerService audioScrobblerService) {
+        this.audioScrobblerService = audioScrobblerService;
+    }
 }
