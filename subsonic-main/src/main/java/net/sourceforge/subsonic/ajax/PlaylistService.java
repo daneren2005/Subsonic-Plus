@@ -285,7 +285,7 @@ public class PlaylistService {
         String url = request.getRequestURL().toString();
 
         if (sendM3U && player.isJukebox()) {
-            jukeboxService.play(player);
+            jukeboxService.updateJukebox(player);
         }
         boolean isCurrentPlayer = player.getIpAddress() != null && player.getIpAddress().equals(request.getRemoteAddr());
 

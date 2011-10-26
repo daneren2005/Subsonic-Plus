@@ -32,6 +32,11 @@ Submariner
 
 TODO IN 4.6
 -----------------
+Jukebox
+  Support progress
+  Update statistics.
+  Merge JukeboxService and JukeboxPlayer?
+
 Add BUUF theme
   http://forum.subsonic.org/forum/viewtopic.php?f=8&t=5554
 Avoid dock icon on Mac

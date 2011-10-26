@@ -142,17 +142,13 @@
     </bean>
 
     <bean id="jukeboxPlayer" class="net.sourceforge.subsonic.service.jukebox.JukeboxPlayer">
+        <property name="statusService" ref="statusService"/>
         <property name="transcodingService" ref="transcodingService"/>
         <property name="audioScrobblerService" ref="audioScrobblerService"/>
     </bean>
 
     <bean id="jukeboxService" class="net.sourceforge.subsonic.service.JukeboxService">
-        <property name="statusService" ref="statusService"/>
         <property name="securityService" ref="securityService"/>
-        <property name="musicInfoService" ref="musicInfoService"/>
-        <property name="transcodingService" ref="transcodingService"/>
-        <property name="searchService" ref="searchService"/>
-        <property name="audioScrobblerService" ref="audioScrobblerService"/>
         <property name="jukeboxPlayer" ref="jukeboxPlayer"/>
     </bean>
 

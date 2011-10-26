@@ -21,7 +21,6 @@ package net.sourceforge.subsonic.service;
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.Player;
 import net.sourceforge.subsonic.domain.Playlist;
-import net.sourceforge.subsonic.domain.TransferStatus;
 import net.sourceforge.subsonic.domain.User;
 import net.sourceforge.subsonic.service.jukebox.JukeboxPlayer;
 
@@ -35,45 +34,27 @@ public class JukeboxService {
     private static final Logger LOG = Logger.getLogger(JukeboxService.class);
 
     private SecurityService securityService;
-    private StatusService statusService;
-    private TranscodingService transcodingService;
-    private MusicInfoService musicInfoService;
-    private SearchService searchService;
-    private AudioScrobblerService audioScrobblerService;
     private JukeboxPlayer jukeboxPlayer;
-    private TransferStatus status;
 
     /**
-     * Start playing the playlist of the given player on the local audio device.
+     * Updates the jukebox by starting or pausing playback on the local audio device.
      *
      * @param player The player in question.
      */
-    public synchronized void play(Player player) throws Exception {
+    public synchronized void updateJukebox(Player player) throws Exception {
         User user = securityService.getUserByName(player.getUsername());
         if (!user.isJukeboxRole()) {
             LOG.warn(user.getUsername() + " is not authorized for jukebox playback.");
             return;
         }
 
-        stop();
-
         if (player.getPlaylist().getStatus() == Playlist.Status.PLAYING) {
             LOG.info("Starting jukebox player on behalf of " + player.getUsername());
-
-            status = statusService.createStreamStatus(player);
-
-            jukeboxPlayer.play(player, status);
+            jukeboxPlayer.play(player);
+        } else {
+            jukeboxPlayer.pause();
         }
-    }
 
-    /**
-     * Stop playing audio on the local device.
-     */
-    private synchronized void stop() {
-        jukeboxPlayer.reset();
-        if (status != null) {
-            statusService.removeStreamStatus(status);
-        }
     }
 
     public float getGain() {
@@ -86,26 +67,6 @@ public class JukeboxService {
 
     public void setSecurityService(SecurityService securityService) {
         this.securityService = securityService;
-    }
-
-    public void setStatusService(StatusService statusService) {
-        this.statusService = statusService;
-    }
-
-    public void setTranscodingService(TranscodingService transcodingService) {
-        this.transcodingService = transcodingService;
-    }
-
-    public void setMusicInfoService(MusicInfoService musicInfoService) {
-        this.musicInfoService = musicInfoService;
-    }
-
-    public void setSearchService(SearchService searchService) {
-        this.searchService = searchService;
-    }
-
-    public void setAudioScrobblerService(AudioScrobblerService audioScrobblerService) {
-        this.audioScrobblerService = audioScrobblerService;
     }
 
     public void setJukeboxPlayer(JukeboxPlayer jukeboxPlayer) {

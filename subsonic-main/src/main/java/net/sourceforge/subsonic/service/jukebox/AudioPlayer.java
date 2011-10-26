@@ -119,6 +119,13 @@ public class AudioPlayer {
     }
 
     /**
+     * Returns the player state.
+     */
+    public State getState() {
+        return state.get();
+    }
+
+    /**
      * Sets the gain.
      *
      * @param gain The gain between 0.0 and 1.0.
