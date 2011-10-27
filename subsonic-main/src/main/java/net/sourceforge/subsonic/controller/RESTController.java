@@ -399,7 +399,8 @@ public class RESTController extends MultiActionController {
                 playlistControlService.doStop(request, response);
             } else if ("skip".equals(action)) {
                 int index = ServletRequestUtils.getRequiredIntParameter(request, "index");
-                playlistControlService.doSkip(request, response, index);
+                int offset = ServletRequestUtils.getIntParameter(request, "offset", 0);
+                playlistControlService.doSkip(request, response, index, offset);
             } else if ("add".equals(action)) {
                 String[] ids = ServletRequestUtils.getRequiredStringParameters(request, "id");
                 List<String> paths = new ArrayList<String>(ids.length);

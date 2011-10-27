@@ -33,9 +33,6 @@ Submariner
 
 TODO IN 4.6
 -----------------
-Jukebox
-  Support skip position?
-  Configurable output audio device?
 
 Add BUUF theme
   http://forum.subsonic.org/forum/viewtopic.php?f=8&t=5554

@@ -1165,6 +1165,12 @@
         <td>Used by <code>skip</code> and <code>remove</code>. Zero-based index of the song to skip to or remove.</td>
     </tr>
     <tr class="table-altrow">
+        <td><code>offset</code></td>
+        <td>No</td>
+        <td></td>
+        <td>Used by <code>skip</code>. Start playing this many seconds into the track.</td>
+    </tr>
+    <tr>
         <td><code>id</code></td>
         <td>No</td>
         <td></td>
@@ -1172,7 +1178,7 @@
             to add many songs in the same request.
         </td>
     </tr>
-    <tr>
+    <tr class="table-altrow">
         <td><code>gain</code></td>
         <td>No</td>
         <td></td>

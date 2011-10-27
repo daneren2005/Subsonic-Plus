@@ -54,13 +54,15 @@ public class JukeboxService implements AudioPlayer.Listener {
     private TransferStatus status;
     private MusicFile currentPlayingFile;
     private float gain = 0.5f;
+    private int offset;
 
     /**
      * Updates the jukebox by starting or pausing playback on the local audio device.
      *
      * @param player The player in question.
+     * @param offset Start playing after this many seconds into the track.
      */
-    public synchronized void updateJukebox(Player player) throws Exception {
+    public synchronized void updateJukebox(Player player, int offset) throws Exception {
         User user = securityService.getUserByName(player.getUsername());
         if (!user.isJukeboxRole()) {
             LOG.warn(user.getUsername() + " is not authorized for jukebox playback.");
@@ -68,24 +70,16 @@ public class JukeboxService implements AudioPlayer.Listener {
         }
 
         if (player.getPlaylist().getStatus() == Playlist.Status.PLAYING) {
-            play(player);
+            this.player = player;
+            play(player.getPlaylist().getCurrentFile(), offset);
         } else {
-            pause();
+            if (audioPlayer != null) {
+                audioPlayer.pause();
+            }
         }
     }
 
-    public synchronized void play(Player player) throws Exception {
-        this.player = player;
-        play(player.getPlaylist().getCurrentFile());
-    }
-
-    public synchronized void pause() {
-        if (audioPlayer != null) {
-            audioPlayer.pause();
-        }
-    }
-
-    private synchronized void play(MusicFile file) {
+    private synchronized void play(MusicFile file, int offset) {
         try {
 
             // Resume if possible.
@@ -94,6 +88,7 @@ public class JukeboxService implements AudioPlayer.Listener {
             if (sameFile && paused) {
                 audioPlayer.play();
             } else {
+                this.offset = offset;
                 if (audioPlayer != null) {
                     audioPlayer.close();
                     if (currentPlayingFile != null) {
@@ -102,7 +97,7 @@ public class JukeboxService implements AudioPlayer.Listener {
                 }
 
                 if (file != null) {
-                    TranscodingService.Parameters parameters = new TranscodingService.Parameters(file, new VideoTranscodingSettings(0, 0, 0));
+                    TranscodingService.Parameters parameters = new TranscodingService.Parameters(file, new VideoTranscodingSettings(0, 0, offset));
                     String command = settingsService.getJukeboxCommand();
                     parameters.setTranscoding(new Transcoding(null, null, null, null, command, null, null));
                     InputStream in = transcodingService.getTranscodedInputStream(parameters);
@@ -123,7 +118,7 @@ public class JukeboxService implements AudioPlayer.Listener {
     public synchronized void stateChanged(AudioPlayer audioPlayer, AudioPlayer.State state) {
         if (state == EOM) {
             player.getPlaylist().next();
-            play(player.getPlaylist().getCurrentFile());
+            play(player.getPlaylist().getCurrentFile(), 0);
         }
     }
 
@@ -132,7 +127,7 @@ public class JukeboxService implements AudioPlayer.Listener {
     }
 
     public synchronized int getPosition() {
-        return audioPlayer == null ? 0 : audioPlayer.getPosition();
+        return audioPlayer == null ? 0 : offset + audioPlayer.getPosition();
     }
 
     /**

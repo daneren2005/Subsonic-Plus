@@ -95,14 +95,14 @@ public class PlaylistService {
     public PlaylistInfo skip(int index) throws Exception {
         HttpServletRequest request = WebContextFactory.get().getHttpServletRequest();
         HttpServletResponse response = WebContextFactory.get().getHttpServletResponse();
-        return doSkip(request, response, index);
+        return doSkip(request, response, index, 0);
     }
 
-    public PlaylistInfo doSkip(HttpServletRequest request, HttpServletResponse response, int index) throws Exception {
+    public PlaylistInfo doSkip(HttpServletRequest request, HttpServletResponse response, int index, int offset) throws Exception {
         Player player = getCurrentPlayer(request, response);
         player.getPlaylist().setIndex(index);
         boolean serverSidePlaylist = !player.isExternalWithPlaylist();
-        return convert(request, player, serverSidePlaylist);
+        return convert(request, player, serverSidePlaylist, offset);
     }
 
     public PlaylistInfo play(String path) throws Exception {
@@ -282,10 +282,14 @@ public class PlaylistService {
     }
 
     private PlaylistInfo convert(HttpServletRequest request, Player player, boolean sendM3U) throws Exception {
+        return convert(request, player, sendM3U, 0);
+    }
+
+    private PlaylistInfo convert(HttpServletRequest request, Player player, boolean sendM3U, int offset) throws Exception {
         String url = request.getRequestURL().toString();
 
         if (sendM3U && player.isJukebox()) {
-            jukeboxService.updateJukebox(player);
+            jukeboxService.updateJukebox(player, offset);
         }
         boolean isCurrentPlayer = player.getIpAddress() != null && player.getIpAddress().equals(request.getRemoteAddr());
 
