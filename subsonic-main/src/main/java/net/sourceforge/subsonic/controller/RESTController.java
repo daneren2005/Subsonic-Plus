@@ -426,11 +426,17 @@ public class RESTController extends MultiActionController {
             if (returnPlaylist) {
 
                 Player player = playerService.getPlayer(request, response);
+                Player jukeboxPlayer = jukeboxService.getPlayer();
+                boolean controlsJukebox = jukeboxPlayer != null && jukeboxPlayer.getId().equals(player.getId());
                 Playlist playlist = player.getPlaylist();
-                Iterable<Attribute> attrs = Arrays.asList(new Attribute("currentIndex", playlist.getIndex()),
-                        new Attribute("playing", playlist.getStatus() == Playlist.Status.PLAYING),
-                        new Attribute("gain", jukeboxService.getGain()),
-                        new Attribute("position", jukeboxService.getPosition()));
+
+                List<Attribute> attrs = new ArrayList<Attribute>(Arrays.asList(
+                        new Attribute("currentIndex", controlsJukebox && !playlist.isEmpty() ? playlist.getIndex() : -1),
+                        new Attribute("playing", controlsJukebox && !playlist.isEmpty() && playlist.getStatus() == Playlist.Status.PLAYING),
+                        new Attribute("gain", jukeboxService.getGain())));
+                if (controlsJukebox) {
+                    attrs.add(new Attribute("position", jukeboxService.getPosition()));
+                }
 
                 builder.add("jukeboxPlaylist", attrs, false);
                 for (MusicFile musicFile : playlist.getFiles()) {

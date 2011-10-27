@@ -18,8 +18,6 @@
  */
 package net.sourceforge.subsonic.service;
 
-import java.io.InputStream;
-
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.MusicFile;
 import net.sourceforge.subsonic.domain.Player;
@@ -31,6 +29,8 @@ import net.sourceforge.subsonic.domain.VideoTranscodingSettings;
 import net.sourceforge.subsonic.service.jukebox.AudioPlayer;
 import net.sourceforge.subsonic.util.FileUtil;
 
+import java.io.InputStream;
+
 import static net.sourceforge.subsonic.service.jukebox.AudioPlayer.State.EOM;
 
 /**
@@ -38,7 +38,7 @@ import static net.sourceforge.subsonic.service.jukebox.AudioPlayer.State.EOM;
  *
  * @author Sindre Mehus
  */
-public class JukeboxService implements AudioPlayer.Listener{
+public class JukeboxService implements AudioPlayer.Listener {
 
     private static final Logger LOG = Logger.getLogger(JukeboxService.class);
 
@@ -133,6 +133,15 @@ public class JukeboxService implements AudioPlayer.Listener{
 
     public synchronized int getPosition() {
         return audioPlayer == null ? 0 : audioPlayer.getPosition();
+    }
+
+    /**
+     * Returns the player which currently uses the jukebox.
+     *
+     * @return The player, may be {@code null}.
+     */
+    public Player getPlayer() {
+        return player;
     }
 
     private void onSongStart(MusicFile file) {
