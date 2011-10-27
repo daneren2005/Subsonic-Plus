@@ -176,33 +176,37 @@
         <th class="param-heading">Subsonic version</th>
         <th class="param-heading">REST API version</th>
     </tr>
-    <tr class="table-altrow">
-        <td>3.8</td>
-        <td>1.0.0</td>
-    </tr>
     <tr>
-        <td>3.9</td>
-        <td>1.1.1</td>
+        <td>4.6</td>
+        <td>1.7.0</td>
     </tr>
     <tr class="table-altrow">
-        <td>4.0</td>
-        <td>1.2.0</td>
-    </tr>
-    <tr>
-        <td>4.1</td>
-        <td>1.3.0</td>
-    </tr>
-    <tr class="table-altrow">
-        <td>4.2</td>
-        <td>1.4.0</td>
+        <td>4.5</td>
+        <td>1.6.0</td>
     </tr>
     <tr>
         <td>4.3.1</td>
         <td>1.5.0</td>
     </tr>
     <tr class="table-altrow">
-        <td>4.5</td>
-        <td>1.6.0</td>
+        <td>4.2</td>
+        <td>1.4.0</td>
+    </tr>
+    <tr>
+        <td>4.1</td>
+        <td>1.3.0</td>
+    </tr>
+    <tr class="table-altrow">
+        <td>4.0</td>
+        <td>1.2.0</td>
+    </tr>
+    <tr>
+        <td>3.9</td>
+        <td>1.1.1</td>
+    </tr>
+    <tr class="table-altrow">
+        <td>3.8</td>
+        <td>1.0.0</td>
     </tr>
 </table>
 <p>
@@ -1168,7 +1172,7 @@
         <td><code>offset</code></td>
         <td>No</td>
         <td></td>
-        <td>Used by <code>skip</code>. Start playing this many seconds into the track.</td>
+        <td>(Since <a href="#versions">1.7.0</a>) Used by <code>skip</code>. Start playing this many seconds into the track.</td>
     </tr>
     <tr>
         <td><code>id</code></td>
