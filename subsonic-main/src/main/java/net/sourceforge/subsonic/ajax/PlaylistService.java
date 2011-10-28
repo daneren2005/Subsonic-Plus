@@ -151,6 +151,20 @@ public class PlaylistService {
         player.getPlaylist().setRandomSearchCriteria(null);
         return convert(request, player, false);
     }
+    
+    public PlaylistInfo doSet(HttpServletRequest request, HttpServletResponse response, List<String> paths) throws Exception {
+        Player player = getCurrentPlayer(request, response);
+        Playlist playlist = player.getPlaylist();
+        int index = playlist.getIndex();
+        Playlist.Status status = playlist.getStatus();
+
+        playlist.clear();
+        PlaylistInfo result = doAdd(request, response, paths);
+
+        playlist.setIndex(index);
+        playlist.setStatus(status);
+        return result;
+    }
 
     public PlaylistInfo clear() throws Exception {
         HttpServletRequest request = WebContextFactory.get().getHttpServletRequest();

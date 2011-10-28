@@ -1158,8 +1158,8 @@
         <td><code>action</code></td>
         <td>Yes</td>
         <td></td>
-        <td>The operation to perform. Must be one of: <code>get</code>, <code>start</code>, <code>stop</code>,
-            <code>skip</code>, <code>add</code>, <code>clear</code>, <code>remove</code>, <code>shuffle</code>, <code>setGain</code>
+        <td>The operation to perform. Must be one of: <code>get</code>, <code>set</code> (since <a href="#versions">1.7.0</a>), <code>start</code>,
+            <code>stop</code>, <code>skip</code>, <code>add</code>, <code>clear</code>, <code>remove</code>, <code>shuffle</code>, <code>setGain</code>
         </td>
     </tr>
     <tr>
@@ -1178,8 +1178,9 @@
         <td><code>id</code></td>
         <td>No</td>
         <td></td>
-        <td>Used by <code>add</code>. ID of song to add to the jukebox playlist. Use multiple <code>id</code> parameters
-            to add many songs in the same request.
+        <td>Used by <code>add</code> and <code>set</code>. ID of song to add to the jukebox playlist. Use multiple <code>id</code> parameters
+            to add many songs in the same request. (<code>set</code> is similar to a <code>clear</code> followed by a <code>add</code>, but
+            will not change the currently playing track.)
         </td>
     </tr>
     <tr class="table-altrow">

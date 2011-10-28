@@ -408,6 +408,13 @@ public class RESTController extends MultiActionController {
                     paths.add(StringUtil.utf8HexDecode(id));
                 }
                 playlistControlService.doAdd(request, response, paths);
+            } else if ("set".equals(action)) {
+                String[] ids = ServletRequestUtils.getRequiredStringParameters(request, "id");
+                List<String> paths = new ArrayList<String>(ids.length);
+                for (String id : ids) {
+                    paths.add(StringUtil.utf8HexDecode(id));
+                }
+                playlistControlService.doSet(request, response, paths);
             } else if ("clear".equals(action)) {
                 playlistControlService.doClear(request, response);
             } else if ("remove".equals(action)) {
