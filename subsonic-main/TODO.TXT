@@ -49,7 +49,6 @@ Better video quality when sharing
 License is for private non-commercial use.
 Show license details in About.
 Update list of premium features.
-Improve logging of license validation failure.
 Support custom domain name in sharing (Settings > Advanced)
 Fix permission issue on Win7.
 Rename "offsetSeconds" to "timeOffset" in StreamController, and update API doc.

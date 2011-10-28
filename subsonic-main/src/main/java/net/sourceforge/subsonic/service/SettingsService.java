@@ -1155,7 +1155,9 @@ public class SettingsService {
             ResponseHandler<String> responseHandler = new BasicResponseHandler();
             String content = client.execute(method, responseHandler);
             licenseValidated = content != null && content.contains("true");
-            LOG.debug("License validated: " + licenseValidated);
+            if (!licenseValidated) {
+                LOG.warn("License key is not valid.");
+            }
         } catch (Throwable x) {
             LOG.warn("Failed to validate license.", x);
         } finally {
