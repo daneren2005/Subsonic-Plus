@@ -51,3 +51,6 @@ slick "Slick"
 hicon "High Contrast"
 hiconi "High Contrast (Inverted)"
 hitech "High-Tech"
+
+# BUUF Theme by Fractal Systems - Based on icons by Paul Davey aka Mattahan. All rights reserved.
+buuftheme "BUUF Theme"

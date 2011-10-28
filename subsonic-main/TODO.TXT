@@ -30,13 +30,13 @@ Estimate content-length for transcoded audio.
 Tighten security in Linux packages.
 Update screenshots for SonicAir
 Submariner
-Use UTF-8 when reading m3u files.
+Use UTF-8 when reading playlist files.
+New "set" action for playlists.
+Added BUUF theme, courtesy of Fractal Systems.
 
 TODO IN 4.6
 -----------------
-New "set" action for playlists.
-Add BUUF theme
-  http://forum.subsonic.org/forum/viewtopic.php?f=8&t=5554
+Update transcoding.jsp
 Avoid dock icon on Mac
   https://mail.google.com/mail/?shva=1#inbox/13313eda791ccb67
   Update installation.jsp
@@ -54,7 +54,6 @@ Support custom domain name in sharing (Settings > Advanced)
 Fix permission issue on Win7.
 Rename "offsetSeconds" to "timeOffset" in StreamController, and update API doc.
 Add "byteOffset" parameter as well.
-Test with java 7.
 Add rating attributes to <directory> in getMusicDirectory.
 Update description of Thumper.
 minisub
