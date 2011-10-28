@@ -402,14 +402,14 @@ public class RESTController extends MultiActionController {
                 int offset = ServletRequestUtils.getIntParameter(request, "offset", 0);
                 playlistControlService.doSkip(request, response, index, offset);
             } else if ("add".equals(action)) {
-                String[] ids = ServletRequestUtils.getRequiredStringParameters(request, "id");
+                String[] ids = ServletRequestUtils.getStringParameters(request, "id");
                 List<String> paths = new ArrayList<String>(ids.length);
                 for (String id : ids) {
                     paths.add(StringUtil.utf8HexDecode(id));
                 }
                 playlistControlService.doAdd(request, response, paths);
             } else if ("set".equals(action)) {
-                String[] ids = ServletRequestUtils.getRequiredStringParameters(request, "id");
+                String[] ids = ServletRequestUtils.getStringParameters(request, "id");
                 List<String> paths = new ArrayList<String>(ids.length);
                 for (String id : ids) {
                     paths.add(StringUtil.utf8HexDecode(id));
