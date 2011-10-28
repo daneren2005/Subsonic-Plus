@@ -32,9 +32,11 @@ import org.jdom.input.SAXBuilder;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -95,7 +97,7 @@ public class PlaylistService {
 
         playlist.setName(name);
 
-        BufferedReader reader = new BufferedReader(new FileReader(playlistFile));
+        BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(playlistFile), StringUtil.ENCODING_UTF8));
         try {
             PlaylistFormat format = PlaylistFormat.getPlaylistFormat(playlistFile);
             format.loadPlaylist(playlist, reader, musicFileService);

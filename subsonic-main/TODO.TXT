@@ -30,11 +30,11 @@ Estimate content-length for transcoded audio.
 Tighten security in Linux packages.
 Update screenshots for SonicAir
 Submariner
+Use UTF-8 when reading m3u files.
 
 TODO IN 4.6
 -----------------
 New "set" action for playlists.
-Use UTF-8 for m3u files.
 Add BUUF theme
   http://forum.subsonic.org/forum/viewtopic.php?f=8&t=5554
 Avoid dock icon on Mac
