@@ -15,24 +15,7 @@ TRANSCODING
 
 DONE IN 4.6
 ----------------
-New transcoding framework.
-Jukebox reimplemented.
-New video transcoding.
-Updated Dutch translation, courtesy of Muiz.
-Updated German translation, courtesy of deejay.
-Added UK English translation, courtesy of Brian Aust.
-REST: include files in root folders.
-Menu broken in "Settings > Shared media" when logged in as admin.
-Stronger license check.  Verify asynch with backend.
-Share on Google+
-Estimate content-length for transcoded audio.
-  https://mail.google.com/mail/?shva=1#inbox/132d043e46168fed
-Tighten security in Linux packages.
-Update screenshots for SonicAir
-Submariner
-Use UTF-8 when reading playlist files.
-New "set" action for playlists.
-Added BUUF theme, courtesy of Fractal Systems.
+
 
 TODO IN 4.6
 -----------------

@@ -16,6 +16,25 @@
 <div id="main-col">
 <h1 class="bottomspace">Subsonic Change Log</h1>
 
+<a name="4.6.beta1"><h2 class="div">Subsonic 4.6.beta1 - Nov 1, 2011</h2></a>
+<ul>
+    <li><span class="bugid">New: </span>Simplified and improved transcoding framework.</li>
+    <li><span class="bugid">New: </span>Improved video quality with H.264 encoding.</li>
+    <li><span class="bugid">New: </span>Reimplemented jukebox. More robust and new features.</li>
+    <li><span class="bugid">New: </span>Share on Google+.</li>
+    <li><span class="bugid">New: </span>Estimate content-length for transcoded audio.</li>
+    <li><span class="bugid">New: </span>Updated Dutch translation, courtesy of Muiz.</li>
+    <li><span class="bugid">New: </span>Updated German translation, courtesy of deejay.</li>
+    <li><span class="bugid">New: </span>Added BUUF theme, courtesy of Fractal Systems.</li>
+    <li><span class="bugid">New: </span>Added UK English translation, courtesy of Brian Aust.</li>
+    <li><span class="bugid">Bugfix: </span>Menu broken in "Settings &gt; Shared media" when logged in as admin.</li>
+    <li><span class="bugid">Tech: </span>Improved security in Linux packages.</li>
+    <li><span class="bugid">Tech: </span>Stronger license check.</li>
+    <li><span class="bugid">Tech: </span>Use UTF-8 when reading playlist files.</li>
+    <li><span class="bugid">API: </span>Include files in root folders.</li>
+    <li><span class="bugid">API: </span>New jukebox features.</li>
+</ul>
+
 <a name="4.5"><h2 class="div">Subsonic 4.5 - Aug 6, 2011</h2></a>
 <ul>
     <li><span class="bugid">New: </span>Updated Korean translation, courtesy of Rhetor Choi.</li>
@@ -844,6 +863,7 @@
     <div class="sidebox">
         <h2>Releases</h2>
         <ul class="list">
+            <li><a href="#4.6.beta1">Subsonic 4.6.beta1</a></li>
             <li><a href="#4.5">Subsonic 4.5</a></li>
             <li><a href="#4.5.beta2">Subsonic 4.5.beta2</a></li>
             <li><a href="#4.5.beta1">Subsonic 4.5.beta1</a></li>
