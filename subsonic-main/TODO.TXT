@@ -36,7 +36,6 @@ Added BUUF theme, courtesy of Fractal Systems.
 
 TODO IN 4.6
 -----------------
-Update transcoding.jsp
 Avoid dock icon on Mac
   https://mail.google.com/mail/?shva=1#inbox/13313eda791ccb67
   Update installation.jsp
