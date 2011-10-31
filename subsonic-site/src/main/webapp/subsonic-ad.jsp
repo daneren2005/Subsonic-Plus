@@ -17,26 +17,24 @@
      margin: 0;
 	 width: 178px;
 	 height: 398px;
-	 border: 1px solid gray;
-	">
-    <div style="margin:6px;padding-top:0.5em">
-            <img src="inc/img/donate.png" alt="Subsonic" class="img-center">
-        <h2 style="padding-top:5px">Love Subsonic?</h2>
+	 border: 1px solid gray;">
+    <div style="margin:6px;padding-top:0.5em"> 
+        <h2 style=""><img src="inc/img/donate.png" alt="">&nbsp;&nbsp;Love Subsonic?</h2>
         <p>
-            Please support continued development and maintenance by giving a donation.
+            Support us by giving a donation and enjoy premium features like:
         </p>
-        <p>
-            Donors get access to premium features like:
-        </p>
-        <p>
-            o Stream music to your mobile phone.<br>
-            o Video streaming.<br>
-            o Your personal server address: <em>you</em>.subsonic.org<br>
-            o No ads.<br>
-        </p>
+        <div style="font-size:12px;">
+            <div style="color:#00008b"><a href="http://subsonic.org/pages/apps.jsp" target="blank">Apps</a> for Android, iPhone, WP&nbsp;7, PlayBook, Roku ++.</div>
+            <div style="color:green;padding-top:5px">Video streaming.</div>
+            <div style="color:#00008b;padding-top:5px">Share on Facebook, Twitter, Google+</div>
+            <div style="color:green;padding-top:5px">Your personal server address: <em>you</em>.subsonic.org</div>
+            <div style="color:#00008b;padding-top:5px">No ads.</div>
+        </div>
 
-        <p>
+        <p style="padding-top:12px">
             The suggested donation amount is &euro;20, but you can give any amount you like.
+        </p>
+        <p style="text-align: center;">
             <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=JUF7FRS6WTLHC">&euro;10</a>,
             <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=LQGGXPWSHEFRQ">&euro;15</a>,
             <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=BMH2GB5E4MU7G">&euro;20</a>,

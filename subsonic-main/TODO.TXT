@@ -19,6 +19,7 @@ DONE IN 4.6
 
 TODO IN 4.6
 -----------------
+Audio problems on Linux.
 Avoid dock icon on Mac
   https://mail.google.com/mail/?shva=1#inbox/13313eda791ccb67
   Update installation.jsp
@@ -28,7 +29,7 @@ subcl:
   http://forum.subsonic.org/forum/viewtopic.php?f=4&t=7897
 Better video quality when sharing
   http://forum.subsonic.org/forum/viewtopic.php?f=8&t=7646
-License is for private non-commercial use.
+License is for private, non-commercial use.
 Show license details in About.
 Update list of premium features.
 Support custom domain name in sharing (Settings > Advanced)

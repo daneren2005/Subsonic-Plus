@@ -1,16 +1,14 @@
 <div class="sidebox">
     <h2>Donate</h2>
     <p>
-        Love Subsonic? Support continued development and maintenance by giving a donation.
-    </p>
-    <p>
-        Donors get access to premium features like:
+        Love Subsonic? Support us by giving a donation and enjoy premium features like:
     </p>
     <ul>
-        <li>Stream music to Android, iPhone and Windows Phone&nbsp;7*.</li>
+        <li><a href="apps.jsp">Apps</a> for Android, iPhone, WP&nbsp;7, PlayBook, Roku and more*.</li>
         <li>Video streaming.</li>
+        <li>Share your media on Facebook, Twitter, Google+.</li>
+        <li>No ads.</li>
         <li>Your personal server address: <em>yourname</em>.subsonic.org</li>
-        <li>No ads in the web interface.</li>
     </ul>
     <p>
         The suggested donation amount is &euro;20, but you can give any amount you like.
@@ -22,5 +20,7 @@
     </p>
     <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=8QD3YWR7LMDKU"><img src="inc/img/paypal.gif" alt="Donate" class="img-center"/></a>
 
-    <div style="padding-top:10px;font-size:9px;">* Some <a href="apps.jsp">apps</a> are sold by third-party developers.</div>
-</div>
+    <p style="padding-top:10px;">After completing the payment you'll receive a license key by email which unlocks the premium features.</p>
+
+    <p style="font-size:9px;">* Some <a href="apps.jsp">apps</a> are sold by third-party developers.</p>
+</div> 
