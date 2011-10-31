@@ -28,6 +28,7 @@ import net.sourceforge.subsonic.domain.User;
 import net.sourceforge.subsonic.domain.VideoTranscodingSettings;
 import net.sourceforge.subsonic.service.jukebox.AudioPlayer;
 import net.sourceforge.subsonic.util.FileUtil;
+import org.apache.commons.io.IOUtils;
 
 import java.io.InputStream;
 
@@ -80,6 +81,7 @@ public class JukeboxService implements AudioPlayer.Listener {
     }
 
     private synchronized void play(MusicFile file, int offset) {
+        InputStream in = null;
         try {
 
             // Resume if possible.
@@ -100,7 +102,7 @@ public class JukeboxService implements AudioPlayer.Listener {
                     TranscodingService.Parameters parameters = new TranscodingService.Parameters(file, new VideoTranscodingSettings(0, 0, offset));
                     String command = settingsService.getJukeboxCommand();
                     parameters.setTranscoding(new Transcoding(null, null, null, null, command, null, null));
-                    InputStream in = transcodingService.getTranscodedInputStream(parameters);
+                    in = transcodingService.getTranscodedInputStream(parameters);
                     audioPlayer = new AudioPlayer(in, this);
                     audioPlayer.setGain(gain);
                     audioPlayer.play();
@@ -112,6 +114,7 @@ public class JukeboxService implements AudioPlayer.Listener {
 
         } catch (Exception x) {
             LOG.error("Error in jukebox: " + x, x);
+            IOUtils.closeQuietly(in);
         }
     }
 

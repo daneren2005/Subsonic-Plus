@@ -59,6 +59,7 @@ public class AudioPlayer {
         AudioFormat format = AudioSystem.getAudioFileFormat(this.in).getFormat();
         line = AudioSystem.getSourceDataLine(format);
         line.open(format);
+        LOG.debug("Opened line " + line);
 
         if (line.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
             gainControl = (FloatControl) line.getControl(FloatControl.Type.MASTER_GAIN);
@@ -97,19 +98,22 @@ public class AudioPlayer {
     public synchronized void close() {
         if (state.get() != CLOSED && state.get() != EOM) {
             setState(CLOSED);
-
-            try {
-                line.stop();
-            } catch (Throwable x) {
-                LOG.warn("Failed to stop player: " + x, x);
-            }
-            try {
-                line.close();
-            } catch (Throwable x) {
-                LOG.warn("Failed to close player: " + x, x);
-            }
-            IOUtils.closeQuietly(in);
         }
+
+        try {
+            line.stop();
+        } catch (Throwable x) {
+            LOG.warn("Failed to stop player: " + x, x);
+        }
+        try {
+            if (line.isOpen()) {
+                line.close();
+                LOG.debug("Closed line " + line);
+            }
+        } catch (Throwable x) {
+            LOG.warn("Failed to close player: " + x, x);
+        }
+        IOUtils.closeQuietly(in);
     }
 
     /**
