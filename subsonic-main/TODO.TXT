@@ -45,6 +45,9 @@ Subsonic Chumby
   http://forum.chumby.com/viewtopic.php?id=6733
 REST: add method to get everything in search index (binary, compressed)?
 
+Favorite rather rating?
+Stream from devices
+  https://mail.google.com/mail/?shva=1#inbox/13352f77f870eba1
 Instant playlist
   https://mail.google.com/mail/?ui=2&shva=1#inbox/1323fe922bb985af
 Go through tracker.
