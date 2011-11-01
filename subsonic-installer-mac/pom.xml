@@ -32,7 +32,7 @@
 
     <profiles>
         <profile>
-            <id>windows</id>
+            <id>mac</id>
             <activation>
                 <os>
                     <family>mac</family>
@@ -60,6 +60,7 @@
                                                     jar="../subsonic-booter/target/subsonic-booter-jar-with-dependencies.jar"
                                                     bundleid="net.sourceforge.subsonic"
                                                     icon="src/subsonic.icns"
+                                                    helpbookfolder="foobar"
                                                     verbose="true">
                                             <resourcefilelist dir="../subsonic-main/target" files="subsonic.war"/>
                                             <javaproperty name="subsonic.war" value="Subsonic.app/Contents/Resources/subsonic.war"/>
@@ -71,6 +72,8 @@
                                             <javaproperty name="subsonic.httpsPort" value="0"/>
                                             <javaproperty name="subsonic.contextPath" value="/"/>
                                         </jarbundler>
+                                        <replace file="target/Subsonic.app/Contents/Info.plist" token="CFBundleHelpBookFolder" value="LSUIElement"/>
+                                        <replace file="target/Subsonic.app/Contents/Info.plist" token="foobar" value="1"/>
                                         <exec executable="/Developer/Applications/Utilities/PackageMaker.app/Contents/MacOS/PackageMaker">
                                             <arg value="--doc"/>
                                             <arg value="${basedir}/src/subsonic.pmdoc"/>

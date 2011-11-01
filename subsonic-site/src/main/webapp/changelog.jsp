@@ -27,6 +27,7 @@
     <li><span class="bugid">New: </span>Updated German translation, courtesy of deejay.</li>
     <li><span class="bugid">New: </span>Added BUUF theme, courtesy of Fractal Systems.</li>
     <li><span class="bugid">New: </span>Added UK English translation, courtesy of Brian Aust.</li>
+    <li><span class="bugid">New: </span>Hide dock icon on Mac.</li>
     <li><span class="bugid">Bugfix: </span>Menu broken in "Settings &gt; Shared media" when logged in as admin.</li>
     <li><span class="bugid">Tech: </span>Improved security in Linux packages.</li>
     <li><span class="bugid">Tech: </span>Stronger license check.</li>

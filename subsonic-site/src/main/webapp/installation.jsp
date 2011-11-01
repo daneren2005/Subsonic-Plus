@@ -70,7 +70,7 @@
             <p>
                 Download the installation package and run it. This installs Subsonic.app in Applications. Start it by opening Applications and
                 click the Subsonic icon.  A small headset icon will appear in the menu bar. If you want Subsonic to start automatically when you log in,
-                right-click on the Subsonic icon in the dock and select "Open at Login".
+                open <b>System Preferences &gt; Accounts</b> and add Subsonic to the list of <b>Login Items</b>.
             </p>
             <p>
                 After installing and starting Subsonic, open the Subsonic web page on <a href="http://localhost:4040">http://localhost:4040</a>.

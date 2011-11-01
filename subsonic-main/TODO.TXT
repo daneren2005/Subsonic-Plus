@@ -21,9 +21,6 @@ TODO IN 4.6
 -----------------
 Audio problems on Linux.
   https://mail.google.com/mail/?ui=2&shva=1#inbox/133318f313c0ffbd
-Avoid dock icon on Mac
-  https://mail.google.com/mail/?shva=1#inbox/13313eda791ccb67
-  Update installation.jsp
 Coniq:
   http://forum.subsonic.org/forum/viewtopic.php?f=4&t=8042
 subcl:
