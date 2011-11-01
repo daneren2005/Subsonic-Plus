@@ -1158,8 +1158,8 @@
         <td><code>action</code></td>
         <td>Yes</td>
         <td></td>
-        <td>The operation to perform. Must be one of: <code>get</code>, <code>set</code> (since <a href="#versions">1.7.0</a>), <code>start</code>,
-            <code>stop</code>, <code>skip</code>, <code>add</code>, <code>clear</code>, <code>remove</code>, <code>shuffle</code>, <code>setGain</code>
+        <td>The operation to perform. Must be one of: <code>get</code>, <code>status</code> (since <a href="#versions">1.7.0</a>), <code>set</code> (since <a href="#versions">1.7.0</a>),
+            <code>start</code>, <code>stop</code>, <code>skip</code>, <code>add</code>, <code>clear</code>, <code>remove</code>, <code>shuffle</code>, <code>setGain</code>
         </td>
     </tr>
     <tr>
@@ -1191,9 +1191,10 @@
     </tr>
 </table>
 <p>
-    Returns an empty <code>&lt;subsonic-response&gt;</code> element on success, unless the <code>get</code>
+    Returns a <code>&lt;jukeboxStatus&gt;</code> element on success, unless the <code>get</code>
     action is used, in which case a nested <code>&lt;jukeboxPlaylist&gt;</code> element is returned.
-    <a href="http://subsonic.svn.sourceforge.net/viewvc/subsonic/trunk/subsonic-main/src/main/webapp/xsd/jukeboxPlaylist_example_1.xml?view=markup">Example</a>.
+    <a href="http://subsonic.svn.sourceforge.net/viewvc/subsonic/trunk/subsonic-main/src/main/webapp/xsd/jukeboxStatus_example_1.xml?view=markup">Example 1</a>.
+    <a href="http://subsonic.svn.sourceforge.net/viewvc/subsonic/trunk/subsonic-main/src/main/webapp/xsd/jukeboxPlaylist_example_1.xml?view=markup">Example 2</a>.
 </p>
 
 <h2 class="div">getPodcasts</h2>

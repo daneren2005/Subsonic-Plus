@@ -19,7 +19,9 @@ DONE IN 4.6
 
 TODO IN 4.6
 -----------------
+Changes to jukebox status.
 Audio problems on Linux.
+  https://mail.google.com/mail/?ui=2&shva=1#inbox/133318f313c0ffbd
 Avoid dock icon on Mac
   https://mail.google.com/mail/?shva=1#inbox/13313eda791ccb67
   Update installation.jsp
@@ -29,9 +31,7 @@ subcl:
   http://forum.subsonic.org/forum/viewtopic.php?f=4&t=7897
 Better video quality when sharing
   http://forum.subsonic.org/forum/viewtopic.php?f=8&t=7646
-License is for private, non-commercial use.
 Show license details in About.
-Update list of premium features.
 Support custom domain name in sharing (Settings > Advanced)
 Fix permission issue on Win7.
 Rename "offsetSeconds" to "timeOffset" in StreamController, and update API doc.
@@ -795,6 +795,7 @@ wget -S  --tries=1 'http://localhost:8080/rest/stream.view?u=admin&p=admin&v=1.6
 
 wget 'http://localhost:4040/rest/jukeboxControl.view?u=admin&p=admin&v=1.6&c=android&action=get' -O -
 wget 'http://localhost:4040/rest/jukeboxControl.view?u=admin&p=admin&v=1.6&c=android&action=start' -O -
+wget 'http://localhost:4040/rest/jukeboxControl.view?u=admin&p=admin&v=1.6&c=android&action=status' -O -
 
 wget 'http://localhost:4040/rest/jukeboxControl.view?u=admin&p=admin&v=1.6&c=android&action=add&id=683a5c6d757369632e6576656e5c4169725c54616c6b69652057616c6b6965202d20323030345c3032202d2043686572727920426c6f73736f6d204769726c2e6d7033&id=683a5c6d757369632e6576656e5c4169725c54616c6b69652057616c6b6965202d20323030345c3039202d2042696f6c6f676963616c2e6d7033' -O -
 wget 'http://localhost:8080/rest/jukeboxControl.view?u=admin&p=admin&v=1.6&c=android&action=add&id=2f55736572732f73696e6472652f4d757369632f44696d6d7520426f726769722f41627261686164616272612f3035202d2044696d6d7520426f726769722e6d7033' -O -

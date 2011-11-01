@@ -427,31 +427,34 @@ public class RESTController extends MultiActionController {
                 jukeboxService.setGain(gain);
             } else if ("get".equals(action)) {
                 returnPlaylist = true;
+            } else if ("status".equals(action)) {
+                // No action necessary.
+            } else {
+                throw new Exception("Unknown jukebox action: '" + action + "'.");
             }
 
             XMLBuilder builder = createXMLBuilder(request, response, true);
 
+            Player player = playerService.getPlayer(request, response);
+            Player jukeboxPlayer = jukeboxService.getPlayer();
+            boolean controlsJukebox = jukeboxPlayer != null && jukeboxPlayer.getId().equals(player.getId());
+            Playlist playlist = player.getPlaylist();
+
+            List<Attribute> attrs = new ArrayList<Attribute>(Arrays.asList(
+                    new Attribute("currentIndex", controlsJukebox && !playlist.isEmpty() ? playlist.getIndex() : -1),
+                    new Attribute("playing", controlsJukebox && !playlist.isEmpty() && playlist.getStatus() == Playlist.Status.PLAYING),
+                    new Attribute("gain", jukeboxService.getGain()),
+                    new Attribute("position", controlsJukebox && !playlist.isEmpty() ? jukeboxService.getPosition() : 0)));
+
             if (returnPlaylist) {
-
-                Player player = playerService.getPlayer(request, response);
-                Player jukeboxPlayer = jukeboxService.getPlayer();
-                boolean controlsJukebox = jukeboxPlayer != null && jukeboxPlayer.getId().equals(player.getId());
-                Playlist playlist = player.getPlaylist();
-
-                List<Attribute> attrs = new ArrayList<Attribute>(Arrays.asList(
-                        new Attribute("currentIndex", controlsJukebox && !playlist.isEmpty() ? playlist.getIndex() : -1),
-                        new Attribute("playing", controlsJukebox && !playlist.isEmpty() && playlist.getStatus() == Playlist.Status.PLAYING),
-                        new Attribute("gain", jukeboxService.getGain())));
-                if (controlsJukebox) {
-                    attrs.add(new Attribute("position", jukeboxService.getPosition()));
-                }
-
                 builder.add("jukeboxPlaylist", attrs, false);
                 for (MusicFile musicFile : playlist.getFiles()) {
                     File coverArt = musicFileService.getCoverArt(musicFile.getParent());
                     AttributeSet attributes = createAttributesForMusicFile(player, coverArt, musicFile);
                     builder.add("entry", attributes, true);
                 }
+            } else {
+                builder.add("jukeboxStatus", attrs, false);
             }
 
             builder.endAll();
@@ -1142,7 +1145,8 @@ public class RESTController extends MultiActionController {
                 new Attribute("commentRole", requestedUser.isCommentRole()),
                 new Attribute("podcastRole", requestedUser.isPodcastRole()),
                 new Attribute("streamRole", requestedUser.isStreamRole()),
-                new Attribute("jukeboxRole", requestedUser.isJukeboxRole())
+                new Attribute("jukeboxRole", requestedUser.isJukeboxRole()),
+                new Attribute("shareRole", requestedUser.isShareRole())
         );
 
         builder.add("user", attributes, true);

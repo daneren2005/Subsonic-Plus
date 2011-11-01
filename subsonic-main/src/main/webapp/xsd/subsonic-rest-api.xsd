@@ -18,6 +18,7 @@
             <xs:element name="searchResult2" type="sub:SearchResult2" minOccurs="1" maxOccurs="1"/>
             <xs:element name="playlists" type="sub:Playlists" minOccurs="1" maxOccurs="1"/>
             <xs:element name="playlist" type="sub:Playlist" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="jukeboxStatus" type="sub:JukeboxStatus" minOccurs="1" maxOccurs="1"/>
             <xs:element name="jukeboxPlaylist" type="sub:JukeboxPlaylist" minOccurs="1" maxOccurs="1"/>
             <xs:element name="license" type="sub:License" minOccurs="1" maxOccurs="1"/>
             <xs:element name="user" type="sub:User" minOccurs="1" maxOccurs="1"/>
@@ -180,14 +181,21 @@
         </xs:complexContent>
     </xs:complexType>
 
-    <xs:complexType name="JukeboxPlaylist">
-        <xs:sequence>
-            <xs:element name="entry" type="sub:Child" minOccurs="0" maxOccurs="unbounded"/>
-        </xs:sequence>
+    <xs:complexType name="JukeboxStatus">
         <xs:attribute name="currentIndex" type="xs:int" use="required"/>
         <xs:attribute name="playing" type="xs:boolean" use="required"/>
         <xs:attribute name="gain" type="xs:float" use="required"/>
         <xs:attribute name="position" type="xs:int" use="optional"/> <!--Added in 1.7.0-->
+    </xs:complexType>
+
+    <xs:complexType name="JukeboxPlaylist">
+        <xs:complexContent>
+            <xs:extension base="sub:JukeboxStatus">
+                <xs:sequence>
+                    <xs:element name="entry" type="sub:Child" minOccurs="0" maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
     </xs:complexType>
 
     <xs:complexType name="ChatMessages">
@@ -299,6 +307,7 @@
         <xs:attribute name="podcastRole" type="xs:boolean" use="required"/>
         <xs:attribute name="streamRole" type="xs:boolean" use="required"/>
         <xs:attribute name="jukeboxRole" type="xs:boolean" use="required"/>
+        <xs:attribute name="shareRole" type="xs:boolean" use="required"/> <!-- Added in 1.7.0 -->
     </xs:complexType>
 
     <xs:complexType name="Error">
