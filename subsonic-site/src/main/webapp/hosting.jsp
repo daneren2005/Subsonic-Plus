@@ -61,12 +61,17 @@
                             with full root access.
                         </p>
 
+                        <a href="http://www.trialpay.com/productpage/?c=ee8eacd&tid=RHyuuKT" target="_blank">
+                            <img class="img-right" src="http://www.trialpay.com/mi/?rc=v&ri=1368898&p=VtA3333j&t=RHyuuKT&type=img" alt=""/>
+                        </a>
                         <p>
                             <b><a href="<%=gigaProsUrl%>" target="_blank">Check out GigaPros' server plans and prices.</a></b>
                         </p>
+
+
                     </div>
                 </div>
-            </div>
+            </div> 
 
         </div>
 

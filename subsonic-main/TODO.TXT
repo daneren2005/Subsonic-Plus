@@ -20,6 +20,8 @@ Updated Slovenian translation, courtesy of Jan Jamšek.
 TODO IN 4.6
 -----------------
 Add +1 button.
+Add Subsonic for Roku
+  http://www.randomwalking.com/project.php?project=roku_subsonic
 Audio problems on Linux.
   https://mail.google.com/mail/?ui=2&shva=1#inbox/133318f313c0ffbd
 Coniq:
