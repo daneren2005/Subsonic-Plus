@@ -16,6 +16,7 @@ TRANSCODING
 DONE IN 4.6
 ----------------
 Updated Slovenian translation, courtesy of Jan Jamšek.
+Jukebox: Support skipping when paused.
 
 TODO IN 4.6
 -----------------

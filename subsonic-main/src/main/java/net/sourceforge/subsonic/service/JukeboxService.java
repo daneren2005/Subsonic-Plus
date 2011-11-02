@@ -87,7 +87,7 @@ public class JukeboxService implements AudioPlayer.Listener {
             // Resume if possible.
             boolean sameFile = file != null && file.equals(currentPlayingFile);
             boolean paused = audioPlayer != null && audioPlayer.getState() == AudioPlayer.State.PAUSED;
-            if (sameFile && paused) {
+            if (sameFile && paused && offset == 0) {
                 audioPlayer.play();
             } else {
                 this.offset = offset;
