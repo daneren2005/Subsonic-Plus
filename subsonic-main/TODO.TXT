@@ -15,10 +15,11 @@ TRANSCODING
 
 DONE IN 4.6
 ----------------
-
+Updated Slovenian translation, courtesy of Jan Jamšek.
 
 TODO IN 4.6
 -----------------
+Add +1 button.
 Audio problems on Linux.
   https://mail.google.com/mail/?ui=2&shva=1#inbox/133318f313c0ffbd
 Coniq:
@@ -679,7 +680,7 @@ Commit
 svn up
 mvn clean -P full
 mvn install -P full
-cd ../subsonic-assembly; mvn assembly:assembly
+cd subsonic-assembly; mvn assembly:assembly; cd ..
 Deploy
 Check that correct local version is displayed.
 Upload files to SourceForge (in separate shell, REMEMBER TO CHANGE VERSION BELOW).
@@ -696,7 +697,7 @@ Upload site (OLD):
 Upload site (NEW):
   rsync -avP -e ssh --exclude ".*" subsonic-site/src/main/webapp/  root@subsonic.org:/usr/local/jakarta/tomcat/webapps/pages/
 
-svn copy https://subsonic.svn.sourceforge.net/svnroot/subsonic/trunk https://subsonic.svn.sourceforge.net/svnroot/subsonic/tags/release-4.5 -m "Tagging 4.5."
+svn copy https://subsonic.svn.sourceforge.net/svnroot/subsonic/trunk https://subsonic.svn.sourceforge.net/svnroot/subsonic/tags/release-4.6.beta1 -m "Tagging 4.6.beta1"
 Register at freshmeat.
 Post message on forum.
 Update version number in pom.xml etc.
