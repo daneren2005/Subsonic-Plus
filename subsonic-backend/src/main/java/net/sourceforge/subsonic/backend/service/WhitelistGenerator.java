@@ -3,8 +3,10 @@ package net.sourceforge.subsonic.backend.service;
 import net.sourceforge.subsonic.backend.dao.PaymentDao;
 import org.apache.log4j.Logger;
 
+import javax.mail.Address;
 import javax.mail.Folder;
 import javax.mail.Message;
+import javax.mail.internet.InternetAddress;
 import java.util.Date;
 
 /**
@@ -29,7 +31,8 @@ public class WhitelistGenerator {
         for (int i = n; i >= 0; i--) {
             Message message = folder.getMessage(i);
             Date date = message.getSentDate();
-            String recipient = message.getRecipients(Message.RecipientType.TO)[0].toString();
+            InternetAddress address = (InternetAddress) message.getRecipients(Message.RecipientType.TO)[0];
+            String recipient = address.getAddress();
             if (date.before(newerThan)) {
                 break;
             }
