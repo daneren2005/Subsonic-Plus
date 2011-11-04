@@ -17,6 +17,7 @@ DONE IN 4.6
 ----------------
 Updated Slovenian translation, courtesy of Jan Jamšek.
 Jukebox: Support skipping when paused.
+Jukebox: Ensure that "set" method maintains correct current index. (MUST BE TESTED WITH SHUFFLE)
 
 TODO IN 4.6
 -----------------

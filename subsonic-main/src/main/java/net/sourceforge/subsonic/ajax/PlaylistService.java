@@ -155,12 +155,13 @@ public class PlaylistService {
     public PlaylistInfo doSet(HttpServletRequest request, HttpServletResponse response, List<String> paths) throws Exception {
         Player player = getCurrentPlayer(request, response);
         Playlist playlist = player.getPlaylist();
-        int index = playlist.getIndex();
+        MusicFile currentFile = playlist.getCurrentFile();
         Playlist.Status status = playlist.getStatus();
 
         playlist.clear();
         PlaylistInfo result = doAdd(request, response, paths);
 
+        int index = currentFile == null ? -1 : Arrays.asList(playlist.getFiles()).indexOf(currentFile);
         playlist.setIndex(index);
         playlist.setStatus(status);
         return result;
