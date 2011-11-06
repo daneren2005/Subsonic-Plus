@@ -817,6 +817,11 @@ public class RESTController extends MultiActionController {
 
         Player player = playerService.getPlayer(request, response);
 
+        if (!settingsService.getUserSettings(player.getUsername()).isLastFmEnabled()) {
+            error(request, response, ErrorCode.GENERIC, "Scrobbling is not enabled for " + player.getUsername() + ".");
+            return;
+        }
+
         MusicFile file;
         try {
             String path = StringUtil.utf8HexDecode(ServletRequestUtils.getRequiredStringParameter(request, "id"));
@@ -1132,10 +1137,13 @@ public class RESTController extends MultiActionController {
             return;
         }
 
+        UserSettings userSettings = settingsService.getUserSettings(username);
+
         XMLBuilder builder = createXMLBuilder(request, response, true);
         List<Attribute> attributes = Arrays.asList(
                 new Attribute("username", requestedUser.getUsername()),
                 new Attribute("email", requestedUser.getEmail()),
+                new Attribute("scrobblingEnabled", userSettings.isLastFmEnabled()),
                 new Attribute("adminRole", requestedUser.isAdminRole()),
                 new Attribute("settingsRole", requestedUser.isSettingsRole()),
                 new Attribute("downloadRole", requestedUser.isDownloadRole()),

@@ -111,7 +111,7 @@ public class AudioScrobblerService {
         }
 
         UserSettings userSettings = settingsService.getUserSettings(username);
-        if (!userSettings.isLastFmEnabled() || userSettings.getLastFmUsername() == null || userSettings.getLastFmUsername() == null) {
+        if (!userSettings.isLastFmEnabled() || userSettings.getLastFmUsername() == null || userSettings.getLastFmPassword() == null) {
             return null;
         }
 
