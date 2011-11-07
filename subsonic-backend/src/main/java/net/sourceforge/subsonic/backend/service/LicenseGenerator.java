@@ -124,12 +124,10 @@ public class LicenseGenerator {
                 "License: " + license + " \n" +
                 "\n" +
                 "To install the license key, click the \"Donate\" link in the top right corner of the Subsonic " +
-                "web interface.\n" +
-                "\n" +
-                "More info here: http://subsonic.org/pages/getting-started.jsp#3" +
+                "web interface. More info here: http://subsonic.org/pages/getting-started.jsp#3" +
                 "\n" +
                 "This license is valid for personal, non-commercial of Subsonic. For commercial use, please " +
-                "<a href='mailto:subsonic_donation@activeobjects.no'>contact</a> us for licensing options." +
+                "contact us for licensing options." +
                 "\n" +
                 "Thanks again for supporting the project!\n" +
                 "\n" +
