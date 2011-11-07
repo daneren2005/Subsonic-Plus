@@ -116,26 +116,25 @@ public class LicenseGenerator {
         String license = md5Hex(to.toLowerCase());
 
         return "Dear Subsonic donor,\n" +
-               "\n" +
-               "Many thanks for your kind donation to Subsonic!\n" +
-               "Please find your license key below.\n" +
-               "\n" +
-               "Email: " + to + "\n" +
-               "License: " + license + " \n" +
-               "\n" +
-               "To install the license, click the \"Donate\" link in the top right corner of the Subsonic " +
-               "web interface.\n" +
-               "\n" +
-               "More info here: http://subsonic.org/pages/getting-started.jsp#3" +
-               "\n" +
-               "Thanks again for supporting the project!\n" +
-               "\n" +
-               "Best regards,\n" +
-               "Sindre\n" +
-               "\n" +
-               "--\n" +
-               "Sindre Mehus\n" +
-               "Subsonic developer";
+                "\n" +
+                "Many thanks for your kind donation to Subsonic!\n" +
+                "Please find your license key below.\n" +
+                "\n" +
+                "Email: " + to + "\n" +
+                "License: " + license + " \n" +
+                "\n" +
+                "To install the license key, click the \"Donate\" link in the top right corner of the Subsonic " +
+                "web interface.\n" +
+                "\n" +
+                "More info here: http://subsonic.org/pages/getting-started.jsp#3" +
+                "\n" +
+                "This license is valid for personal, non-commercial of Subsonic. For commercial use, please " +
+                "<a href='mailto:subsonic_donation@activeobjects.no'>contact</a> us for licensing options." +
+                "\n" +
+                "Thanks again for supporting the project!\n" +
+                "\n" +
+                "Best regards,\n" +
+                "The Subsonic team";
     }
 
     /**
