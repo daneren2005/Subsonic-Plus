@@ -123,11 +123,11 @@ public class LicenseGenerator {
                 "Email: " + to + "\n" +
                 "License: " + license + " \n" +
                 "\n" +
-                "To install the license key, click the \"Donate\" link in the top right corner of the Subsonic " +
-                "web interface. More info here: http://subsonic.org/pages/getting-started.jsp#3" +
+                "To install the license key, click the \"Donate\" link in the top right corner of the Subsonic web interface.\n" +
                 "\n" +
-                "This license is valid for personal, non-commercial of Subsonic. For commercial use, please " +
-                "contact us for licensing options." +
+                "More info here: http://subsonic.org/pages/getting-started.jsp#3\n" +
+                "\n" +
+                "This license is valid for personal, non-commercial of Subsonic. For commercial use, please contact us for licensing options.\n" +
                 "\n" +
                 "Thanks again for supporting the project!\n" +
                 "\n" +
