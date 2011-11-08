@@ -100,10 +100,10 @@ DONE IN ANDROID 3.3
 --------------------
 Bugfix: Improve buffering of downsampled songs (don't buffer for too long)
 Jukebox (remote control) support
+Show error message if server url contains "@".
 
 TODO IN ANDROID 3.3
 --------------------
-Improve error handling if server url contains "@".
 Test BlackBerry runtime
 Android 4.0: Support Audio remote controls
 Handle files in root folder.

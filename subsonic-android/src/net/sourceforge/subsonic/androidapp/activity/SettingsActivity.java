@@ -18,11 +18,6 @@
  */
 package net.sourceforge.subsonic.androidapp.activity;
 
-import java.net.URL;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.io.File;
-
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
@@ -40,9 +35,14 @@ import net.sourceforge.subsonic.androidapp.service.MusicService;
 import net.sourceforge.subsonic.androidapp.service.MusicServiceFactory;
 import net.sourceforge.subsonic.androidapp.util.Constants;
 import net.sourceforge.subsonic.androidapp.util.ErrorDialog;
+import net.sourceforge.subsonic.androidapp.util.FileUtil;
 import net.sourceforge.subsonic.androidapp.util.ModalBackgroundTask;
 import net.sourceforge.subsonic.androidapp.util.Util;
-import net.sourceforge.subsonic.androidapp.util.FileUtil;
+
+import java.io.File;
+import java.net.URL;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class SettingsActivity extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -262,7 +262,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
                     try {
                         String url = (String) value;
                         new URL(url);
-                        if (!url.equals(url.trim())) {
+                        if (!url.equals(url.trim()) || url.contains("@")) {
                             throw new Exception();
                         }
                     } catch (Exception x) {
