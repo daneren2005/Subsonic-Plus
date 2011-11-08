@@ -166,6 +166,7 @@
         <c:if test="${model.user.shareRole}">
             <a href="${shareUrl}"><img src="<spring:theme code="shareFacebookImage"/>" alt=""></a>
             <a href="${shareUrl}"><img src="<spring:theme code="shareTwitterImage"/>" alt=""></a>
+            <a href="${shareUrl}"><img src="<spring:theme code="shareGooglePlusImage"/>" alt=""></a>
             <a href="${shareUrl}"><span class="detail"><fmt:message key="main.sharealbum"/></span></a> |
         </c:if>
 
