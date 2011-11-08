@@ -18,25 +18,6 @@
  */
 package net.sourceforge.subsonic.androidapp.util;
 
-import java.io.ByteArrayOutputStream;
-import java.io.Closeable;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
-import java.security.MessageDigest;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
-import org.apache.http.HttpEntity;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Notification;
@@ -63,7 +44,6 @@ import android.widget.RemoteViews;
 import android.widget.Toast;
 import net.sourceforge.subsonic.androidapp.R;
 import net.sourceforge.subsonic.androidapp.activity.DownloadActivity;
-import net.sourceforge.subsonic.androidapp.activity.ErrorActivity;
 import net.sourceforge.subsonic.androidapp.domain.MusicDirectory;
 import net.sourceforge.subsonic.androidapp.domain.PlayerState;
 import net.sourceforge.subsonic.androidapp.domain.RepeatMode;
@@ -71,6 +51,24 @@ import net.sourceforge.subsonic.androidapp.domain.Version;
 import net.sourceforge.subsonic.androidapp.provider.SubsonicAppWidgetProvider;
 import net.sourceforge.subsonic.androidapp.receiver.MediaButtonIntentReceiver;
 import net.sourceforge.subsonic.androidapp.service.DownloadServiceImpl;
+import org.apache.http.HttpEntity;
+
+import java.io.ByteArrayOutputStream;
+import java.io.Closeable;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+import java.security.MessageDigest;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author Sindre Mehus
@@ -525,73 +523,6 @@ public final class Util {
         }
     }
 
-    /**
-     * <p>Gets the substring after the first occurrence of a separator.
-     * The separator is not returned.</p>
-     * <p/>
-     * <p>A <code>null</code> string input will return <code>null</code>.
-     * An empty ("") string input will return the empty string.
-     * A <code>null</code> separator will return the empty string if the
-     * input string is not <code>null</code>.</p>
-     * <p/>
-     * <pre>
-     * substringAfter(null, *)      = null
-     * substringAfter("", *)        = ""
-     * substringAfter(*, null)      = ""
-     * substringAfter("abc", "a")   = "bc"
-     * substringAfter("abcba", "b") = "cba"
-     * substringAfter("abc", "c")   = ""
-     * substringAfter("abc", "d")   = ""
-     * substringAfter("abc", "")    = "abc"
-     * </pre>
-     *
-     * @param s         the String to get a substring from, may be null
-     * @param separator the String to search for, may be null
-     * @return the substring after the first occurrence of the separator,
-     *         <code>null</code> if null String input
-     */
-    public static String substringAfter(String s, String separator) {
-        if (s == null || s.length() == 0) {
-            return s;
-        }
-        if (separator == null) {
-            return "";
-        }
-        int pos = s.indexOf(separator);
-        if (pos == -1) {
-            return "";
-        }
-        return s.substring(pos + separator.length());
-    }
-
-    /**
-     * <p>Removes control characters (char &lt;= 32) from both
-     * ends of this String returning <code>null</code> if the String is
-     * empty ("") after the trim or if it is <code>null</code>.
-     * <p/>
-     * <p>The String is trimmed using {@link String#trim()}.
-     * Trim removes start and end characters &lt;= 32.
-     * <p/>
-     * <pre>
-     * trimToNull(null)          = null
-     * trimToNull("")            = null
-     * trimToNull("     ")       = null
-     * trimToNull("abc")         = "abc"
-     * trimToNull("    abc    ") = "abc"
-     * </pre>
-     *
-     * @param s the String to be trimmed, may be null
-     * @return the trimmed String,
-     *         <code>null</code> if only chars &lt;= 32, empty or null String input
-     */
-    public static String trimToNull(String s) {
-        if (s == null) {
-            return null;
-        }
-        s = s.trim();
-        return s.length() == 0 ? null : s;
-    }
-
     public static boolean isNetworkConnected(Context context) {
         ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = manager.getActiveNetworkInfo();
@@ -612,10 +543,6 @@ public final class Util {
         return prefs.getBoolean(Constants.PREFERENCES_KEY_WIFI_REQUIRED_FOR_DOWNLOAD, false);
     }
 
-    public static void error(Context context, int messageId) {
-        showDialog(context, android.R.drawable.ic_dialog_alert, R.string.error_label, messageId);
-    }
-
     public static void info(Context context, int titleId, int messageId) {
         showDialog(context, android.R.drawable.ic_dialog_info, titleId, messageId);
     }
@@ -628,26 +555,6 @@ public final class Util {
                 .setPositiveButton(R.string.common_ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int i) {
-                        dialog.dismiss();
-                    }
-                })
-                .show();
-    }
-
-    public static void confirm(Context context, int messageId, final Runnable task) {
-        new AlertDialog.Builder(context)
-                .setIcon(android.R.drawable.ic_dialog_info)
-                .setTitle(messageId)
-                .setPositiveButton(R.string.common_ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        dialog.dismiss();
-                        task.run();
-                    }
-                })
-                .setNegativeButton(R.string.common_cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int whichButton) {
                         dialog.dismiss();
                     }
                 })
@@ -714,39 +621,6 @@ public final class Util {
 
         // Update widget
         SubsonicAppWidgetProvider.getInstance().notifyChange(context, downloadService, false);
-    }
-
-    public static void showErrorNotification(final Context context, Handler handler, String title, Exception error) {
-        final NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-
-        StringBuilder text = new StringBuilder();
-        if (error.getMessage() != null) {
-            text.append(error.getMessage()).append(" (");
-        }
-        text.append(error.getClass().getSimpleName());
-        if (error.getMessage() != null) {
-            text.append(")");
-        }
-
-        // Set the icon, scrolling text and timestamp
-        final Notification notification = new Notification(android.R.drawable.stat_sys_warning, title, System.currentTimeMillis());
-        notification.flags |= Notification.FLAG_AUTO_CANCEL;
-
-        // The PendingIntent to launch our activity if the user selects this notification
-        Intent intent = new Intent(context, ErrorActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra(Constants.INTENT_EXTRA_NAME_ERROR, title + ".\n\n" + text);
-        PendingIntent contentIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        notification.setLatestEventInfo(context, title, text, contentIntent);
-
-        // Send the notification.
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                notificationManager.cancel(Constants.NOTIFICATION_ID_ERROR);
-                notificationManager.notify(Constants.NOTIFICATION_ID_ERROR, notification);
-            }
-        });
     }
 
     public static void sleepQuietly(long millis) {

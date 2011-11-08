@@ -18,16 +18,6 @@
  */
 package net.sourceforge.subsonic.androidapp.service;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicLong;
-
 import android.content.Context;
 import android.os.Handler;
 import android.util.Log;
@@ -41,6 +31,16 @@ import net.sourceforge.subsonic.androidapp.domain.JukeboxStatus;
 import net.sourceforge.subsonic.androidapp.domain.PlayerState;
 import net.sourceforge.subsonic.androidapp.service.parser.SubsonicRESTException;
 import net.sourceforge.subsonic.androidapp.util.Util;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Provides an asynchronous interface to the remote jukebox on the Subsonic server.
@@ -64,7 +64,6 @@ public class JukeboxService {
     private VolumeToast volumeToast;
 
     // TODO: Report warning if queue fills up.
-    // TODO: Merge into main trunk.
     // TODO: Create shutdown method?
     // TODO: Disable repeat.
     // TODO: Persist RC state?

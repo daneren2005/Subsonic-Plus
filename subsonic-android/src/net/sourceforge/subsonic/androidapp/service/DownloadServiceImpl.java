@@ -18,12 +18,6 @@
  */
 package net.sourceforge.subsonic.androidapp.service;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -33,7 +27,6 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.util.Log;
-import net.sourceforge.subsonic.androidapp.R;
 import net.sourceforge.subsonic.androidapp.audiofx.EqualizerController;
 import net.sourceforge.subsonic.androidapp.audiofx.VisualizerController;
 import net.sourceforge.subsonic.androidapp.domain.MusicDirectory;
@@ -44,6 +37,12 @@ import net.sourceforge.subsonic.androidapp.util.LRUCache;
 import net.sourceforge.subsonic.androidapp.util.ShufflePlayBuffer;
 import net.sourceforge.subsonic.androidapp.util.SimpleServiceBinder;
 import net.sourceforge.subsonic.androidapp.util.Util;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
 import static net.sourceforge.subsonic.androidapp.domain.PlayerState.*;
 
@@ -754,11 +753,7 @@ public class DownloadServiceImpl extends Service implements DownloadService {
     }
 
     private void handleError(Exception x) {
-        if (currentPlaying != null) {
-            String msg = getResources().getString(R.string.download_play_error, currentPlaying.getSong().getTitle());
-            Util.showErrorNotification(this, handler, msg, x);
-            Log.e(TAG, msg, x);
-        }
+        Log.w(TAG, "Media player error: " + x, x);
         mediaPlayer.reset();
         setPlayerState(IDLE);
     }

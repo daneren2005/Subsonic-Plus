@@ -99,15 +99,14 @@ Linux locale issue
 DONE IN ANDROID 3.3
 --------------------
 Bugfix: Improve buffering of downsampled songs (don't buffer for too long)
+Jukebox (remote control) support
 
 TODO IN ANDROID 3.3
 --------------------
 Improve error handling if server url contains "@".
-Jukebox (remote control) support
 Test BlackBerry runtime
 Android 4.0: Support Audio remote controls
 Handle files in root folder.
-Improve behavior on player error.
 EQ resets when switching between online/offline.
   https://mail.google.com/mail/?shva=1#inbox/131e7e98173f0c97
 Don't stop playback when switching between online/offline.
@@ -357,7 +356,6 @@ Android: Suggest switching to offline mode if network error.
 Android: Make offline mode more visible.
 Android: Reorder playlist
 Android: Queue Next + Queue Last
-Android: Download error notification is nagging.
 Swipe album art to go to prev/next track.
 Seeking fails when playing partial file.  seekTo() should test if playing from partial.
 Only show fullscreen when applicable.

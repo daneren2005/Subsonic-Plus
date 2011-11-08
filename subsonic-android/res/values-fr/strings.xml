@@ -78,7 +78,6 @@
     <string name="download.menu_shuffle">Mélanger</string>
     <string name="download.menu_save">Enregistrer la playlist</string>
     <string name="download.menu_shuffle_notification">Playlist mélangée</string>
-    <string name="download.play_error">Erreur en jouant \"%s\"</string>
     <string name="download.playlist_title">Enregistrer la playlist</string>
     <string name="download.playlist_name">Saisissez le nom de la playlist:</string>
     <string name="download.playlist_saving">Enregistrement de la playlist \"%s\"...</string>
