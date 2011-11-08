@@ -18,22 +18,6 @@
  */
 package net.sourceforge.subsonic.androidapp.service;
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import net.sourceforge.subsonic.androidapp.domain.Artist;
-import net.sourceforge.subsonic.androidapp.domain.Indexes;
-import net.sourceforge.subsonic.androidapp.domain.MusicDirectory;
-import net.sourceforge.subsonic.androidapp.domain.MusicFolder;
-import net.sourceforge.subsonic.androidapp.domain.Playlist;
-import net.sourceforge.subsonic.androidapp.domain.SearchResult;
-import net.sourceforge.subsonic.androidapp.domain.SearchCritera;
-import net.sourceforge.subsonic.androidapp.domain.Lyrics;
-import net.sourceforge.subsonic.androidapp.util.Constants;
-import net.sourceforge.subsonic.androidapp.util.FileUtil;
-import net.sourceforge.subsonic.androidapp.util.ProgressListener;
-import net.sourceforge.subsonic.androidapp.util.Util;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -44,6 +28,23 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import net.sourceforge.subsonic.androidapp.domain.Artist;
+import net.sourceforge.subsonic.androidapp.domain.Indexes;
+import net.sourceforge.subsonic.androidapp.domain.JukeboxStatus;
+import net.sourceforge.subsonic.androidapp.domain.Lyrics;
+import net.sourceforge.subsonic.androidapp.domain.MusicDirectory;
+import net.sourceforge.subsonic.androidapp.domain.MusicFolder;
+import net.sourceforge.subsonic.androidapp.domain.Playlist;
+import net.sourceforge.subsonic.androidapp.domain.SearchCritera;
+import net.sourceforge.subsonic.androidapp.domain.SearchResult;
+import net.sourceforge.subsonic.androidapp.util.Constants;
+import net.sourceforge.subsonic.androidapp.util.FileUtil;
+import net.sourceforge.subsonic.androidapp.util.ProgressListener;
+import net.sourceforge.subsonic.androidapp.util.Util;
 
 /**
  * @author Sindre Mehus
@@ -139,47 +140,77 @@ public class OfflineMusicService extends RESTMusicService {
 
     @Override
     public List<MusicFolder> getMusicFolders(Context context, ProgressListener progressListener) throws Exception {
-        throw new RuntimeException("Music folders not available in offline mode");
+        throw new OfflineException("Music folders not available in offline mode");
     }
 
     @Override
     public SearchResult search(SearchCritera criteria, Context context, ProgressListener progressListener) throws Exception {
-        throw new RuntimeException("Search not available in offline mode");
+        throw new OfflineException("Search not available in offline mode");
     }
 
     @Override
     public List<Playlist> getPlaylists(boolean refresh, Context context, ProgressListener progressListener) throws Exception {
-        throw new RuntimeException("Playlists not available in offline mode");
+        throw new OfflineException("Playlists not available in offline mode");
     }
 
     @Override
     public MusicDirectory getPlaylist(String id, Context context, ProgressListener progressListener) throws Exception {
-        throw new RuntimeException("Playlists not available in offline mode");
+        throw new OfflineException("Playlists not available in offline mode");
     }
 
     @Override
     public void createPlaylist(String id, String name, List<MusicDirectory.Entry> entries, Context context, ProgressListener progressListener) throws Exception {
-        throw new RuntimeException("Playlists not available in offline mode");
+        throw new OfflineException("Playlists not available in offline mode");
     }
 
     @Override
     public Lyrics getLyrics(String artist, String title, Context context, ProgressListener progressListener) throws Exception {
-        throw new RuntimeException("Lyrics not available in offline mode");
+        throw new OfflineException("Lyrics not available in offline mode");
     }
 
     @Override
     public void scrobble(String id, boolean submission, Context context, ProgressListener progressListener) throws Exception {
-        throw new RuntimeException("Scrobbling not available in offline mode");
+        throw new OfflineException("Scrobbling not available in offline mode");
     }
 
     @Override
     public MusicDirectory getAlbumList(String type, int size, int offset, Context context, ProgressListener progressListener) throws Exception {
-        throw new RuntimeException("Album lists not available in offline mode");
+        throw new OfflineException("Album lists not available in offline mode");
     }
 
     @Override
     public String getVideoUrl(Context context, String id) {
-        throw new RuntimeException("Video playback not available in offline mode");
+        return null;
+    }
+
+    @Override
+    public JukeboxStatus updateJukeboxPlaylist(List<String> ids, Context context, ProgressListener progressListener) throws Exception {
+        throw new OfflineException("Jukebox not available in offline mode");
+    }
+
+    @Override
+    public JukeboxStatus skipJukebox(int index, int offsetSeconds, Context context, ProgressListener progressListener) throws Exception {
+        throw new OfflineException("Jukebox not available in offline mode");
+    }
+
+    @Override
+    public JukeboxStatus stopJukebox(Context context, ProgressListener progressListener) throws Exception {
+        throw new OfflineException("Jukebox not available in offline mode");
+    }
+
+    @Override
+    public JukeboxStatus startJukebox(Context context, ProgressListener progressListener) throws Exception {
+        throw new OfflineException("Jukebox not available in offline mode");
+    }
+
+    @Override
+    public JukeboxStatus getJukeboxStatus(Context context, ProgressListener progressListener) throws Exception {
+        throw new OfflineException("Jukebox not available in offline mode");
+    }
+
+    @Override
+    public JukeboxStatus setJukeboxGain(float gain, Context context, ProgressListener progressListener) throws Exception {
+        throw new OfflineException("Jukebox not available in offline mode");
     }
 
     @Override

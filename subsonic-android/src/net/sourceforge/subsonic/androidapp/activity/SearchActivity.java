@@ -231,8 +231,6 @@ public class SearchActivity extends SubsonicTabActivity {
             protected SearchResult doInBackground() throws Throwable {
                 SearchCritera criteria = new SearchCritera(query, MAX_ARTISTS, MAX_ALBUMS, MAX_SONGS);
                 MusicService service = MusicServiceFactory.getMusicService(SearchActivity.this);
-                // Call isLicenseValid to ensure the server's REST version is read.
-                service.isLicenseValid(SearchActivity.this, this);
                 return service.search(criteria, SearchActivity.this, this);
             }
 

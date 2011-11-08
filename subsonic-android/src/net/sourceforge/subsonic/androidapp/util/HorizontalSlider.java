@@ -43,7 +43,7 @@ public class HorizontalSlider extends ProgressBar {
     private int startPosition;
 
     public interface OnSliderChangeListener {
-        void onSliderChanged(View view, int position);
+        void onSliderChanged(View view, int position, boolean inProgress);
     }
 
     public HorizontalSlider(Context context, AttributeSet attrs, int defStyle) {
@@ -123,13 +123,16 @@ public class HorizontalSlider extends ProgressBar {
 
             setProgress(Math.min(startPosition, sliderPosition));
             setSecondaryProgress(Math.max(startPosition, sliderPosition));
+            if (listener != null) {
+                listener.onSliderChanged(this, sliderPosition, true);
+            }
 
         } else if (action == MotionEvent.ACTION_UP) {
             sliding = false;
             setProgress(sliderPosition);
             setSecondaryProgress(0);
             if (listener != null) {
-                listener.onSliderChanged(this, sliderPosition);
+                listener.onSliderChanged(this, sliderPosition, false);
             }
         }
 

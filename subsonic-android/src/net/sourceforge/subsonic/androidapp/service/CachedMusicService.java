@@ -18,25 +18,27 @@
  */
 package net.sourceforge.subsonic.androidapp.service;
 
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import org.apache.http.HttpResponse;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import net.sourceforge.subsonic.androidapp.domain.Indexes;
+import net.sourceforge.subsonic.androidapp.domain.JukeboxStatus;
+import net.sourceforge.subsonic.androidapp.domain.Lyrics;
 import net.sourceforge.subsonic.androidapp.domain.MusicDirectory;
 import net.sourceforge.subsonic.androidapp.domain.MusicFolder;
 import net.sourceforge.subsonic.androidapp.domain.Playlist;
-import net.sourceforge.subsonic.androidapp.domain.Version;
-import net.sourceforge.subsonic.androidapp.domain.SearchResult;
 import net.sourceforge.subsonic.androidapp.domain.SearchCritera;
-import net.sourceforge.subsonic.androidapp.domain.Lyrics;
+import net.sourceforge.subsonic.androidapp.domain.SearchResult;
+import net.sourceforge.subsonic.androidapp.domain.Version;
 import net.sourceforge.subsonic.androidapp.util.CancellableTask;
 import net.sourceforge.subsonic.androidapp.util.LRUCache;
 import net.sourceforge.subsonic.androidapp.util.ProgressListener;
 import net.sourceforge.subsonic.androidapp.util.TimeLimitedCache;
 import net.sourceforge.subsonic.androidapp.util.Util;
-import org.apache.http.HttpResponse;
-
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author Sindre Mehus
@@ -71,7 +73,7 @@ public class CachedMusicService implements MusicService {
         Boolean result = cachedLicenseValid.get();
         if (result == null) {
             result = musicService.isLicenseValid(context, progressListener);
-            cachedLicenseValid.set(result);
+            cachedLicenseValid.set(result, result ? 30L * 60L : 2L * 60L, TimeUnit.SECONDS);
         }
         return result;
     }
@@ -186,6 +188,36 @@ public class CachedMusicService implements MusicService {
     @Override
     public String getVideoUrl(Context context, String id) {
         return musicService.getVideoUrl(context, id);
+    }
+
+    @Override
+    public JukeboxStatus updateJukeboxPlaylist(List<String> ids, Context context, ProgressListener progressListener) throws Exception {
+        return musicService.updateJukeboxPlaylist(ids, context, progressListener);
+    }
+
+    @Override
+    public JukeboxStatus skipJukebox(int index, int offsetSeconds, Context context, ProgressListener progressListener) throws Exception {
+        return musicService.skipJukebox(index, offsetSeconds, context, progressListener);
+    }
+
+    @Override
+    public JukeboxStatus stopJukebox(Context context, ProgressListener progressListener) throws Exception {
+        return musicService.stopJukebox(context, progressListener);
+    }
+
+    @Override
+    public JukeboxStatus startJukebox(Context context, ProgressListener progressListener) throws Exception {
+        return musicService.startJukebox(context, progressListener);
+    }
+
+    @Override
+    public JukeboxStatus getJukeboxStatus(Context context, ProgressListener progressListener) throws Exception {
+        return musicService.getJukeboxStatus(context, progressListener);
+    }
+
+    @Override
+    public JukeboxStatus setJukeboxGain(float gain, Context context, ProgressListener progressListener) throws Exception {
+        return musicService.setJukeboxGain(gain, context, progressListener);
     }
 
     private void checkSettingsChanged(Context context) {

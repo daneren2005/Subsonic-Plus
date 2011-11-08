@@ -223,6 +223,7 @@ public class DownloadServiceLifecycleSupport {
                 downloadService.reset();
                 break;
             default:
+                break;
         }
     }
 

@@ -61,6 +61,7 @@ import android.widget.ViewFlipper;
 import net.sourceforge.subsonic.androidapp.R;
 import net.sourceforge.subsonic.androidapp.domain.MusicDirectory;
 import net.sourceforge.subsonic.androidapp.domain.PlayerState;
+import net.sourceforge.subsonic.androidapp.domain.RepeatMode;
 import net.sourceforge.subsonic.androidapp.service.DownloadFile;
 import net.sourceforge.subsonic.androidapp.service.DownloadService;
 import net.sourceforge.subsonic.androidapp.service.MusicService;
@@ -78,6 +79,8 @@ public class DownloadActivity extends SubsonicTabActivity implements OnGestureLi
 
     private static final int DIALOG_SAVE_PLAYLIST = 100;
     private static final int PERCENTAGE_OF_SCREEN_FOR_SWIPE = 5;
+    private static final int COLOR_BUTTON_ENABLED = Color.rgb(129, 201, 54);
+    private static final int COLOR_BUTTON_DISABLED = Color.rgb(164, 166, 158);
 
     private ViewFlipper playlistFlipper;
     private ViewFlipper buttonBarFlipper;
@@ -100,6 +103,7 @@ public class DownloadActivity extends SubsonicTabActivity implements OnGestureLi
     private ImageButton repeatButton;
     private Button equalizerButton;
     private Button visualizerButton;
+    private Button jukeboxButton;
     private View toggleListButton;
     private ScheduledExecutorService executorService;
     private DownloadFile currentPlaying;
@@ -145,6 +149,7 @@ public class DownloadActivity extends SubsonicTabActivity implements OnGestureLi
         repeatButton = (ImageButton) findViewById(R.id.download_repeat);
         equalizerButton = (Button) findViewById(R.id.download_equalizer);
         visualizerButton = (Button) findViewById(R.id.download_visualizer);
+        jukeboxButton = (Button) findViewById(R.id.download_jukebox);
         LinearLayout visualizerViewLayout = (LinearLayout) findViewById(R.id.download_visualizer_view_layout);
 
         toggleListButton = findViewById(R.id.download_toggle_list);
@@ -160,6 +165,9 @@ public class DownloadActivity extends SubsonicTabActivity implements OnGestureLi
         pauseButton.setOnTouchListener(touchListener);
         stopButton.setOnTouchListener(touchListener);
         startButton.setOnTouchListener(touchListener);
+        equalizerButton.setOnTouchListener(touchListener);
+        visualizerButton.setOnTouchListener(touchListener);
+        jukeboxButton.setOnTouchListener(touchListener);
         buttonBarFlipper.setOnTouchListener(touchListener);
         emptyTextView.setOnTouchListener(touchListener);
         albumArtImageView.setOnTouchListener(touchListener);
@@ -232,8 +240,22 @@ public class DownloadActivity extends SubsonicTabActivity implements OnGestureLi
         repeatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getDownloadService().setRepeatMode(getDownloadService().getRepeatMode().next());
+                RepeatMode repeatMode = getDownloadService().getRepeatMode().next();
+                getDownloadService().setRepeatMode(repeatMode);
                 onDownloadListChanged();
+                switch (repeatMode) {
+                    case OFF:
+                        Util.toast(DownloadActivity.this, R.string.download_repeat_off);
+                        break;
+                    case ALL:
+                        Util.toast(DownloadActivity.this, R.string.download_repeat_all);
+                        break;
+                    case SINGLE:
+                        Util.toast(DownloadActivity.this, R.string.download_repeat_single);
+                        break;
+                    default:
+                        break;
+                }
             }
         });
 
@@ -247,9 +269,21 @@ public class DownloadActivity extends SubsonicTabActivity implements OnGestureLi
         visualizerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                visualizerView.setActive(!visualizerView.isActive());
+                boolean active = !visualizerView.isActive();
+                visualizerView.setActive(active);
                 getDownloadService().setShowVisualization(visualizerView.isActive());
                 updateButtons();
+                Util.toast(DownloadActivity.this, active ? R.string.download_visualizer_on : R.string.download_visualizer_off);
+            }
+        });
+
+        jukeboxButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                boolean jukeboxEnabled = !getDownloadService().isJukeboxEnabled();
+                getDownloadService().setJukeboxEnabled(jukeboxEnabled);
+                updateButtons();
+                Util.toast(DownloadActivity.this, jukeboxEnabled ? R.string.download_jukebox_on : R.string.download_jukebox_off, false);
             }
         });
 
@@ -262,9 +296,12 @@ public class DownloadActivity extends SubsonicTabActivity implements OnGestureLi
 
         progressBar.setOnSliderChangeListener(new HorizontalSlider.OnSliderChangeListener() {
             @Override
-            public void onSliderChanged(View view, int position) {
-                getDownloadService().seekTo(position);
-                onProgressChanged();
+            public void onSliderChanged(View view, int position, boolean inProgress) {
+                Util.toast(DownloadActivity.this, Util.formatDuration(position / 1000), true);
+                if (!inProgress) {
+                    getDownloadService().seekTo(position);
+                    onProgressChanged();
+                }
             }
         });
         playlistView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -312,6 +349,7 @@ public class DownloadActivity extends SubsonicTabActivity implements OnGestureLi
         Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/Storopia.ttf");
         equalizerButton.setTypeface(typeface);
         visualizerButton.setTypeface(typeface);
+        jukeboxButton.setTypeface(typeface);
     }
 
     @Override
@@ -360,11 +398,14 @@ public class DownloadActivity extends SubsonicTabActivity implements OnGestureLi
     private void updateButtons() {
         boolean eqEnabled = getDownloadService() != null && getDownloadService().getEqualizerController() != null &&
                 getDownloadService().getEqualizerController().isEnabled();
-        equalizerButton.setTextColor(eqEnabled ? Color.rgb(129, 201, 54) : Color.rgb(164, 166, 158));
+        equalizerButton.setTextColor(eqEnabled ? COLOR_BUTTON_ENABLED : COLOR_BUTTON_DISABLED);
 
         if (visualizerView != null) {
-            visualizerButton.setTextColor(visualizerView.isActive() ? Color.rgb(129, 201, 54) : Color.rgb(164, 166, 158));
+            visualizerButton.setTextColor(visualizerView.isActive() ? COLOR_BUTTON_ENABLED : COLOR_BUTTON_DISABLED);
         }
+
+        boolean jukeboxEnabled = getDownloadService() != null && getDownloadService().isJukeboxEnabled();
+        jukeboxButton.setTextColor(jukeboxEnabled ? COLOR_BUTTON_ENABLED : COLOR_BUTTON_DISABLED);
     }
 
     // Scroll to current playing/downloading.
@@ -685,7 +726,7 @@ public class DownloadActivity extends SubsonicTabActivity implements OnGestureLi
             durationTextView.setText(Util.formatDuration(millisTotal / 1000));
             progressBar.setMax(millisTotal == 0 ? 100 : millisTotal); // Work-around for apparent bug.
             progressBar.setProgress(millisPlayed);
-            progressBar.setSlidingEnabled(currentPlaying.isCompleteFileAvailable());
+            progressBar.setSlidingEnabled(currentPlaying.isCompleteFileAvailable() || getDownloadService().isJukeboxEnabled());
         } else {
             positionTextView.setText("0:00");
             durationTextView.setText("-:--");
@@ -733,6 +774,8 @@ public class DownloadActivity extends SubsonicTabActivity implements OnGestureLi
                 startButton.setVisibility(View.VISIBLE);
                 break;
         }
+
+        jukeboxButton.setTextColor(getDownloadService().isJukeboxEnabled() ? COLOR_BUTTON_ENABLED : COLOR_BUTTON_DISABLED);
     }
 
     private class SongListAdapter extends ArrayAdapter<DownloadFile> {

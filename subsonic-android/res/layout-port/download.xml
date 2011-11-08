@@ -26,7 +26,22 @@
                     a:layout_height="wrap_content"
                     a:layout_gravity="top|right"
                     a:paddingTop="24dip"
-                    a:paddingLeft="8dip"/>
+                    a:paddingLeft="8dip"
+                    a:paddingBottom="12dip"/>
+
+            <Button
+                    a:id="@+id/download_jukebox"
+                    a:text="RC"
+                    a:textStyle="bold"
+                    a:textSize="22sp"
+                    a:background="@android:color/transparent"
+                    a:layout_width="wrap_content"
+                    a:layout_height="wrap_content"
+                    a:layout_gravity="top|right"
+                    a:layout_below="@+id/download_repeat"
+                    a:paddingTop="12dip"
+                    a:paddingLeft="14dip"
+                    a:paddingBottom="15dip"/>
 
             <Button
                     a:id="@+id/download_equalizer"
@@ -53,6 +68,7 @@
                     a:layout_gravity="top|right"
                     a:layout_alignParentRight="true"
                     a:layout_below="@+id/download_equalizer"
+                    a:layout_alignBottom="@+id/download_jukebox"
                     a:paddingTop="12dip"
                     a:paddingRight="12dip"
                     a:paddingBottom="12dip"/>

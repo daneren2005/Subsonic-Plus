@@ -18,44 +18,20 @@
  */
 package net.sourceforge.subsonic.androidapp.service;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.util.Log;
-import net.sourceforge.subsonic.androidapp.R;
-import net.sourceforge.subsonic.androidapp.domain.Indexes;
-import net.sourceforge.subsonic.androidapp.domain.Lyrics;
-import net.sourceforge.subsonic.androidapp.domain.MusicDirectory;
-import net.sourceforge.subsonic.androidapp.domain.MusicFolder;
-import net.sourceforge.subsonic.androidapp.domain.Playlist;
-import net.sourceforge.subsonic.androidapp.domain.SearchCritera;
-import net.sourceforge.subsonic.androidapp.domain.SearchResult;
-import net.sourceforge.subsonic.androidapp.domain.ServerInfo;
-import net.sourceforge.subsonic.androidapp.domain.Version;
-import net.sourceforge.subsonic.androidapp.service.parser.AlbumListParser;
-import net.sourceforge.subsonic.androidapp.service.parser.ErrorParser;
-import net.sourceforge.subsonic.androidapp.service.parser.IndexesParser;
-import net.sourceforge.subsonic.androidapp.service.parser.LicenseParser;
-import net.sourceforge.subsonic.androidapp.service.parser.LyricsParser;
-import net.sourceforge.subsonic.androidapp.service.parser.MusicDirectoryParser;
-import net.sourceforge.subsonic.androidapp.service.parser.MusicFoldersParser;
-import net.sourceforge.subsonic.androidapp.service.parser.PlaylistParser;
-import net.sourceforge.subsonic.androidapp.service.parser.PlaylistsParser;
-import net.sourceforge.subsonic.androidapp.service.parser.RandomSongsParser;
-import net.sourceforge.subsonic.androidapp.service.parser.SearchResult2Parser;
-import net.sourceforge.subsonic.androidapp.service.parser.SearchResultParser;
-import net.sourceforge.subsonic.androidapp.service.parser.VersionParser;
-import net.sourceforge.subsonic.androidapp.service.ssl.SSLSocketFactory;
-import net.sourceforge.subsonic.androidapp.service.ssl.TrustSelfSignedStrategy;
-import net.sourceforge.subsonic.androidapp.util.CancellableTask;
-import net.sourceforge.subsonic.androidapp.util.Constants;
-import net.sourceforge.subsonic.androidapp.util.FileUtil;
-import net.sourceforge.subsonic.androidapp.util.ProgressListener;
-import net.sourceforge.subsonic.androidapp.util.Util;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.Reader;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
+
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
@@ -83,21 +59,46 @@ import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.ExecutionContext;
 import org.apache.http.protocol.HttpContext;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.Reader;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.util.Log;
+import net.sourceforge.subsonic.androidapp.R;
+import net.sourceforge.subsonic.androidapp.domain.Indexes;
+import net.sourceforge.subsonic.androidapp.domain.JukeboxStatus;
+import net.sourceforge.subsonic.androidapp.domain.Lyrics;
+import net.sourceforge.subsonic.androidapp.domain.MusicDirectory;
+import net.sourceforge.subsonic.androidapp.domain.MusicFolder;
+import net.sourceforge.subsonic.androidapp.domain.Playlist;
+import net.sourceforge.subsonic.androidapp.domain.SearchCritera;
+import net.sourceforge.subsonic.androidapp.domain.SearchResult;
+import net.sourceforge.subsonic.androidapp.domain.ServerInfo;
+import net.sourceforge.subsonic.androidapp.domain.Version;
+import net.sourceforge.subsonic.androidapp.service.parser.AlbumListParser;
+import net.sourceforge.subsonic.androidapp.service.parser.ErrorParser;
+import net.sourceforge.subsonic.androidapp.service.parser.IndexesParser;
+import net.sourceforge.subsonic.androidapp.service.parser.JukeboxStatusParser;
+import net.sourceforge.subsonic.androidapp.service.parser.LicenseParser;
+import net.sourceforge.subsonic.androidapp.service.parser.LyricsParser;
+import net.sourceforge.subsonic.androidapp.service.parser.MusicDirectoryParser;
+import net.sourceforge.subsonic.androidapp.service.parser.MusicFoldersParser;
+import net.sourceforge.subsonic.androidapp.service.parser.PlaylistParser;
+import net.sourceforge.subsonic.androidapp.service.parser.PlaylistsParser;
+import net.sourceforge.subsonic.androidapp.service.parser.RandomSongsParser;
+import net.sourceforge.subsonic.androidapp.service.parser.SearchResult2Parser;
+import net.sourceforge.subsonic.androidapp.service.parser.SearchResultParser;
+import net.sourceforge.subsonic.androidapp.service.parser.VersionParser;
+import net.sourceforge.subsonic.androidapp.service.ssl.SSLSocketFactory;
+import net.sourceforge.subsonic.androidapp.service.ssl.TrustSelfSignedStrategy;
+import net.sourceforge.subsonic.androidapp.util.CancellableTask;
+import net.sourceforge.subsonic.androidapp.util.Constants;
+import net.sourceforge.subsonic.androidapp.util.FileUtil;
+import net.sourceforge.subsonic.androidapp.util.ProgressListener;
+import net.sourceforge.subsonic.androidapp.util.Util;
 
 /**
  * @author Sindre Mehus
@@ -129,7 +130,6 @@ public class RESTMusicService implements MusicService {
     private String redirectFrom;
     private String redirectTo;
     private final ThreadSafeClientConnManager connManager;
-    private Version serverRestVersion;
 
     public RESTMusicService() {
 
@@ -180,7 +180,6 @@ public class RESTMusicService implements MusicService {
         Reader reader = getReader(context, progressListener, "getLicense", null);
         try {
             ServerInfo serverInfo = new LicenseParser(context).parse(reader);
-            serverRestVersion = serverInfo.getRestVersion();
             return serverInfo.isLicenseValid();
         } finally {
             Util.close(reader);
@@ -252,27 +251,12 @@ public class RESTMusicService implements MusicService {
 
     @Override
     public SearchResult search(SearchCritera critera, Context context, ProgressListener progressListener) throws Exception {
-        // Ensure backward compatibility with REST 1.3.
-        if (isServerAtLeast14()) {
+        try {
             return searchNew(critera, context, progressListener);
-        } else {
+        } catch (ServerTooOldException x) {
+            // Ensure backward compatibility with REST 1.3.
             return searchOld(critera, context, progressListener);
         }
-    }
-
-    private boolean isServerAtLeast14() {
-        return isServerAtLeast("1.4");
-    }
-
-    private boolean isServerAtLeast15() {
-        return isServerAtLeast("1.5");
-    }
-
-    private boolean isServerAtLeast(String version) {
-        if (serverRestVersion == null) {
-            return false;
-        }
-        return serverRestVersion.compareTo(new Version(version)) >= 0;
     }
 
     /**
@@ -293,6 +277,8 @@ public class RESTMusicService implements MusicService {
      * Search using the "search2" REST method, available in 1.4.0 and later.
      */
     private SearchResult searchNew(SearchCritera critera, Context context, ProgressListener progressListener) throws Exception {
+        checkServerVersion(context, "1.4", null);
+
         List<String> parameterNames = Arrays.asList("query", "artistCount", "albumCount", "songCount");
         List<Object> parameterValues = Arrays.<Object>asList(critera.getQuery(), critera.getArtistCount(),
                                                              critera.getAlbumCount(), critera.getSongCount());
@@ -365,11 +351,7 @@ public class RESTMusicService implements MusicService {
 
     @Override
     public void scrobble(String id, boolean submission, Context context, ProgressListener progressListener) throws Exception {
-
-        if (!isServerAtLeast15()) {
-            throw new Exception("Scrobbling not supported, server version is too old.");
-        }
-
+        checkServerVersion(context, "1.5", "Scrobbling not supported.");
         Reader reader = getReader(context, progressListener, "scrobble", null, Arrays.asList("id", "submission"), Arrays.<Object>asList(id, submission));
         try {
             new ErrorParser(context).parse(reader);
@@ -415,6 +397,16 @@ public class RESTMusicService implements MusicService {
             return new VersionParser().parse(reader);
         } finally {
             Util.close(reader);
+        }
+    }
+
+    private void checkServerVersion(Context context, String version, String text) throws ServerTooOldException {
+        Version serverVersion = Util.getServerRestVersion(context);
+        Version requiredVersion = new Version(version);
+        boolean ok = serverVersion == null || serverVersion.compareTo(requiredVersion) >= 0;
+
+        if (!ok) {
+            throw new ServerTooOldException(text, serverVersion, requiredVersion);
         }
     }
 
@@ -511,6 +503,61 @@ public class RESTMusicService implements MusicService {
         String url = rewriteUrlWithRedirect(context, builder.toString());
         Log.i(TAG, "Using video URL: " + url);
         return url;
+    }
+
+    @Override
+    public JukeboxStatus updateJukeboxPlaylist(List<String> ids, Context context, ProgressListener progressListener) throws Exception {
+        int n = ids.size();
+        List<String> parameterNames = new ArrayList<String>(n + 1);
+        parameterNames.add("action");
+        for (int i = 0; i < n; i++) {
+            parameterNames.add("id");
+        }
+        List<Object> parameterValues = new ArrayList<Object>();
+        parameterValues.add("set");
+        parameterValues.addAll(ids);
+
+        return executeJukeboxCommand(context, progressListener, parameterNames, parameterValues);
+    }
+
+    @Override
+    public JukeboxStatus skipJukebox(int index, int offsetSeconds, Context context, ProgressListener progressListener) throws Exception {
+        List<String> parameterNames = Arrays.asList("action", "index", "offset");
+        List<Object> parameterValues = Arrays.<Object>asList("skip", index, offsetSeconds);
+        return executeJukeboxCommand(context, progressListener, parameterNames, parameterValues);
+    }
+
+    @Override
+    public JukeboxStatus stopJukebox(Context context, ProgressListener progressListener) throws Exception {
+        return executeJukeboxCommand(context, progressListener, Arrays.asList("action"), Arrays.<Object>asList("stop"));
+    }
+
+    @Override
+    public JukeboxStatus startJukebox(Context context, ProgressListener progressListener) throws Exception {
+        return executeJukeboxCommand(context, progressListener, Arrays.asList("action"), Arrays.<Object>asList("start"));
+    }
+
+    @Override
+    public JukeboxStatus getJukeboxStatus(Context context, ProgressListener progressListener) throws Exception {
+        return executeJukeboxCommand(context, progressListener, Arrays.asList("action"), Arrays.<Object>asList("status"));
+    }
+
+    @Override
+    public JukeboxStatus setJukeboxGain(float gain, Context context, ProgressListener progressListener) throws Exception {
+        List<String> parameterNames = Arrays.asList("action", "gain");
+        List<Object> parameterValues = Arrays.<Object>asList("setGain", gain);
+        return executeJukeboxCommand(context, progressListener, parameterNames, parameterValues);
+
+    }
+
+    private JukeboxStatus executeJukeboxCommand(Context context, ProgressListener progressListener, List<String> parameterNames, List<Object> parameterValues) throws Exception {
+        checkServerVersion(context, "1.7", "Jukebox not supported.");
+        Reader reader = getReader(context, progressListener, "jukeboxControl", null, parameterNames, parameterValues);
+        try {
+            return new JukeboxStatusParser(context).parse(reader);
+        } finally {
+            Util.close(reader);
+        }
     }
 
     private Reader getReader(Context context, ProgressListener progressListener, String method, HttpParams requestParams) throws Exception {

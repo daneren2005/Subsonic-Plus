@@ -20,9 +20,9 @@ package net.sourceforge.subsonic.androidapp.service;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Collections;
 
 import android.app.Service;
 import android.content.Context;
@@ -34,16 +34,16 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.util.Log;
 import net.sourceforge.subsonic.androidapp.R;
+import net.sourceforge.subsonic.androidapp.audiofx.EqualizerController;
 import net.sourceforge.subsonic.androidapp.audiofx.VisualizerController;
 import net.sourceforge.subsonic.androidapp.domain.MusicDirectory;
 import net.sourceforge.subsonic.androidapp.domain.PlayerState;
 import net.sourceforge.subsonic.androidapp.domain.RepeatMode;
 import net.sourceforge.subsonic.androidapp.util.CancellableTask;
+import net.sourceforge.subsonic.androidapp.util.LRUCache;
 import net.sourceforge.subsonic.androidapp.util.ShufflePlayBuffer;
 import net.sourceforge.subsonic.androidapp.util.SimpleServiceBinder;
 import net.sourceforge.subsonic.androidapp.util.Util;
-import net.sourceforge.subsonic.androidapp.util.LRUCache;
-import net.sourceforge.subsonic.androidapp.audiofx.EqualizerController;
 
 import static net.sourceforge.subsonic.androidapp.domain.PlayerState.*;
 
@@ -72,6 +72,7 @@ public class DownloadServiceImpl extends Service implements DownloadService {
     private final LRUCache<MusicDirectory.Entry, DownloadFile> downloadFileCache = new LRUCache<MusicDirectory.Entry, DownloadFile>(100);
     private final List<DownloadFile> cleanupCandidates = new ArrayList<DownloadFile>();
     private final Scrobbler scrobbler = new Scrobbler();
+    private final JukeboxService jukeboxService = new JukeboxService(this);
     private DownloadFile currentPlaying;
     private DownloadFile currentDownloading;
     private CancellableTask bufferTask;
@@ -88,6 +89,7 @@ public class DownloadServiceImpl extends Service implements DownloadService {
     private EqualizerController equalizerController;
     private VisualizerController visualizerController;
     private boolean showVisualization;
+    private boolean jukeboxEnabled;
 
     static {
         try {
@@ -200,6 +202,7 @@ public class DownloadServiceImpl extends Service implements DownloadService {
             }
             revision++;
         }
+        updateJukeboxPlaylist();
 
         if (autoplay) {
             play(0);
@@ -210,6 +213,12 @@ public class DownloadServiceImpl extends Service implements DownloadService {
             checkDownloads();
         }
         lifecycleSupport.serializeDownloadQueue();
+    }
+
+    private void updateJukeboxPlaylist() {
+        if (jukeboxEnabled) {
+            jukeboxService.updatePlaylist();
+        }
     }
 
     public void restore(List<MusicDirectory.Entry> songs, int currentPlayingIndex, int currentPlayingPosition) {
@@ -249,6 +258,7 @@ public class DownloadServiceImpl extends Service implements DownloadService {
         }
         revision++;
         lifecycleSupport.serializeDownloadQueue();
+        updateJukeboxPlaylist();
     }
 
     @Override
@@ -313,6 +323,7 @@ public class DownloadServiceImpl extends Service implements DownloadService {
             }
         }
         lifecycleSupport.serializeDownloadQueue();
+        updateJukeboxPlaylist();
     }
 
     @Override
@@ -333,6 +344,7 @@ public class DownloadServiceImpl extends Service implements DownloadService {
         if (serialize) {
             lifecycleSupport.serializeDownloadQueue();
         }
+        updateJukeboxPlaylist();
     }
 
     @Override
@@ -348,6 +360,7 @@ public class DownloadServiceImpl extends Service implements DownloadService {
         downloadList.remove(downloadFile);
         revision++;
         lifecycleSupport.serializeDownloadQueue();
+        updateJukeboxPlaylist();
     }
 
     @Override
@@ -364,7 +377,15 @@ public class DownloadServiceImpl extends Service implements DownloadService {
         }
     }
 
-    private synchronized void setCurrentPlaying(DownloadFile currentPlaying, boolean showNotification) {
+    synchronized void setCurrentPlaying(int currentPlayingIndex, boolean showNotification) {
+        try {
+            setCurrentPlaying(downloadList.get(currentPlayingIndex), showNotification);
+        } catch (IndexOutOfBoundsException x) {
+            // Ignored
+        }
+    }
+
+    synchronized void setCurrentPlaying(DownloadFile currentPlaying, boolean showNotification) {
         this.currentPlaying = currentPlaying;
 
         if (currentPlaying != null) {
@@ -412,24 +433,24 @@ public class DownloadServiceImpl extends Service implements DownloadService {
     }
 
     @Override
-    public synchronized void play(DownloadFile file) {
-        play(downloadList.indexOf(file));
-    }
-
-    @Override
     public synchronized void play(int index) {
         play(index, true);
     }
 
-    synchronized void play(int index, boolean start) {
+    private synchronized void play(int index, boolean start) {
         if (index < 0 || index >= size()) {
             reset();
             setCurrentPlaying(null, false);
         } else {
-            setCurrentPlaying(downloadList.get(index), start);
+            setCurrentPlaying(index, start);
             checkDownloads();
             if (start) {
-                bufferAndPlay();
+                if (jukeboxEnabled) {
+                    jukeboxService.skip(getCurrentPlayingIndex(), 0);
+                    setPlayerState(STARTED);
+                } else {
+                    bufferAndPlay();
+                }
             }
         }
     }
@@ -449,7 +470,11 @@ public class DownloadServiceImpl extends Service implements DownloadService {
     @Override
     public synchronized void seekTo(int position) {
         try {
-            mediaPlayer.seekTo(position);
+            if (jukeboxEnabled) {
+                jukeboxService.skip(getCurrentPlayingIndex(), position / 1000);
+            } else {
+                mediaPlayer.seekTo(position);
+            }
         } catch (Exception x) {
             handleError(x);
         }
@@ -501,7 +526,11 @@ public class DownloadServiceImpl extends Service implements DownloadService {
     public synchronized void pause() {
         try {
             if (playerState == STARTED) {
-                mediaPlayer.pause();
+                if (jukeboxEnabled) {
+                    jukeboxService.stop();
+                } else {
+                    mediaPlayer.pause();
+                }
                 setPlayerState(PAUSED);
             }
         } catch (Exception x) {
@@ -512,7 +541,11 @@ public class DownloadServiceImpl extends Service implements DownloadService {
     @Override
     public synchronized void start() {
         try {
-            mediaPlayer.start();
+            if (jukeboxEnabled) {
+                jukeboxService.start();
+            } else {
+                mediaPlayer.start();
+            }
             setPlayerState(STARTED);
         } catch (Exception x) {
             handleError(x);
@@ -538,8 +571,11 @@ public class DownloadServiceImpl extends Service implements DownloadService {
             if (playerState == IDLE || playerState == DOWNLOADING || playerState == PREPARING) {
                 return 0;
             }
-//            Log.i(TAG, "Player pos: " + mediaPlayer.getCurrentPosition() + " of " + mediaPlayer.getDuration());
-            return mediaPlayer.getCurrentPosition();
+            if (jukeboxEnabled) {
+                return jukeboxService.getPositionSeconds() * 1000;
+            } else {
+                return mediaPlayer.getCurrentPosition();
+            }
         } catch (Exception x) {
             handleError(x);
             return 0;
@@ -569,7 +605,7 @@ public class DownloadServiceImpl extends Service implements DownloadService {
         return playerState;
     }
 
-    private synchronized void setPlayerState(PlayerState playerState) {
+    synchronized void setPlayerState(PlayerState playerState) {
         Log.i(TAG, this.playerState.name() + " -> " + playerState.name() + " (" + currentPlaying + ")");
 
         if (playerState == PAUSED) {
@@ -612,6 +648,30 @@ public class DownloadServiceImpl extends Service implements DownloadService {
     @Override
     public VisualizerController getVisualizerController() {
         return visualizerController;
+    }
+
+    @Override
+    public boolean isJukeboxEnabled() {
+        return jukeboxEnabled;
+    }
+
+    @Override
+    public void setJukeboxEnabled(boolean jukeboxEnabled) {
+        this.jukeboxEnabled = jukeboxEnabled;
+        jukeboxService.setEnabled(jukeboxEnabled);
+        if (jukeboxEnabled) {
+            reset();
+            
+            // Cancel current download, if necessary.
+            if (currentDownloading != null) {
+                currentDownloading.cancelDownload();
+            }
+        }
+    }
+
+    @Override
+    public void adjustJukeboxVolume(boolean up) {
+        jukeboxService.adjustVolume(up);
     }
 
     private synchronized void bufferAndPlay() {
@@ -705,12 +765,16 @@ public class DownloadServiceImpl extends Service implements DownloadService {
 
     protected synchronized void checkDownloads() {
 
-        if (!Util.isNetworkConnected(this) || !Util.isExternalStoragePresent() || !lifecycleSupport.isExternalStorageAvailable()) {
+        if (!Util.isExternalStoragePresent() || !lifecycleSupport.isExternalStorageAvailable()) {
             return;
         }
 
         if (shufflePlay) {
             checkShufflePlay();
+        }
+
+        if (jukeboxEnabled || !Util.isNetworkConnected(this)) {
+            return;
         }
 
         if (downloadList.isEmpty()) {
@@ -770,6 +834,8 @@ public class DownloadServiceImpl extends Service implements DownloadService {
         final int listSize = 20;
         boolean wasEmpty = downloadList.isEmpty();
 
+        long revisionBefore = revision;
+
         // First, ensure that list is at least 20 songs long.
         int size = size();
         if (size < listSize) {
@@ -791,6 +857,10 @@ public class DownloadServiceImpl extends Service implements DownloadService {
                 downloadList.remove(0);
                 revision++;
             }
+        }
+
+        if (revisionBefore != revision) {
+            updateJukeboxPlaylist();
         }
 
         if (wasEmpty && !downloadList.isEmpty()) {

@@ -33,6 +33,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -183,6 +184,21 @@ public class SubsonicTabActivity extends Activity {
         super.onDestroy();
         destroyed = true;
         getImageLoader().clear();
+    }
+
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        boolean isVolumeDown = keyCode == KeyEvent.KEYCODE_VOLUME_DOWN;
+        boolean isVolumeUp = keyCode == KeyEvent.KEYCODE_VOLUME_UP;
+        boolean isVolumeAdjust = isVolumeDown || isVolumeUp;
+        boolean isJukebox = getDownloadService() != null && getDownloadService().isJukeboxEnabled();
+
+        if (isVolumeAdjust && isJukebox) {
+            getDownloadService().adjustJukeboxVolume(isVolumeUp);
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     @Override

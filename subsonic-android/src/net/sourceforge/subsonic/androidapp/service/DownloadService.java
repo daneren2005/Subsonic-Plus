@@ -18,13 +18,13 @@
  */
 package net.sourceforge.subsonic.androidapp.service;
 
+import java.util.List;
+
+import net.sourceforge.subsonic.androidapp.audiofx.EqualizerController;
 import net.sourceforge.subsonic.androidapp.audiofx.VisualizerController;
 import net.sourceforge.subsonic.androidapp.domain.MusicDirectory;
 import net.sourceforge.subsonic.androidapp.domain.PlayerState;
 import net.sourceforge.subsonic.androidapp.domain.RepeatMode;
-import net.sourceforge.subsonic.androidapp.audiofx.EqualizerController;
-
-import java.util.List;
 
 /**
  * @author Sindre Mehus
@@ -68,8 +68,6 @@ public interface DownloadService {
 
     DownloadFile getCurrentDownloading();
 
-    void play(DownloadFile file);
-
     void play(int index);
 
     void seekTo(int position);
@@ -105,4 +103,10 @@ public interface DownloadService {
     EqualizerController getEqualizerController();
 
     VisualizerController getVisualizerController();
+
+    boolean isJukeboxEnabled();
+
+    void setJukeboxEnabled(boolean b);
+
+    void adjustJukeboxVolume(boolean up);
 }

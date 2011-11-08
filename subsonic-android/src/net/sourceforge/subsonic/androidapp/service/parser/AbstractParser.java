@@ -18,14 +18,16 @@
  */
 package net.sourceforge.subsonic.androidapp.service.parser;
 
+import java.io.Reader;
+
 import org.xmlpull.v1.XmlPullParser;
 
 import android.content.Context;
 import android.util.Xml;
 import net.sourceforge.subsonic.androidapp.R;
+import net.sourceforge.subsonic.androidapp.domain.Version;
 import net.sourceforge.subsonic.androidapp.util.ProgressListener;
-
-import java.io.Reader;
+import net.sourceforge.subsonic.androidapp.util.Util;
 
 /**
  * @author Sindre Mehus
@@ -56,6 +58,9 @@ public abstract class AbstractParser {
                 break;
             case 40:
                 message = context.getResources().getString(R.string.parser_not_authenticated);
+                break;
+            case 50:
+                message = context.getResources().getString(R.string.parser_not_authorized);
                 break;
             default:
                 message = get("message");
@@ -98,6 +103,11 @@ public abstract class AbstractParser {
         return s == null ? null : Long.valueOf(s);
     }
 
+    protected Float getFloat(String name) {
+        String s = get(name);
+        return s == null ? null : Float.valueOf(s);
+    }
+
     protected void init(Reader reader) throws Exception {
         parser = Xml.newPullParser();
         parser.setInput(reader);
@@ -112,6 +122,10 @@ public abstract class AbstractParser {
         String name = parser.getName();
         if ("subsonic-response".equals(name)) {
             rootElementFound = true;
+            String version = get("version");
+            if (version != null) {
+                Util.setServerRestVersion(context, new Version(version));
+            }
         }
         return name;
     }
