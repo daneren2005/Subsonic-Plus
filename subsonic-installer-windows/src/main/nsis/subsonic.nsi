@@ -61,6 +61,7 @@ Section "Subsonic"
   SetOutPath $INSTDIR
 
   # Write files.
+  File ..\..\..\target\elevate.exe
   File ..\..\..\target\subsonic-agent.exe
   File ..\..\..\target\subsonic-agent.exe.vmoptions
   File ..\..\..\target\subsonic-service.exe
@@ -94,6 +95,7 @@ Section "Subsonic"
   # Add Windows Firewall exception.
   # (Requires NSIS plugin found on http://nsis.sourceforge.net/NSIS_Simple_Firewall_Plugin to be installed
   # as NSIS_HOME/Plugins/SimpleFC.dll)
+  SimpleFC::AddApplication "Subsonic Elevate" "$INSTDIR\elevate.exe" 0 2 "" 1
   SimpleFC::AddApplication "Subsonic Service" "$INSTDIR\subsonic-service.exe" 0 2 "" 1
   SimpleFC::AddApplication "Subsonic Agent" "$INSTDIR\subsonic-agent.exe" 0 2 "" 1
 
@@ -146,6 +148,7 @@ Section "Uninstall"
   Delete "$SMSTARTUP\Subsonic.lnk"
   RMDir /r "$SMPROGRAMS\Subsonic"
   Delete "$INSTDIR\build_number.txt"
+  Delete "$INSTDIR\elevate.exe"
   Delete "$INSTDIR\Getting Started.html"
   Delete "$INSTDIR\LICENSE.TXT"
   Delete "$INSTDIR\README.TXT"
@@ -164,6 +167,7 @@ Section "Uninstall"
   # Remove Windows Firewall exception.
   # (Requires NSIS plugin found on http://nsis.sourceforge.net/NSIS_Simple_Firewall_Plugin to be installed
   # as NSIS_HOME/Plugins/SimpleFC.dll)
+  SimpleFC::RemoveApplication "$INSTDIR\elevate.exe"
   SimpleFC::RemoveApplication "$INSTDIR\subsonic-service.exe"
   SimpleFC::RemoveApplication "$INSTDIR\subsonic-agent.exe"
 

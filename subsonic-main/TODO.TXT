@@ -23,10 +23,17 @@ Added Google+ button.
 Bugfix: Fixed a case where guessing the title and track number failed.
 Tech: Ensure Windows uninstaller only removes program files (in case user installs to c:\subsonic)
 New option in Settings > Transcoding: "Enable this transcoding for all existing and new players."
+
 TODO IN 4.6
 -----------------
 Automatically delete obsolete players.
+  - name == null
+  - lastSeen == null or lastSeen < XXX
+  - clientId == null
+Upgrade jre-6u27-windows-i586-iftw to java 7.
 Fix permission issue on Win7.
+  http://stackoverflow.com/questions/258728/request-admin-privileges-for-java-app-on-windows-vista
+  http://jpassing.com/2007/12/08/launch-elevated-processes-from-the-command-line/
 Remove lyrics
 Add Subsonic Channel (for Roku)
   http://www.randomwalking.com/project.php?project=roku_subsonic
@@ -107,6 +114,7 @@ Show error message if server url contains "@".
 
 TODO IN ANDROID 3.3
 --------------------
+Google TV?
 Test BlackBerry runtime
 Android 4.0: Support Audio remote controls
 Handle files in root folder.
