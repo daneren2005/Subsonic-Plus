@@ -64,6 +64,8 @@ public class MetaDataParserTestCase extends TestCase {
         assertEquals("1 kokos", parser.removeTrackNumberFromTitle("1 kokos", 2));
         assertEquals("50 years", parser.removeTrackNumberFromTitle("50 years", 1));
         assertEquals("years", parser.removeTrackNumberFromTitle("50 years", 50));
+        assertEquals("15 Step", parser.removeTrackNumberFromTitle("15 Step", 1));
+        assertEquals("Step", parser.removeTrackNumberFromTitle("15 Step", 15));
 
         assertEquals("49ers", parser.removeTrackNumberFromTitle("49ers", 1));
         assertEquals("49ers", parser.removeTrackNumberFromTitle("49ers", 49));

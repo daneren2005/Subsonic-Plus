@@ -20,9 +20,11 @@ Jukebox: Support skipping when paused.
 Jukebox: Ensure that "set" method maintains correct current index.
 REST: Added "scrobblingEnabled" to getUser.
 Added Google+ button.
+Bugfix: Fixed a case where guessing the title and track number failed.
 
 TODO IN 4.6
 -----------------
+Improve uninstaller, only delete relavant files in case user has installed in c:/subsonic
 Remove lyrics
 Add Subsonic Channel (for Roku)
   http://www.randomwalking.com/project.php?project=roku_subsonic

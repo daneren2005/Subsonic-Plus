@@ -155,12 +155,11 @@ public abstract class MetaDataParser {
         title = title.trim();
 
         // Don't remove numbers if true track number is given, and title does not start with it.
-        if (trackNumber != null && !title.matches("0?" + trackNumber + ".*")) {
+        if (trackNumber != null && !title.matches("0?" + trackNumber + "[\\.\\- ].*")) {
             return title;
         }
 
         String result = title.replaceFirst("^\\d{2}[\\.\\- ]+", "");
         return result.length() == 0 ? title : result;
     }
-
 }
