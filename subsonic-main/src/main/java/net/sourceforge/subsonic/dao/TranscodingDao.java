@@ -35,7 +35,7 @@ import net.sourceforge.subsonic.domain.Transcoding;
 public class TranscodingDao extends AbstractDao {
 
     private static final Logger LOG = Logger.getLogger(TranscodingDao.class);
-    private static final String COLUMNS = "id, name, source_formats, target_format, step1, step2, step3";
+    private static final String COLUMNS = "id, name, source_formats, target_format, step1, step2, step3, default_active";
     private TranscodingRowMapper rowMapper = new TranscodingRowMapper();
 
     /**
@@ -86,7 +86,7 @@ public class TranscodingDao extends AbstractDao {
         String sql = "insert into transcoding2 (" + COLUMNS + ") values (" + questionMarks(COLUMNS) + ")";
         update(sql, transcoding.getId(), transcoding.getName(), transcoding.getSourceFormats(),
                 transcoding.getTargetFormat(), transcoding.getStep1(),
-                transcoding.getStep2(), transcoding.getStep3());
+                transcoding.getStep2(), transcoding.getStep3(), transcoding.isDefaultActive());
         LOG.info("Created transcoding " + transcoding.getName());
     }
 
@@ -108,16 +108,16 @@ public class TranscodingDao extends AbstractDao {
      */
     public void updateTranscoding(Transcoding transcoding) {
         String sql = "update transcoding2 set name=?, source_formats=?, target_format=?, " +
-                "step1=?, step2=?, step3=? where id=?";
+                "step1=?, step2=?, step3=?, default_active=? where id=?";
         update(sql, transcoding.getName(), transcoding.getSourceFormats(),
                 transcoding.getTargetFormat(), transcoding.getStep1(), transcoding.getStep2(),
-                transcoding.getStep3(), transcoding.getId());
+                transcoding.getStep3(), transcoding.isDefaultActive(), transcoding.getId());
     }
 
     private static class TranscodingRowMapper implements ParameterizedRowMapper<Transcoding> {
         public Transcoding mapRow(ResultSet rs, int rowNum) throws SQLException {
             return new Transcoding(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5),
-                    rs.getString(6), rs.getString(7));
+                    rs.getString(6), rs.getString(7), rs.getBoolean(8));
         }
     }
 }

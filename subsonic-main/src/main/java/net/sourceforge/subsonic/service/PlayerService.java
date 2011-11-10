@@ -28,6 +28,8 @@ import org.apache.commons.lang.StringUtils;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -278,7 +280,14 @@ public class PlayerService {
         playerDao.createPlayer(player);
 
         List<Transcoding> transcodings = transcodingService.getAllTranscodings();
-        transcodingService.setTranscodingsForPlayer(player, transcodings);
+        List<Transcoding> defaultActiveTranscodings = new ArrayList<Transcoding>();
+        for (Transcoding transcoding : transcodings) {
+            if (transcoding.isDefaultActive()) {
+                defaultActiveTranscodings.add(transcoding);
+            }
+        }
+
+        transcodingService.setTranscodingsForPlayer(player, defaultActiveTranscodings);
     }
 
     public void setStatusService(StatusService statusService) {

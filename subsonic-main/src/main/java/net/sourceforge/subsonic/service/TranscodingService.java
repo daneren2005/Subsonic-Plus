@@ -111,11 +111,13 @@ public class TranscodingService {
     public void createTranscoding(Transcoding transcoding) {
         transcodingDao.createTranscoding(transcoding);
 
-        // Activate this transcoding for all players.
-        for (Player player : playerService.getAllPlayers()) {
-            List<Transcoding> transcodings = getTranscodingsForPlayer(player);
-            transcodings.add(transcoding);
-            setTranscodingsForPlayer(player, transcodings);
+        // Activate this transcoding for all players?
+        if (transcoding.isDefaultActive()) {
+            for (Player player : playerService.getAllPlayers()) {
+                List<Transcoding> transcodings = getTranscodingsForPlayer(player);
+                transcodings.add(transcoding);
+                setTranscodingsForPlayer(player, transcodings);
+            }
         }
     }
 

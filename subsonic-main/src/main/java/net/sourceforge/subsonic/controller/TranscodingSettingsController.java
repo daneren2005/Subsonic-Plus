@@ -104,9 +104,10 @@ public class TranscodingSettingsController extends ParameterizableViewController
         String targetFormat = StringUtils.trimToNull(request.getParameter("targetFormat"));
         String step1 = StringUtils.trimToNull(request.getParameter("step1"));
         String step2 = StringUtils.trimToNull(request.getParameter("step2"));
+        boolean defaultActive = request.getParameter("defaultActive") != null;
 
         if (name != null || sourceFormats != null || targetFormat != null || step1 != null || step2 != null) {
-            Transcoding transcoding = new Transcoding(null, name, sourceFormats, targetFormat, step1, step2, null);
+            Transcoding transcoding = new Transcoding(null, name, sourceFormats, targetFormat, step1, step2, null, defaultActive);
             if (name == null) {
                 map.put("error", "transcodingsettings.noname");
             } else if (sourceFormats == null) {

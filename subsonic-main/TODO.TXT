@@ -22,9 +22,10 @@ REST: Added "scrobblingEnabled" to getUser.
 Added Google+ button.
 Bugfix: Fixed a case where guessing the title and track number failed.
 Tech: Ensure Windows uninstaller only removes program files (in case user installs to c:\subsonic)
-
+New option in Settings > Transcoding: "Enable this transcoding for all existing and new players."
 TODO IN 4.6
 -----------------
+Automatically delete obsolete players.
 Fix permission issue on Win7.
 Remove lyrics
 Add Subsonic Channel (for Roku)

@@ -43,6 +43,13 @@
         <td><input style="font-family:monospace" type="text" name="step2" size="22" value="${model.newTranscoding.step2}"/></td>
         <td/>
     </tr>
+
+    <tr>
+        <td colspan="6" style="padding-top:0.1em">
+            <input type="checkbox" id="defaultActive" name="defaultActive" class="checkbox" checked/>
+            <label for="defaultActive"><fmt:message key="transcodingsettings.defaultactive"/></label>
+        </td>
+    </tr>
 </table>
 
     <p style="padding-top:0.75em">
