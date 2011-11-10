@@ -145,7 +145,21 @@ Section "Uninstall"
   # Remove files.
   Delete "$SMSTARTUP\Subsonic.lnk"
   RMDir /r "$SMPROGRAMS\Subsonic"
-  RMDir /r "$INSTDIR"
+  Delete "$INSTDIR\build_number.txt"
+  Delete "$INSTDIR\Getting Started.html"
+  Delete "$INSTDIR\LICENSE.TXT"
+  Delete "$INSTDIR\README.TXT"
+  Delete "$INSTDIR\subsonic.url"
+  Delete "$INSTDIR\subsonic.war"
+  Delete "$INSTDIR\subsonic-agent.exe"
+  Delete "$INSTDIR\subsonic-agent.exe.vmoptions"
+  Delete "$INSTDIR\subsonic-booter-jar-with-dependencies.jar"
+  Delete "$INSTDIR\subsonic-service.exe"
+  Delete "$INSTDIR\subsonic-service.exe.vmoptions"
+  Delete "$INSTDIR\uninstall.exe"
+  Delete "$INSTDIR\version.txt"
+  RMDir /r "$INSTDIR\log"
+  RMDir "$INSTDIR"
 
   # Remove Windows Firewall exception.
   # (Requires NSIS plugin found on http://nsis.sourceforge.net/NSIS_Simple_Firewall_Plugin to be installed

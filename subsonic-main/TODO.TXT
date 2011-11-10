@@ -21,10 +21,11 @@ Jukebox: Ensure that "set" method maintains correct current index.
 REST: Added "scrobblingEnabled" to getUser.
 Added Google+ button.
 Bugfix: Fixed a case where guessing the title and track number failed.
+Tech: Ensure Windows uninstaller only removes program files (in case user installs to c:\subsonic)
 
 TODO IN 4.6
 -----------------
-Improve uninstaller, only delete relavant files in case user has installed in c:/subsonic
+Fix permission issue on Win7.
 Remove lyrics
 Add Subsonic Channel (for Roku)
   http://www.randomwalking.com/project.php?project=roku_subsonic
@@ -38,7 +39,6 @@ Better video quality when sharing
   http://forum.subsonic.org/forum/viewtopic.php?f=8&t=7646
 Show license details in About.
 Support custom domain name in sharing (Settings > Advanced)
-Fix permission issue on Win7.
 Rename "offsetSeconds" to "timeOffset" in StreamController, and update API doc.
 Add "byteOffset" parameter as well.
 Add rating attributes to <directory> in getMusicDirectory.
