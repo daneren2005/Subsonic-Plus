@@ -86,7 +86,7 @@ public class SubsonicAgent {
 
     public void startOrStopService(boolean start) {
         try {
-            Runtime.getRuntime().exec("subsonic-service.exe " + (start ? "-start" : "-stop"));
+            Runtime.getRuntime().exec("elevate.exe subsonic-service.exe " + (start ? "-start" : "-stop"));
         } catch (Exception x) {
             x.printStackTrace();
         }
