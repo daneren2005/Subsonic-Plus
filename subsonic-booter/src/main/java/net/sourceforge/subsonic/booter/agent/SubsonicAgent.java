@@ -86,9 +86,34 @@ public class SubsonicAgent {
 
     public void startOrStopService(boolean start) {
         try {
-            Runtime.getRuntime().exec("elevate.exe subsonic-service.exe " + (start ? "-start" : "-stop"));
+            List<String> cmd = new ArrayList<String>();
+            if (isElevationNeeded()) {
+                cmd.add("elevate.exe");
+            }
+            cmd.add("subsonic-service.exe");
+            cmd.add(start ? "-start" : "-stop");
+
+            System.err.println("Executing: " + cmd);
+
+            Runtime.getRuntime().exec(cmd.toArray(new String[cmd.size()]));
         } catch (Exception x) {
             x.printStackTrace();
+        }
+    }
+
+    /**
+     * Returns whether UAC elevation is necessary (to start/stop services etc).
+     */
+    private boolean isElevationNeeded() {
+        String osVersion = System.getProperty("os.version");
+        try {
+            int majorVersion = Integer.parseInt(osVersion.substring(0, osVersion.indexOf(".")));
+
+            // Elevation is necessary in Windows Vista (os.version=6.1) and later.
+            return majorVersion >= 6;
+        } catch (Exception x) {
+            System.err.println("Failed to resolve OS version from '" + osVersion + "'\n" + x);
+            return false;
         }
     }
 
