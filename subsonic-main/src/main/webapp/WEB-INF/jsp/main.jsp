@@ -170,21 +170,19 @@
             <a href="${shareUrl}"><span class="detail"><fmt:message key="main.sharealbum"/></span></a> |
         </c:if>
 
-        <c:set var="artist" value="${model.children[0].metaData.artist}"/>
-        <c:set var="album" value="${model.children[0].metaData.album}"/>
-        <c:if test="${not empty artist and not empty album}">
+        <c:if test="${not empty model.artist and not empty model.album}">
             <sub:url value="http://www.google.com/musicsearch" var="googleUrl" encoding="UTF-8">
-                <sub:param name="q" value="\"${artist}\" \"${album}\""/>
+                <sub:param name="q" value="\"${model.artist}\" \"${model.album}\""/>
             </sub:url>
             <sub:url value="http://en.wikipedia.org/wiki/Special:Search" var="wikipediaUrl" encoding="UTF-8">
-                <sub:param name="search" value="\"${album}\""/>
+                <sub:param name="search" value="\"${model.album}\""/>
                 <sub:param name="go" value="Go"/>
             </sub:url>
             <sub:url value="allmusic.view" var="allmusicUrl">
-                <sub:param name="album" value="${album}"/>
+                <sub:param name="album" value="${model.album}"/>
             </sub:url>
             <sub:url value="http://www.last.fm/search" var="lastFmUrl" encoding="UTF-8">
-                <sub:param name="q" value="\"${artist}\" \"${album}\""/>
+                <sub:param name="q" value="\"${model.artist}\" \"${model.album}\""/>
                 <sub:param name="type" value="album"/>
             </sub:url>
             <fmt:message key="top.search"/> <a target="_blank" href="${googleUrl}">Google</a> |

@@ -85,6 +85,8 @@ public class MainController extends ParameterizableViewController {
         map.put("dir", dir);
         map.put("ancestors", getAncestors(dir));
         map.put("children", children);
+        map.put("artist", guessArtist(children));
+        map.put("album", guessAlbum(children));
         map.put("player", player);
         map.put("user", securityService.getCurrentUser(request));
         map.put("multipleArtists", isMultipleArtists(children));
@@ -141,6 +143,25 @@ public class MainController extends ParameterizableViewController {
         ModelAndView result = super.handleRequestInternal(request, response);
         result.addObject("model", map);
         return result;
+    }
+
+    private String guessArtist(List<MusicFile> children) {
+        MusicFile.MetaData metaData = getMetaData(children);
+        return metaData == null ? null : metaData.getArtist();
+    }
+
+    private String guessAlbum(List<MusicFile> children) {
+        MusicFile.MetaData metaData = getMetaData(children);
+        return metaData == null ? null : metaData.getAlbum();
+    }
+
+    private MusicFile.MetaData getMetaData(List<MusicFile> children) {
+        for (MusicFile child : children) {
+            if (child.isFile() && child.getMetaData() != null) {
+                return child.getMetaData();
+            }
+        }
+        return null;
     }
 
     private List<File> getCoverArt(String[] paths) throws IOException {
