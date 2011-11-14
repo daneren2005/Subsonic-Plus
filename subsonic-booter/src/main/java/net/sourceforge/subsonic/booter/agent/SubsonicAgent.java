@@ -30,6 +30,7 @@ public class SubsonicAgent {
     private static final int POLL_INTERVAL_SERVICE_STATUS_SECONDS = 5;
     private String url;
     private boolean serviceStatusPollingEnabled;
+    private boolean elevated;
 
     public SubsonicAgent(SubsonicDeployerService service) {
         this.service = service;
@@ -40,6 +41,14 @@ public class SubsonicAgent {
 
     public void setFrame(SubsonicFrame frame) {
         this.frame = frame;
+    }
+
+    public void setElevated(boolean elevated) {
+        this.elevated = elevated;
+    }
+
+    public boolean isElevated() {
+        return elevated;
     }
 
     private void setLookAndFeel() {
@@ -140,8 +149,12 @@ public class SubsonicAgent {
         }
     }
 
-    public void showControlPanel() {
-        frame.showControlPanel();
+    public void showStatusPanel() {
+        frame.showStatusPanel();
+    }
+
+    public void showSettingsPanel() {
+        frame.showSettingsPanel();
     }
 
     public void exit() {

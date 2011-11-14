@@ -95,9 +95,17 @@ public class SubsonicFrame extends JFrame {
         subsonicAgent.setServiceStatusPollingEnabled(b);
     }
 
-    public void showControlPanel() {
+    public void showStatusPanel() {
         settingsPanel.setValues();
         tabbedPane.setSelectedComponent(statusPanel);
+        pack();
+        setVisible(true);
+        toFront();
+    }
+
+    public void showSettingsPanel() {
+        settingsPanel.setValues();
+        tabbedPane.setSelectedComponent(settingsPanel);
         pack();
         setVisible(true);
         toFront();

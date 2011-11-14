@@ -45,7 +45,7 @@ public class TrayController implements SubsonicListener {
 
         controlPanelAction = new AbstractAction("Subsonic Control Panel") {
             public void actionPerformed(ActionEvent e) {
-                subsonicAgent.showControlPanel();
+                subsonicAgent.showStatusPanel();
             }
         };
 
