@@ -1,12 +1,14 @@
 package net.sourceforge.subsonic.booter;
 
-import net.sourceforge.subsonic.booter.agent.SettingsPanel;
-import net.sourceforge.subsonic.booter.agent.SubsonicAgent;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-
-import javax.swing.*;
 import java.util.Arrays;
 import java.util.List;
+
+import javax.swing.JOptionPane;
+
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import net.sourceforge.subsonic.booter.agent.SettingsPanel;
+import net.sourceforge.subsonic.booter.agent.SubsonicAgent;
 
 /**
  * Application entry point for Subsonic booter.
@@ -21,27 +23,29 @@ public class Main {
     public Main(String contextName, List<String> args) {
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationContext" + contextName + ".xml");
 
-        SubsonicAgent agent  = (SubsonicAgent) context.getBean("agent");
-        SettingsPanel settingsPanel = (SettingsPanel) context.getBean("settingsPanel");
+        if ("-agent".equals(contextName)) {
 
-        agent.setElevated(args.contains("-elevated"));
+            SubsonicAgent agent = (SubsonicAgent) context.getBean("agent");
+            SettingsPanel settingsPanel = (SettingsPanel) context.getBean("settingsPanel");
 
-        if (args.contains("-stop")) {
-            agent.startOrStopService(false);
-            agent.showStatusPanel();
-        }
-        else if (args.contains("-start")) {
-            agent.startOrStopService(true);
-            agent.showStatusPanel();
-        }
+            agent.setElevated(args.contains("-elevated"));
 
-        if (args.contains("-settings")) {
-            String[] settings = args.get(args.indexOf("-settings") + 1).split(",");
-            try {
-                settingsPanel.saveSettings(Integer.valueOf(settings[0]), Integer.valueOf(settings[1]), Integer.valueOf(settings[2]), settings[3]);
-                agent.showSettingsPanel();
-            } catch (Exception x) {
-                JOptionPane.showMessageDialog(settingsPanel, x.getMessage(), "Error", JOptionPane.WARNING_MESSAGE);
+            if (args.contains("-stop")) {
+                agent.startOrStopService(false);
+                agent.showStatusPanel();
+            } else if (args.contains("-start")) {
+                agent.startOrStopService(true);
+                agent.showStatusPanel();
+            }
+
+            if (args.contains("-settings")) {
+                String[] settings = args.get(args.indexOf("-settings") + 1).split(",");
+                try {
+                    settingsPanel.saveSettings(Integer.valueOf(settings[0]), Integer.valueOf(settings[1]), Integer.valueOf(settings[2]), settings[3]);
+                    agent.showSettingsPanel();
+                } catch (Exception x) {
+                    JOptionPane.showMessageDialog(settingsPanel, x.getMessage(), "Error", JOptionPane.WARNING_MESSAGE);
+                }
             }
         }
     }

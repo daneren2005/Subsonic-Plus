@@ -1,12 +1,6 @@
 package net.sourceforge.subsonic.booter.agent;
 
-import com.jgoodies.looks.plastic.PlasticXPLookAndFeel;
-import net.sourceforge.subsonic.booter.deployer.DeploymentStatus;
-import net.sourceforge.subsonic.booter.deployer.SubsonicDeployerService;
-import org.apache.commons.io.IOUtils;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Desktop;
 import java.io.File;
 import java.net.URI;
 import java.util.ArrayList;
@@ -14,6 +8,15 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+
+import javax.swing.UIManager;
+
+import org.apache.commons.io.IOUtils;
+
+import com.jgoodies.looks.plastic.PlasticXPLookAndFeel;
+
+import net.sourceforge.subsonic.booter.deployer.DeploymentStatus;
+import net.sourceforge.subsonic.booter.deployer.SubsonicDeployerService;
 
 /**
  * Responsible for deploying the Subsonic web app in
@@ -91,16 +94,10 @@ public class SubsonicAgent {
 
     public void startOrStopService(boolean start) {
         try {
-            List<String> cmd = new ArrayList<String>();
-            if (isElevationNeeded()) {
-                cmd.add("elevate.exe");
-            }
-            cmd.add("subsonic-service.exe");
-            cmd.add(start ? "-start" : "-stop");
-
+            String cmd = "subsonic-service.exe" + (start ? "-start" : "-stop");
             System.err.println("Executing: " + cmd);
 
-            Runtime.getRuntime().exec(cmd.toArray(new String[cmd.size()]));
+            Runtime.getRuntime().exec(cmd);
         } catch (Exception x) {
             x.printStackTrace();
         }
