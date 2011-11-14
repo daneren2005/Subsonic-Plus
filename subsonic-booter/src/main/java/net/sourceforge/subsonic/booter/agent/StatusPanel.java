@@ -4,15 +4,14 @@ import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.factories.ButtonBarFactory;
 import com.jgoodies.forms.layout.FormLayout;
+import net.sourceforge.subsonic.booter.deployer.DeploymentStatus;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.*;
 import java.text.DateFormat;
 import java.util.Locale;
-
-import net.sourceforge.subsonic.booter.deployer.DeploymentStatus;
 
 /**
  * Panel displaying the status of the Subsonic service.
@@ -92,11 +91,13 @@ public class StatusPanel extends JPanel implements SubsonicListener {
         });
         startButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                subsonicAgent.checkElevation("-start");
                 subsonicAgent.startOrStopService(true);
             }
         });
         stopButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                subsonicAgent.checkElevation("-stop");
                 subsonicAgent.startOrStopService(false);
             }
         });

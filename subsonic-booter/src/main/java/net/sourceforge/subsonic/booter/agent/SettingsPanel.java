@@ -31,6 +31,7 @@ import java.util.regex.Pattern;
  */
 public class SettingsPanel extends JPanel implements SubsonicListener {
 
+    private final SubsonicAgent subsonicAgent;
     private JTextField portTextField;
     private JCheckBox httpsPortCheckBox;
     private JTextField httpsPortTextField;
@@ -40,6 +41,7 @@ public class SettingsPanel extends JPanel implements SubsonicListener {
     private JButton saveButton;
 
     public SettingsPanel(SubsonicAgent subsonicAgent) {
+        this.subsonicAgent = subsonicAgent;
         createComponents();
         configureComponents();
         layoutComponents();
@@ -138,12 +140,8 @@ public class SettingsPanel extends JPanel implements SubsonicListener {
         saveButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
+                    subsonicAgent.checkElevation("-settings " + getMemoryLimit() + "," + getPort() + "," + getHttpsPort() + "," + getContextPath());
                     saveSettings(getMemoryLimit(), getPort(), getHttpsPort(), getContextPath());
-
-                    JOptionPane.showMessageDialog(SettingsPanel.this,
-                                                  "Please restart Subsonic for the new settings to take effect.",
-                                                  "Settings changed", JOptionPane.INFORMATION_MESSAGE);
-
                 } catch (Exception x) {
                     JOptionPane.showMessageDialog(SettingsPanel.this, x.getMessage(), "Error", JOptionPane.WARNING_MESSAGE);
                 }
@@ -219,7 +217,7 @@ public class SettingsPanel extends JPanel implements SubsonicListener {
         return port;
     }
 
-    private void saveSettings(int memoryLimit, int port, int httpsPort, String contextPath) throws SettingsException {
+    public void saveSettings(int memoryLimit, int port, int httpsPort, String contextPath) throws SettingsException {
         File file = getOptionsFile();
 
         java.util.List<String> lines = readLines(file);
@@ -262,6 +260,11 @@ public class SettingsPanel extends JPanel implements SubsonicListener {
         }
 
         writeLines(file, newLines);
+
+        JOptionPane.showMessageDialog(SettingsPanel.this,
+                "Please restart Subsonic for the new settings to take effect.",
+                "Settings changed", JOptionPane.INFORMATION_MESSAGE);
+
     }
 
     private File getOptionsFile() throws SettingsException {
@@ -346,7 +349,7 @@ public class SettingsPanel extends JPanel implements SubsonicListener {
         // Nothing here yet.
     }
 
-    private static class SettingsException extends Exception {
+    public static class SettingsException extends Exception {
 
         public SettingsException(String message, Throwable cause) {
             super(message, cause);

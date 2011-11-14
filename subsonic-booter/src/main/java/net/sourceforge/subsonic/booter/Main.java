@@ -1,13 +1,12 @@
 package net.sourceforge.subsonic.booter;
 
-import java.util.Arrays;
-import java.util.List;
-
+import net.sourceforge.subsonic.booter.agent.SettingsPanel;
+import net.sourceforge.subsonic.booter.agent.SubsonicAgent;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import net.sourceforge.subsonic.booter.agent.SettingsPanel;
-import net.sourceforge.subsonic.booter.agent.StatusPanel;
-import net.sourceforge.subsonic.booter.agent.SubsonicAgent;
+import javax.swing.*;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Application entry point for Subsonic booter.
@@ -24,7 +23,6 @@ public class Main {
 
         SubsonicAgent agent  = (SubsonicAgent) context.getBean("agent");
         SettingsPanel settingsPanel = (SettingsPanel) context.getBean("settingsPanel");
-        StatusPanel statusPanel = (StatusPanel) context.getBean("statusPanel");
 
         agent.setElevated(args.contains("-elevated"));
 
@@ -37,6 +35,15 @@ public class Main {
             agent.showStatusPanel();
         }
 
+        if (args.contains("-settings")) {
+            String[] settings = args.get(args.indexOf("-settings") + 1).split(",");
+            try {
+                settingsPanel.saveSettings(Integer.valueOf(settings[0]), Integer.valueOf(settings[1]), Integer.valueOf(settings[2]), settings[3]);
+                agent.showSettingsPanel();
+            } catch (Exception x) {
+                JOptionPane.showMessageDialog(settingsPanel, x.getMessage(), "Error", JOptionPane.WARNING_MESSAGE);
+            }
+        }
     }
 
     public static void main(String[] args) {

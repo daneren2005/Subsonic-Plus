@@ -33,13 +33,11 @@ Automatically delete obsolete players.
   - name == null
   - lastSeen == null or lastSeen < XXX
   - clientId == null
-Upgrade jre-6u27-windows-i586-iftw to java 7.
 Fix permission issue on Win7.
   http://stackoverflow.com/questions/258728/request-admin-privileges-for-java-app-on-windows-vista
   http://jpassing.com/2007/12/08/launch-elevated-processes-from-the-command-line/
 Don't hardcode c:/subsonic in windows installer.
   http://forum.subsonic.org/forum/viewtopic.php?f=2&t=8213
-
 Remove lyrics
 Add Subsonic Channel (for Roku)
   http://www.randomwalking.com/project.php?project=roku_subsonic

@@ -7,6 +7,7 @@ import org.apache.commons.io.IOUtils;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,14 +42,6 @@ public class SubsonicAgent {
 
     public void setFrame(SubsonicFrame frame) {
         this.frame = frame;
-    }
-
-    public void setElevated(boolean elevated) {
-        this.elevated = elevated;
-    }
-
-    public boolean isElevated() {
-        return elevated;
     }
 
     private void setLookAndFeel() {
@@ -114,9 +107,35 @@ public class SubsonicAgent {
     }
 
     /**
+     * If necessary, restart agent with elevated rights.
+     */
+    public void checkElevation(String arg) {
+        if (isElevationNeeded() && !isElevated()) {
+            try {
+                File exe = new File("subsonic-agent.exe");
+                String cmd = "elevate.exe " + exe.getAbsolutePath() + " -elevated " + arg;
+                Runtime.getRuntime().exec(cmd);
+                System.err.println("Executing: " + cmd);
+                System.exit(0);
+            } catch (Exception x) {
+                x.printStackTrace();
+            }
+        }
+    }
+
+    public void setElevated(boolean elevated) {
+        this.elevated = elevated;
+    }
+
+    private boolean isElevated() {
+        return elevated;
+    }
+
+    /**
      * Returns whether UAC elevation is necessary (to start/stop services etc).
      */
     private boolean isElevationNeeded() {
+
         String osVersion = System.getProperty("os.version");
         try {
             int majorVersion = Integer.parseInt(osVersion.substring(0, osVersion.indexOf(".")));
