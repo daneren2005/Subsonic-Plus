@@ -13,6 +13,21 @@
 
     <bean id="agent" class="net.sourceforge.subsonic.booter.agent.SubsonicAgent">
         <constructor-arg ref="service"/>
+        <property name="frame" ref="frame"/>
+    </bean>
+
+    <bean id="frame" class="net.sourceforge.subsonic.booter.agent.SubsonicFrame">
+        <constructor-arg ref="agent"/>
+        <constructor-arg ref="statusPanel"/>
+        <constructor-arg ref="settingsPanel"/>
+    </bean>
+
+    <bean id="settingsPanel" class="net.sourceforge.subsonic.booter.agent.SettingsPanel">
+        <constructor-arg ref="agent"/>
+    </bean>
+
+    <bean id="statusPanel" class="net.sourceforge.subsonic.booter.agent.StatusPanel">
+        <constructor-arg ref="agent"/>
     </bean>
 
 </beans>

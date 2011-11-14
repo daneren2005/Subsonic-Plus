@@ -21,14 +21,16 @@ public class SubsonicFrame extends JFrame {
 
     private final SubsonicAgent subsonicAgent;
 
+    private final StatusPanel statusPanel;
+    private final SettingsPanel settingsPanel;
     private JTabbedPane tabbedPane;
-    private StatusPanel statusPanel;
-    private SettingsPanel settingsPanel;
     private JButton closeButton;
 
-    public SubsonicFrame(SubsonicAgent subsonicAgent) {
+    public SubsonicFrame(SubsonicAgent subsonicAgent, StatusPanel statusPanel, SettingsPanel settingsPanel) {
         super("Subsonic Control Panel");
         this.subsonicAgent = subsonicAgent;
+        this.statusPanel = statusPanel;
+        this.settingsPanel = settingsPanel;
         createComponents();
         layoutComponents();
         addBehaviour();
@@ -63,9 +65,6 @@ public class SubsonicFrame extends JFrame {
     }
 
     private void createComponents() {
-        statusPanel = new StatusPanel(subsonicAgent);
-        settingsPanel = new SettingsPanel(subsonicAgent);
-
         tabbedPane = new JTabbedPane();
         closeButton = new JButton("Close");
     }

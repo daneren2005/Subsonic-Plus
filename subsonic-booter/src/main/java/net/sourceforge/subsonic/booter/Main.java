@@ -1,5 +1,7 @@
 package net.sourceforge.subsonic.booter;
 
+import java.util.Arrays;
+
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
@@ -17,6 +19,8 @@ public class Main {
     }
 
     public static void main(String[] args) {
+        System.err.println("args: " + Arrays.asList(args));
+
         String context = "-deployer";
         if (args.length > 0) {
             context = args[0];

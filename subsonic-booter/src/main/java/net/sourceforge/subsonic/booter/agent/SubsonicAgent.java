@@ -24,7 +24,7 @@ public class SubsonicAgent {
 
     private final List<SubsonicListener> listeners = new ArrayList<SubsonicListener>();
     private final TrayController trayController;
-    private final SubsonicFrame frame;
+    private SubsonicFrame frame;
     private final SubsonicDeployerService service;
     private static final int POLL_INTERVAL_DEPLOYMENT_INFO_SECONDS = 5;
     private static final int POLL_INTERVAL_SERVICE_STATUS_SECONDS = 5;
@@ -32,11 +32,14 @@ public class SubsonicAgent {
     private boolean serviceStatusPollingEnabled;
 
     public SubsonicAgent(SubsonicDeployerService service) {
-        setLookAndFeel();
         this.service = service;
+        setLookAndFeel();
         trayController = new TrayController(this);
-        frame = new SubsonicFrame(this);
         startPolling();
+    }
+
+    public void setFrame(SubsonicFrame frame) {
+        this.frame = frame;
     }
 
     private void setLookAndFeel() {
