@@ -41,8 +41,9 @@ public class Main {
             if (args.contains("-settings")) {
                 String[] settings = args.get(args.indexOf("-settings") + 1).split(",");
                 try {
-                    settingsPanel.saveSettings(Integer.valueOf(settings[0]), Integer.valueOf(settings[1]), Integer.valueOf(settings[2]), settings[3]);
                     agent.showSettingsPanel();
+                    settingsPanel.saveSettings(Integer.valueOf(settings[0]), Integer.valueOf(settings[1]), Integer.valueOf(settings[2]), settings[3]);
+                    settingsPanel.readValues();
                 } catch (Exception x) {
                     JOptionPane.showMessageDialog(settingsPanel, x.getMessage(), "Error", JOptionPane.WARNING_MESSAGE);
                 }

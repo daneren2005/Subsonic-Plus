@@ -139,6 +139,8 @@ Section "Uninstall"
   # (Requires NSIS plugin found on http://nsis.sourceforge.net/Processes_plug-in to be installed
   # as NSIS_HOME/Plugins/Processes.dll)
   Processes::KillProcess "subsonic-agent"
+  Processes::KillProcess "ffmpeg"
+  Processes::KillProcess "lame"
 
   # Remove registry keys
   DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Subsonic"

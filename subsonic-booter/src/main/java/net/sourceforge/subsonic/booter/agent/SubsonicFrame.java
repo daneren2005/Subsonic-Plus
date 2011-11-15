@@ -96,7 +96,7 @@ public class SubsonicFrame extends JFrame {
     }
 
     public void showStatusPanel() {
-        settingsPanel.setValues();
+        settingsPanel.readValues();
         tabbedPane.setSelectedComponent(statusPanel);
         pack();
         setVisible(true);
@@ -104,7 +104,7 @@ public class SubsonicFrame extends JFrame {
     }
 
     public void showSettingsPanel() {
-        settingsPanel.setValues();
+        settingsPanel.readValues();
         tabbedPane.setSelectedComponent(settingsPanel);
         pack();
         setVisible(true);
