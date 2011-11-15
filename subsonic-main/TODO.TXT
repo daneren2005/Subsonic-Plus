@@ -13,8 +13,8 @@ TRANSCODING
 
 /var/subsonic/transcode/ffmpeg -ss 0 -i /Users/sindre/Movies/Test/Sample.wtv -async 1 -b 1000k -s 480x360 -ar 44100 -ac 2 -f flv -scodec copy -vcodec libx264 -preset veryfast -threads 0 foo.flv
 
-DONE IN 4.6
-----------------
+DONE IN 4.6.beta2
+-----------------
 Updated Slovenian translation, courtesy of Jan Jamšek.
 Jukebox: Support skipping when paused.
 Jukebox: Ensure that "set" method maintains correct current index.
@@ -25,6 +25,7 @@ Tech: Ensure Windows uninstaller only removes program files (in case user instal
 New option in Settings > Transcoding: "Enable this transcoding for all existing and new players."
 Bugfix: Album search links missing if subdirectory exists.
   http://forum.subsonic.org/forum/viewtopic.php?f=2&t=8256
+Fix permission issue on Win7.
 
 TODO IN 4.6
 -----------------
@@ -33,9 +34,6 @@ Automatically delete obsolete players.
   - name == null
   - lastSeen == null or lastSeen < XXX
   - clientId == null
-Fix permission issue on Win7.
-  http://stackoverflow.com/questions/258728/request-admin-privileges-for-java-app-on-windows-vista
-  http://jpassing.com/2007/12/08/launch-elevated-processes-from-the-command-line/
 Don't hardcode c:/subsonic in windows installer.
   http://forum.subsonic.org/forum/viewtopic.php?f=2&t=8213
 Remove lyrics

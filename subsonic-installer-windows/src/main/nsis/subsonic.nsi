@@ -104,7 +104,7 @@ Section "Subsonic"
   ExecWait '"$INSTDIR\subsonic-service.exe" -start'
 
   # Start agent.
-  Exec '"$INSTDIR\subsonic-agent.exe" -elevated'
+  Exec '"$INSTDIR\subsonic-agent.exe" -elevated -balloon'
 
 SectionEnd
 
@@ -112,14 +112,14 @@ SectionEnd
 Section "Start Menu Shortcuts"
 
   CreateDirectory "$SMPROGRAMS\Subsonic"
-  CreateShortCut "$SMPROGRAMS\Subsonic\Open Subsonic.lnk"          "$INSTDIR\subsonic.url"         ""        "$INSTDIR\subsonic-agent.exe"  0
-  CreateShortCut "$SMPROGRAMS\Subsonic\Subsonic Tray Icon.lnk"     "$INSTDIR\subsonic-agent.exe"   ""        "$INSTDIR\subsonic-agent.exe"  0
-  CreateShortCut "$SMPROGRAMS\Subsonic\Start Subsonic Service.lnk" "$INSTDIR\subsonic-service.exe" "-start"  "$INSTDIR\subsonic-service.exe"  0
-  CreateShortCut "$SMPROGRAMS\Subsonic\Stop Subsonic Service.lnk"  "$INSTDIR\subsonic-service.exe" "-stop"   "$INSTDIR\subsonic-service.exe"  0
-  CreateShortCut "$SMPROGRAMS\Subsonic\Uninstall Subsonic.lnk"     "$INSTDIR\uninstall.exe"        ""        "$INSTDIR\uninstall.exe" 0
-  CreateShortCut "$SMPROGRAMS\Subsonic\Getting Started.lnk"        "$INSTDIR\Getting Started.html" ""        "$INSTDIR\Getting Started.html" 0
+  CreateShortCut "$SMPROGRAMS\Subsonic\Open Subsonic.lnk"          "$INSTDIR\subsonic.url"         ""         "$INSTDIR\subsonic-agent.exe"  0
+  CreateShortCut "$SMPROGRAMS\Subsonic\Subsonic Tray Icon.lnk"     "$INSTDIR\subsonic-agent.exe"   "-balloon" "$INSTDIR\subsonic-agent.exe"  0
+  CreateShortCut "$SMPROGRAMS\Subsonic\Start Subsonic Service.lnk" "$INSTDIR\subsonic-service.exe" "-start"   "$INSTDIR\subsonic-service.exe"  0
+  CreateShortCut "$SMPROGRAMS\Subsonic\Stop Subsonic Service.lnk"  "$INSTDIR\subsonic-service.exe" "-stop"    "$INSTDIR\subsonic-service.exe"  0
+  CreateShortCut "$SMPROGRAMS\Subsonic\Uninstall Subsonic.lnk"     "$INSTDIR\uninstall.exe"        ""         "$INSTDIR\uninstall.exe" 0
+  CreateShortCut "$SMPROGRAMS\Subsonic\Getting Started.lnk"        "$INSTDIR\Getting Started.html" ""         "$INSTDIR\Getting Started.html" 0
 
-  CreateShortCut "$SMSTARTUP\Subsonic.lnk"                         "$INSTDIR\subsonic-agent.exe"   ""        "$INSTDIR\subsonic-agent.exe"  0
+  CreateShortCut "$SMSTARTUP\Subsonic.lnk"                         "$INSTDIR\subsonic-agent.exe"   ""         "$INSTDIR\subsonic-agent.exe"  0
 
 SectionEnd
 

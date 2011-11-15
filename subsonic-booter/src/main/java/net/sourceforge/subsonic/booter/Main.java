@@ -30,6 +30,10 @@ public class Main {
 
             agent.setElevated(args.contains("-elevated"));
 
+            if (args.contains("-balloon")) {
+                agent.showTrayIconMessage();
+            }
+
             if (args.contains("-stop")) {
                 agent.startOrStopService(false);
                 agent.showStatusPanel();
