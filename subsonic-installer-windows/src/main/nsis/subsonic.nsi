@@ -104,7 +104,7 @@ Section "Subsonic"
   ExecWait '"$INSTDIR\subsonic-service.exe" -start'
 
   # Start agent.
-  Exec '"$INSTDIR\subsonic-agent.exe"'
+  Exec '"$INSTDIR\subsonic-agent.exe" -elevated'
 
 SectionEnd
 
