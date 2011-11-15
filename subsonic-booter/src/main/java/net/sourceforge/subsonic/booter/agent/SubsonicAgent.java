@@ -94,7 +94,7 @@ public class SubsonicAgent {
 
     public void startOrStopService(boolean start) {
         try {
-            String cmd = "subsonic-service.exe" + (start ? "-start" : "-stop");
+            String cmd = "subsonic-service.exe " + (start ? "-start" : "-stop");
             System.err.println("Executing: " + cmd);
 
             Runtime.getRuntime().exec(cmd);
