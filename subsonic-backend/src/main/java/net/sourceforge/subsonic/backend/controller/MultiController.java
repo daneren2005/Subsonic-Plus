@@ -52,7 +52,7 @@ public class MultiController extends MultiActionController {
     private static final Logger LOG = Logger.getLogger(RedirectionController.class);
 
     private static final String SUBSONIC_VERSION = "4.5";
-    private static final String SUBSONIC_BETA_VERSION = "4.6.beta1";
+    private static final String SUBSONIC_BETA_VERSION = "4.6.beta2";
 
     private static final Date LICENSE_DATE_THRESHOLD;
 
