@@ -27,10 +27,10 @@ Bugfix: Album search links missing if subdirectory exists.
   http://forum.subsonic.org/forum/viewtopic.php?f=2&t=8256
 Fix permission issue on Win7.
 Don't estimate content-length for web players.
+Fixed broken Google search link.
 
 TODO IN 4.6
 -----------------
-Remove Google music search.
 Automatically delete obsolete players.
   - name == null
   - lastSeen == null or lastSeen < XXX

@@ -171,7 +171,7 @@
         </c:if>
 
         <c:if test="${not empty model.artist and not empty model.album}">
-            <sub:url value="http://www.google.com/musicsearch" var="googleUrl" encoding="UTF-8">
+            <sub:url value="http://www.google.com/search" var="googleUrl" encoding="UTF-8">
                 <sub:param name="q" value="\"${model.artist}\" \"${model.album}\""/>
             </sub:url>
             <sub:url value="http://en.wikipedia.org/wiki/Special:Search" var="wikipediaUrl" encoding="UTF-8">
