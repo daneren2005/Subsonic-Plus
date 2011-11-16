@@ -26,6 +26,7 @@ New option in Settings > Transcoding: "Enable this transcoding for all existing 
 Bugfix: Album search links missing if subdirectory exists.
   http://forum.subsonic.org/forum/viewtopic.php?f=2&t=8256
 Fix permission issue on Win7.
+Don't estimate content-length for web players.
 
 TODO IN 4.6
 -----------------
@@ -116,6 +117,8 @@ Show error message if server url contains "@".
 
 TODO IN ANDROID 3.3
 --------------------
+Include German translation.
+  https://mail.google.com/mail/?shva=1#inbox/133a4277174786c7
 Google TV?
 Test BlackBerry runtime
 Android 4.0: Support Audio remote controls

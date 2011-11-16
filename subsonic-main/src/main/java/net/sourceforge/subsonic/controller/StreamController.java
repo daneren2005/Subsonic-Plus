@@ -22,8 +22,8 @@ import java.awt.Dimension;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Arrays;
-import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -38,6 +38,7 @@ import org.springframework.web.servlet.mvc.Controller;
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.MusicFile;
 import net.sourceforge.subsonic.domain.Player;
+import net.sourceforge.subsonic.domain.PlayerTechnology;
 import net.sourceforge.subsonic.domain.Playlist;
 import net.sourceforge.subsonic.domain.TransferStatus;
 import net.sourceforge.subsonic.domain.User;
@@ -137,6 +138,8 @@ public class StreamController implements Controller {
 
                 TranscodingService.Parameters parameters = transcodingService.getParameters(file, player, maxBitRate, preferredTargetFormat, videoTranscodingSettings);
                 long fileLength = getFileLength(parameters);
+                boolean isConversion = parameters.isDownsample() || parameters.isTranscode();
+                boolean isWebPlayer = player.getTechnology() == PlayerTechnology.WEB;
 
                 range = getRange(request, file);
                 if (range != null) {
@@ -146,7 +149,7 @@ public class StreamController implements Controller {
                     long firstBytePos = range.getMinimumLong();
                     long lastBytePos = fileLength - 1;
                     response.setHeader("Content-Range", "bytes " + firstBytePos + "-" + lastBytePos + "/" + fileLength);
-                } else if (!file.isVideo()) {
+                } else if (!isConversion || !isWebPlayer) {
                     Util.setContentLength(response, fileLength);
                 }
 
