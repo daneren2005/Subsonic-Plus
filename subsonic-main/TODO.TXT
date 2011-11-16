@@ -28,6 +28,7 @@ Bugfix: Album search links missing if subdirectory exists.
 Fix permission issue on Win7.
 Don't estimate content-length for web players.
 Fixed broken Google search link.
+Remove link to lyrics
 
 TODO IN 4.6
 -----------------
@@ -37,7 +38,6 @@ Automatically delete obsolete players.
   - clientId == null
 Don't hardcode c:/subsonic in windows installer.
   http://forum.subsonic.org/forum/viewtopic.php?f=2&t=8213
-Remove lyrics
 Add Subsonic Channel (for Roku)
   http://www.randomwalking.com/project.php?project=roku_subsonic
 Audio problems on Linux.
