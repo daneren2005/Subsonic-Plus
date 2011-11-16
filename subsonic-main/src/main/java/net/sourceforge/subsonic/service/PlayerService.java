@@ -49,6 +49,10 @@ public class PlayerService {
     private SecurityService securityService;
     private TranscodingService transcodingService;
 
+    public void init() {
+        playerDao.deleteOldPlayers(60);
+    }
+
     /**
      * Equivalent to <code>getPlayer(request, response, true)</code> .
      */

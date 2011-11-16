@@ -20,10 +20,11 @@ package net.sourceforge.subsonic.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 
@@ -69,7 +70,7 @@ public class PlayerDao extends AbstractDao {
     public List<Player> getPlayersForUserAndClientId(String username, String clientId) {
         if (clientId != null) {
             String sql = "select " + COLUMNS + " from player where username=? and client_id=?";
-            return query(sql, rowMapper, username,  clientId);
+            return query(sql, rowMapper, username, clientId);
         } else {
             String sql = "select " + COLUMNS + " from player where username=? and client_id is null";
             return query(sql, rowMapper, username);
@@ -88,10 +89,10 @@ public class PlayerDao extends AbstractDao {
     }
 
     /**
-    * Creates a new player.
-    *
-    * @param player The player to create.
-    */
+     * Creates a new player.
+     *
+     * @param player The player to create.
+     */
     public synchronized void createPlayer(Player player) {
         int id = getJdbcTemplate().queryForInt("select max(id) from player") + 1;
         player.setId(String.valueOf(id));
@@ -115,6 +116,23 @@ public class PlayerDao extends AbstractDao {
         String sql = "delete from player where id=?";
         update(sql, id);
         playlists.remove(id);
+    }
+
+
+    /**
+     * Delete players that haven't been used for the given number of days, and which is not given a name
+     * or is used by a REST client.
+     *
+     * @param days Number of days.
+     */
+    public void deleteOldPlayers(int days) {
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, -days);
+        String sql = "delete from player where name is null and client_id is null and (last_seen is null or last_seen < ?)";
+        int n = update(sql, cal.getTime());
+        if (n > 0) {
+            LOG.info("Deleted " + n + " player(s) that haven't been used after " + cal.getTime());
+        }
     }
 
     /**

@@ -85,7 +85,7 @@
         <property name="settingsService" ref="settingsService"/>
     </bean>
 
-    <bean id="playerService" class="net.sourceforge.subsonic.service.PlayerService">
+    <bean id="playerService" class="net.sourceforge.subsonic.service.PlayerService" init-method="init">
         <property name="playerDao" ref="playerDao"/>
         <property name="statusService" ref="statusService"/>
         <property name="securityService" ref="securityService"/>

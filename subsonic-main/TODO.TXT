@@ -29,13 +29,10 @@ Fix permission issue on Win7.
 Don't estimate content-length for web players.
 Fixed broken Google search link.
 Remove link to lyrics
+Automatically delete obsolete players on startup.
 
 TODO IN 4.6
 -----------------
-Automatically delete obsolete players.
-  - name == null
-  - lastSeen == null or lastSeen < XXX
-  - clientId == null
 Don't hardcode c:/subsonic in windows installer.
   http://forum.subsonic.org/forum/viewtopic.php?f=2&t=8213
 Add Subsonic Channel (for Roku)
