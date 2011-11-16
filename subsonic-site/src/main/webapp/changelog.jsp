@@ -16,6 +16,24 @@
 <div id="main-col">
 <h1 class="bottomspace">Subsonic Change Log</h1>
 
+<a name="4.6.beta2"><h2 class="div">Subsonic 4.6.beta2 - Nov 17, 2011</h2></a>
+<ul>
+    <li><span class="bugid">New: </span>Added option in Settings &gt; Transcoding: "Enable this transcoding for all existing and new players."</li>
+    <li><span class="bugid">New: </span>Updated Slovenian translation, courtesy of Jan Jam&#353;ek.</li>
+    <li><span class="bugid">New: </span>Added Google+ button.</li>
+    <li><span class="bugid">New: </span>Automatically delete obsolete players on startup.</li>
+    <li><span class="bugid">Bugfix: </span>Jukebox now support skipping when paused.</li>
+    <li><span class="bugid">Bugfix: </span>Fixed a case where guessing the title and track number failed.</li>
+    <li><span class="bugid">Bugfix: </span>Don't estimate content-length for web players.</li>
+    <li><span class="bugid">Bugfix: </span>Album search links missing if subdirectory exists.</li>
+    <li><span class="bugid">Bugfix: </span>Fixed broken Google search link.</li>
+    <li><span class="bugid">Bugfix: </span>Remove link to lyrics. chartlyrics.com no longer exists.</li>
+    <li><span class="bugid">REST: </span>Ensure that jukebox "set" method maintains correct current index.</li>
+    <li><span class="bugid">REST: </span>Added "scrobblingEnabled" to getUser.</li>
+    <li><span class="bugid">Tech: </span>Ensure Windows uninstaller only removes program files (in case user installs to c:\subsonic).</li>
+    <li><span class="bugid">Tech: </span>Subsonic Control Panel now prompts for elevated permissions when necessary.</li>
+</ul>
+
 <a name="4.6.beta1"><h2 class="div">Subsonic 4.6.beta1 - Nov 1, 2011</h2></a>
 <ul>
     <li><span class="bugid">New: </span>Simplified and improved transcoding framework.</li>
@@ -84,7 +102,7 @@
 <a name="4.4"><h2 class="div">Subsonic 4.4 - Feb 06, 2011</h2></a>
 <ul>
     <li><span class="bugid">New: </span>Updated Greek translation, courtesy of Constantine Samaklis.</li>
-    <li><span class="bugid">New: </span>Updated Slovenian translation, courtesy of Jan Jamsek and Marko Kastelic.</li>
+    <li><span class="bugid">New: </span>Updated Slovenian translation, courtesy of Jan Jam&#353;ek and Marko Kastelic.</li>
 </ul>
 
 <a name="4.4.beta1"><h2 class="div">Subsonic 4.4.beta1 - Jan 20, 2011</h2></a>
@@ -864,6 +882,7 @@
     <div class="sidebox">
         <h2>Releases</h2>
         <ul class="list">
+            <li><a href="#4.6.beta2">Subsonic 4.6.beta2</a></li>
             <li><a href="#4.6.beta1">Subsonic 4.6.beta1</a></li>
             <li><a href="#4.5">Subsonic 4.5</a></li>
             <li><a href="#4.5.beta2">Subsonic 4.5.beta2</a></li>

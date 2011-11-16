@@ -15,21 +15,6 @@ TRANSCODING
 
 DONE IN 4.6.beta2
 -----------------
-Updated Slovenian translation, courtesy of Jan Jamšek.
-Jukebox: Support skipping when paused.
-Jukebox: Ensure that "set" method maintains correct current index.
-REST: Added "scrobblingEnabled" to getUser.
-Added Google+ button.
-Bugfix: Fixed a case where guessing the title and track number failed.
-Tech: Ensure Windows uninstaller only removes program files (in case user installs to c:\subsonic)
-New option in Settings > Transcoding: "Enable this transcoding for all existing and new players."
-Bugfix: Album search links missing if subdirectory exists.
-  http://forum.subsonic.org/forum/viewtopic.php?f=2&t=8256
-Fix permission issue on Win7.
-Don't estimate content-length for web players.
-Fixed broken Google search link.
-Remove link to lyrics
-Automatically delete obsolete players on startup.
 
 TODO IN 4.6
 -----------------
