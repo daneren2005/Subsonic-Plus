@@ -83,11 +83,7 @@ GPU-accellerated ffmpeg
   https://mail.google.com/a/activeobjects.no/#inbox/12f50fffffd6fecf
 Add to playlist from main.jsp
 Sencha Touch
-
-Can't stop/start service on Win7.  Need elevated rights?  Run service as user?
 Subsonic for Boxee
-Avoid icon in mac dock.
-  https://mail.google.com/a/activeobjects.no/#starred/12e6a2c9d3184976
 Linux locale issue
   http://www.activeobjects.no/subsonic/forum/viewtopic.php?p=22386#22386
 
@@ -121,7 +117,6 @@ Offline shuffle play broken.
 Test: New setting: "Wi-Fi streaming only"
 New Pin/unpin icons.
 
-Poor quality for generic album art.
 Enable honeycomb actionbar
 Access other music on phone.
   Make it possible to select multiple root folders.
@@ -135,7 +130,6 @@ Access other music on phone.
     Server 2
     Server 3
     Offline media
-Change font?
 Does repeat button work in landscape mode?
 DownloadServiceImpl: ignore a mysterious MediaPlayer error
   https://mail.google.com/a/activeobjects.no/?ui=2#inbox/12eff38d39be7a3c
@@ -153,8 +147,6 @@ Improve horizontal layout, move tab buttons to the right.
 Shuffle play turned back on when rotating phone. (onNewIntent?)
 Better handling of full SD card.
 Unnecessary initial pause when starting partially downloaded songs.
-Cover art images loaded incorrectly.
-  http://android-developers.blogspot.com/2010/07/multithreading-for-performance.html
 Reuse AlbumViews (in EntryAdapter)
 Cooler button in slider (polished steel)
 Nicer icon for music library.
