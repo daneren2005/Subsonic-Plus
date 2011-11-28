@@ -101,6 +101,8 @@ Add OFL button.
 Handle togglig OFL and RC.
 Include German translation.
   https://mail.google.com/mail/?shva=1#inbox/133a4277174786c7
+Cross-fade from generic album art to actual album art.
+  http://www.pushing-pixels.org/2011/03/07/android-bits-and-pieces-image-cross-fading.html
 Google TV?
 Test BlackBerry runtime
 Android 4.0: Support Audio remote controls
