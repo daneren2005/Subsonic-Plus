@@ -94,16 +94,16 @@ DONE IN ANDROID 3.3
 Bugfix: Improve buffering of downsampled songs (don't buffer for too long)
 Jukebox (remote control) support
 Show error message if server url contains "@".
+Cross-fading album art images.
 
 TODO IN ANDROID 3.3
 --------------------
+Change generic album art.
 Bug if switching to RC and back for a song that is currently downloading.
 Add OFL button.
 Handle togglig OFL and RC.
 Include German translation.
   https://mail.google.com/mail/?shva=1#inbox/133a4277174786c7
-Cross-fade from generic album art to actual album art.
-  http://www.pushing-pixels.org/2011/03/07/android-bits-and-pieces-image-cross-fading.html
 Google TV?
 Test BlackBerry runtime
 Android 4.0: Support Audio remote controls

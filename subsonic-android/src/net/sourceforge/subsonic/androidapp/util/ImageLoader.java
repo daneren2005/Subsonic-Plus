@@ -24,8 +24,6 @@ import android.graphics.Canvas;
 import android.graphics.LinearGradient;
 import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
 import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -93,11 +91,13 @@ public class ImageLoader implements Runnable {
         int size = large ? imageSizeLarge : imageSizeDefault;
         Drawable drawable = cache.get(getKey(entry.getCoverArt(), size));
         if (drawable != null) {
-            setImage(view, drawable, false);
+            setImage(view, drawable, large);
             return;
         }
 
-        setUnknownImage(view, large);
+        if (!large) {
+            setUnknownImage(view, large);
+        }
         queue.offer(new Task(view, entry, size, large, large, crossfade));
     }
 
@@ -107,19 +107,21 @@ public class ImageLoader implements Runnable {
 
     private void setImage(View view, Drawable drawable, boolean crossfade) {
         if (view instanceof TextView) {
+            // Cross-fading is not implemented for TextView since it's not in use.  It would be easy to add it, though.
             TextView textView = (TextView) view;
-            if (crossfade) {
-                Drawable[] layers = new Drawable[]{textView.getCompoundDrawables()[0], drawable};
-                TransitionDrawable transitionDrawable = new TransitionDrawable(layers);
-                textView.setCompoundDrawablesWithIntrinsicBounds(transitionDrawable, null, null, null);
-                transitionDrawable.startTransition(250);
-            } else {
-                textView.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
-            }
+            textView.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
         } else if (view instanceof ImageView) {
             ImageView imageView = (ImageView) view;
             if (crossfade) {
-                Drawable[] layers = new Drawable[]{imageView.getDrawable(), drawable};
+
+                Drawable existingDrawable = imageView.getDrawable();
+                if (existingDrawable == null) {
+                    Bitmap emptyImage = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+                    existingDrawable = new BitmapDrawable(emptyImage);
+                }
+
+                Drawable[] layers = new Drawable[]{existingDrawable, drawable};
+
                 TransitionDrawable transitionDrawable = new TransitionDrawable(layers);
                 imageView.setImageDrawable(transitionDrawable);
                 transitionDrawable.startTransition(250);
@@ -193,14 +195,11 @@ public class ImageLoader implements Runnable {
         // Create a shader that is a linear gradient that covers the reflection
         Paint paint = new Paint();
         LinearGradient shader = new LinearGradient(0, originalImage.getHeight(), 0,
-                bitmapWithReflection.getHeight() + reflectionGap, 0x70ffffff, 0x00ffffff,
+                bitmapWithReflection.getHeight() + reflectionGap, 0x70000000, 0xff000000,
                 Shader.TileMode.CLAMP);
 
         // Set the paint to use this shader (linear gradient)
         paint.setShader(shader);
-
-        // Set the Transfer mode to be porter duff and destination in
-        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
 
         // Draw a rectangle using the paint with our linear gradient
         canvas.drawRect(0, height, width, bitmapWithReflection.getHeight() + reflectionGap, paint);
