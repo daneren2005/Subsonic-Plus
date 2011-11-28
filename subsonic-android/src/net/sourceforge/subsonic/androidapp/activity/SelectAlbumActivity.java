@@ -545,7 +545,7 @@ public class SelectAlbumActivity extends SubsonicTabActivity {
             }
 
             if (songCount > 0) {
-                getImageLoader().loadImage(coverArtView, entries.get(0), false);
+                getImageLoader().loadImage(coverArtView, entries.get(0), false, true);
                 entryList.addFooterView(footer);
                 selectButton.setVisibility(View.VISIBLE);
                 playNowButton.setVisibility(View.VISIBLE);

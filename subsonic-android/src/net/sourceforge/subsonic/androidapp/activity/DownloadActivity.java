@@ -702,12 +702,12 @@ public class DownloadActivity extends SubsonicTabActivity implements OnGestureLi
             songTitleTextView.setText(song.getTitle());
             albumTextView.setText(song.getAlbum());
             artistTextView.setText(song.getArtist());
-            getImageLoader().loadImage(albumArtImageView, song, true);
+            getImageLoader().loadImage(albumArtImageView, song, true, false);
         } else {
             songTitleTextView.setText(null);
             albumTextView.setText(null);
             artistTextView.setText(null);
-            getImageLoader().loadImage(albumArtImageView, null, true);
+            getImageLoader().loadImage(albumArtImageView, null, true, false);
         }
     }
 

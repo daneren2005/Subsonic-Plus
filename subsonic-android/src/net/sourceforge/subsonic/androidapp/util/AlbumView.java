@@ -50,6 +50,6 @@ public class AlbumView extends LinearLayout {
         titleView.setText(album.getTitle());
         artistView.setText(album.getArtist());
         artistView.setVisibility(album.getArtist() == null ? View.GONE : View.VISIBLE);
-        imageLoader.loadImage(coverArtView, album, false);
+        imageLoader.loadImage(coverArtView, album, false, true);
     }
 }

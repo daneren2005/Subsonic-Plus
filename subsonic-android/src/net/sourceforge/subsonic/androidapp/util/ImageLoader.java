@@ -18,9 +18,6 @@
  */
 package net.sourceforge.subsonic.androidapp.util;
 
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -30,8 +27,9 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Shader;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.TransitionDrawable;
 import android.os.Handler;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -42,6 +40,9 @@ import net.sourceforge.subsonic.androidapp.R;
 import net.sourceforge.subsonic.androidapp.domain.MusicDirectory;
 import net.sourceforge.subsonic.androidapp.service.MusicService;
 import net.sourceforge.subsonic.androidapp.service.MusicServiceFactory;
+
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Asynchronous loading of images, with caching.
@@ -83,7 +84,7 @@ public class ImageLoader implements Runnable {
         largeUnknownImage = Util.createDrawableFromBitmap(context, bitmap);
     }
 
-    public void loadImage(View view, MusicDirectory.Entry entry, boolean large) {
+    public void loadImage(View view, MusicDirectory.Entry entry, boolean large, boolean crossfade) {
         if (entry == null || entry.getCoverArt() == null) {
             setUnknownImage(view, large);
             return;
@@ -92,29 +93,45 @@ public class ImageLoader implements Runnable {
         int size = large ? imageSizeLarge : imageSizeDefault;
         Drawable drawable = cache.get(getKey(entry.getCoverArt(), size));
         if (drawable != null) {
-            setImage(view, drawable);
+            setImage(view, drawable, false);
             return;
         }
 
         setUnknownImage(view, large);
-        queue.offer(new Task(view, entry, size, large, large));
+        queue.offer(new Task(view, entry, size, large, large, crossfade));
     }
 
     private String getKey(String coverArtId, int size) {
         return coverArtId + size;
     }
 
-    private void setImage(View view, Drawable drawable) {
+    private void setImage(View view, Drawable drawable, boolean crossfade) {
         if (view instanceof TextView) {
-            ((TextView) view).setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
+            TextView textView = (TextView) view;
+            if (crossfade) {
+                Drawable[] layers = new Drawable[]{textView.getCompoundDrawables()[0], drawable};
+                TransitionDrawable transitionDrawable = new TransitionDrawable(layers);
+                textView.setCompoundDrawablesWithIntrinsicBounds(transitionDrawable, null, null, null);
+                transitionDrawable.startTransition(250);
+            } else {
+                textView.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
+            }
         } else if (view instanceof ImageView) {
-            ((ImageView) view).setImageDrawable(drawable);
+            ImageView imageView = (ImageView) view;
+            if (crossfade) {
+                Drawable[] layers = new Drawable[]{imageView.getDrawable(), drawable};
+                TransitionDrawable transitionDrawable = new TransitionDrawable(layers);
+                imageView.setImageDrawable(transitionDrawable);
+                transitionDrawable.startTransition(250);
+            } else {
+                imageView.setImageDrawable(drawable);
+            }
         }
     }
 
     private void setUnknownImage(View view, boolean large) {
         if (large) {
-            setImage(view, largeUnknownImage);
+            setImage(view, largeUnknownImage, false);
         } else {
             if (view instanceof TextView) {
                 ((TextView) view).setCompoundDrawablesWithIntrinsicBounds(R.drawable.unknown_album, 0, 0, 0);
@@ -198,13 +215,15 @@ public class ImageLoader implements Runnable {
         private final int size;
         private final boolean reflection;
         private final boolean saveToFile;
+        private final boolean crossfade;
 
-        public Task(View view, MusicDirectory.Entry entry, int size, boolean reflection, boolean saveToFile) {
+        public Task(View view, MusicDirectory.Entry entry, int size, boolean reflection, boolean saveToFile, boolean crossfade) {
             this.view = view;
             this.entry = entry;
             this.size = size;
             this.reflection = reflection;
             this.saveToFile = saveToFile;
+            this.crossfade = crossfade;
             handler = new Handler();
         }
 
@@ -223,7 +242,7 @@ public class ImageLoader implements Runnable {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        setImage(view, drawable);
+                        setImage(view, drawable, crossfade);
                     }
                 });
             } catch (Throwable x) {
