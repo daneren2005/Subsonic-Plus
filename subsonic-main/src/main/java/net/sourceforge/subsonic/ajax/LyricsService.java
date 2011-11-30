@@ -34,8 +34,6 @@ import org.jdom.input.SAXBuilder;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 
 /**
  * Provides AJAX-enabled services for retrieving song lyrics from chartlyrics.com.
@@ -60,8 +58,8 @@ public class LyricsService {
     public LyricsInfo getLyrics(String artist, String song) {
         try {
 
-            artist = encode(artist);
-            song = encode(song);
+            artist = StringUtil.urlEncode(artist);
+            song = StringUtil.urlEncode(song);
 
             String url = "http://api.chartlyrics.com/apiv1.asmx/SearchLyric?artist=" + artist + "&song=" + song;
             String xml = executeGetRequest(url);
@@ -82,10 +80,6 @@ public class LyricsService {
             LOG.warn("Failed to get lyrics for song '" + song + "'.", x);
             return new LyricsInfo();
         }
-    }
-
-    private String encode(String s) throws UnsupportedEncodingException {
-        return URLEncoder.encode(s, StringUtil.ENCODING_UTF8);
     }
 
     private SearchLyricResult parseSearchLyric(String xml) throws Exception {

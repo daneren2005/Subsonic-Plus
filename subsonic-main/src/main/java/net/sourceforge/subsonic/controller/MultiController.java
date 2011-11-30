@@ -52,8 +52,8 @@ public class MultiController extends MultiActionController {
         String username = request.getParameter("user");
         String password = request.getParameter("password");
         if (username != null && password != null) {
-            username = URLEncoder.encode(username, StringUtil.ENCODING_UTF8);
-            password = URLEncoder.encode(password, StringUtil.ENCODING_UTF8);
+            username = StringUtil.urlEncode(username);
+            password = StringUtil.urlEncode(password);
             return new ModelAndView(new RedirectView("j_acegi_security_check?j_username=" + username +
                     "&j_password=" + password + "&_acegi_security_remember_me=checked"));
         }

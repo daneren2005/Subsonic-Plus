@@ -1149,7 +1149,7 @@ public class SettingsService {
         HttpClient client = new DefaultHttpClient();
         HttpConnectionParams.setConnectionTimeout(client.getParams(), 120000);
         HttpConnectionParams.setSoTimeout(client.getParams(), 120000);
-        HttpGet method = new HttpGet("http://subsonic.org/backend/validateLicense.view" + "?email=" + email +
+        HttpGet method = new HttpGet("http://subsonic.org/backend/validateLicense.view" + "?email=" + StringUtil.urlEncode(email) +
                 "&date=" + date.getTime() + "&version=" + versionService.getLocalVersion());
         try {
             ResponseHandler<String> responseHandler = new BasicResponseHandler();
