@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.sourceforge.subsonic.backend.dao.PaymentDao;
+import net.sourceforge.subsonic.backend.service.LicenseGenerator;
 import net.sourceforge.subsonic.backend.service.WhitelistGenerator;
 import org.apache.log4j.Logger;
 import org.apache.commons.lang.exception.ExceptionUtils;
@@ -60,6 +61,7 @@ public class MultiController extends MultiActionController {
 
     private PaymentDao paymentDao;
     private WhitelistGenerator whitelistGenerator;
+    private LicenseGenerator licenseGenerator;
 
     static {
         Calendar calendar = Calendar.getInstance();
@@ -138,6 +140,23 @@ public class MultiController extends MultiActionController {
         return new ModelAndView("backend/db", "model", map);
     }
 
+    public ModelAndView requestLicense(HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+        String email = request.getParameter("email");
+        boolean valid = email != null && isLicenseValid(email, System.currentTimeMillis());
+        if (valid) {
+            EmailSession session = new EmailSession();
+            licenseGenerator.sendLicenseTo(email, session);
+        }
+
+        Map<String, Object> map = new HashMap<String, Object>();
+
+        map.put("email", email);
+        map.put("valid", valid);
+
+        return new ModelAndView("backend/requestLicense", "model", map);
+    }
+
     public ModelAndView whitelist(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         String password = ServletRequestUtils.getRequiredStringParameter(request, "p");
@@ -184,5 +203,9 @@ public class MultiController extends MultiActionController {
 
     public void setWhitelistGenerator(WhitelistGenerator whitelistGenerator) {
         this.whitelistGenerator = whitelistGenerator;
+    }
+
+    public void setLicenseGenerator(LicenseGenerator licenseGenerator) {
+        this.licenseGenerator = licenseGenerator;
     }
 }
