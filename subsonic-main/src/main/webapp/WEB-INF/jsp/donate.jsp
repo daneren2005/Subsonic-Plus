@@ -137,6 +137,8 @@
             </table>
         </form:form>
 
+        <p><fmt:message key="donate.resend"/></p>
+
     </c:otherwise>
 </c:choose>
 
