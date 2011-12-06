@@ -16,6 +16,7 @@ TRANSCODING
 DONE IN 4.6.beta2
 -----------------
 Resend license key.
+Added AIFF support.
 
 TODO IN 4.6
 -----------------
