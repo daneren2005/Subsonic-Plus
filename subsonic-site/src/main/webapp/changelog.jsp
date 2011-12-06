@@ -16,6 +16,12 @@
 <div id="main-col">
 <h1 class="bottomspace">Subsonic Change Log</h1>
 
+<a name="4.6"><h2 class="div">Subsonic 4.6 - Dec 06, 2011</h2></a>
+<ul>
+    <li><span class="bugid">New: </span>Added option to resend license key.</li>
+    <li><span class="bugid">New: </span>Added AIFF support.</li>
+</ul>
+
 <a name="4.6.beta2"><h2 class="div">Subsonic 4.6.beta2 - Nov 17, 2011</h2></a>
 <ul>
     <li><span class="bugid">New: </span>Added option in Settings &gt; Transcoding: "Enable this transcoding for all existing and new players."</li>
@@ -882,6 +888,7 @@
     <div class="sidebox">
         <h2>Releases</h2>
         <ul class="list">
+            <li><a href="#4.6">Subsonic 4.6</a></li>
             <li><a href="#4.6.beta2">Subsonic 4.6.beta2</a></li>
             <li><a href="#4.6.beta1">Subsonic 4.6.beta1</a></li>
             <li><a href="#4.5">Subsonic 4.5</a></li>
