@@ -18,6 +18,8 @@ DONE IN 4.6.beta2
 
 TODO IN 4.6
 -----------------
+Retain track number when doing lame downsampling.
+  https://mail.google.com/mail/?ui=2&shva=1#inbox/134082ca4244da22
 Add "-map_meta_data 0:0" to transcoding?
   http://forum.subsonic.org/forum/viewtopic.php?f=3&t=3270&p=34114#p34114
 Serve generic cover art if failing to load original.
@@ -91,14 +93,10 @@ Subsonic for Boxee
 Linux locale issue
   http://www.activeobjects.no/subsonic/forum/viewtopic.php?p=22386#22386
 
-DONE IN ANDROID 3.3
+DONE IN ANDROID 3.4
 --------------------
-Bugfix: Improve buffering of downsampled songs (don't buffer for too long)
-Jukebox (remote control) support
-Show error message if server url contains "@".
-Cross-fading album art images.
 
-TODO IN ANDROID 3.3
+TODO IN ANDROID 3.4
 --------------------
 Change generic album art.
 Bug if switching to RC and back for a song that is currently downloading.
@@ -711,22 +709,23 @@ Upgrade Subsonic backend: CHANGE DATE BELOW
   Backup backend database.
     Checkpoint database (db.view)
     cd /var/subsonic-backend
-    tar cvf db-backup-2011-08-11.tar db
+    tar cvf db-backup-2011-12-06.tar db
   cd subsonic-backend
   mvn clean install
 
-  scp subsonic-backend/target/subsonic-backend-*.war root@subsonic.org:/usr/local/jakarta/tomcat/webapps/ROOT.war.2011-11-07
-  scp subsonic-backend/target/subsonic-backend-*.war root@subsonic.org:/usr/local/jakarta/tomcat/webapps-2011-08-11/ROOT.war
-  scp subsonic-main/target/subsonic.war              root@subsonic.org:/usr/local/jakarta/tomcat/webapps-2011-08-11/demo.war
-  rsync -rlptDvP -e ssh --exclude .svn subsonic-site/src/main/webapp/  root@subsonic.org:/usr/local/jakarta/tomcat/webapps-2011-08-11/pages
+  mkdir /usr/local/jakarta/tomcat/webapps-2011-12-06/
+
+  scp subsonic-backend/target/subsonic-backend-*.war root@subsonic.org:/usr/local/jakarta/tomcat/webapps-2011-12-06/ROOT.war
+  scp subsonic-main/target/subsonic.war              root@subsonic.org:/usr/local/jakarta/tomcat/webapps-2011-12-06/demo.war
+  rsync -rlptDvP -e ssh --exclude .svn subsonic-site/src/main/webapp/  root@subsonic.org:/usr/local/jakarta/tomcat/webapps-2011-12-06/pages
 
   Checkpoint database (db.view)
   ssh root@subsonic.org
+  cd /usr/local/jakarta/tomcat
   ps -elf | grep jsvc
   /usr/sbin/stoptomcat
-
-  ln -s webapps-2011-08-11 webapps
-  ln -s ROOT.war.2011-06-01 ROOT.war
+  rm webapps
+  ln -s webapps-2011-12-06 webapps
 
   rm -rf work logs/*
   /usr/sbin/starttomcat
