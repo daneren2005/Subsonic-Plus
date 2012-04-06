@@ -44,6 +44,7 @@ Update apps to include PlayBook version.
 
 New playlist implementation.
   - Rename to "play queue" and "playlist"
+  - Rename RandomPlaylistController.
   - Create database schema
   - Cascading delete when user is deleted.
   - Update "present" when scanning media library?

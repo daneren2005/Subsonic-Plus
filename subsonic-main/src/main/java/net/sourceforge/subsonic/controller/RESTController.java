@@ -55,7 +55,7 @@ import net.sourceforge.subsonic.domain.MusicFolder;
 import net.sourceforge.subsonic.domain.MusicIndex;
 import net.sourceforge.subsonic.domain.Player;
 import net.sourceforge.subsonic.domain.PlayerTechnology;
-import net.sourceforge.subsonic.domain.Playlist;
+import net.sourceforge.subsonic.domain.PlayQueue;
 import net.sourceforge.subsonic.domain.PodcastChannel;
 import net.sourceforge.subsonic.domain.PodcastEpisode;
 import net.sourceforge.subsonic.domain.RandomSearchCriteria;
@@ -541,14 +541,14 @@ public class RESTController extends MultiActionController {
                 error(request, response, ErrorCode.NOT_FOUND, "Playlist not found: " + id);
                 return;
             }
-            Playlist playlist = new Playlist();
-            playlistService.loadPlaylist(playlist, id);
+            PlayQueue playQueue = new PlayQueue();
+            playlistService.loadPlaylist(playQueue, id);
 
-            builder.add("playlist", false, new Attribute("id", StringUtil.utf8HexEncode(playlist.getName())),
-                    new Attribute("name", FilenameUtils.getBaseName(playlist.getName())));
+            builder.add("playlist", false, new Attribute("id", StringUtil.utf8HexEncode(playQueue.getName())),
+                    new Attribute("name", FilenameUtils.getBaseName(playQueue.getName())));
             List<MediaFile> result;
-            synchronized (playlist) {
-                result = playlist.getFiles();
+            synchronized (playQueue) {
+                result = playQueue.getFiles();
             }
             for (MediaFile mediaFile : result) {
                 AttributeSet attributes = createAttributesForMediaFile(player, mediaFile, username);
@@ -614,19 +614,19 @@ public class RESTController extends MultiActionController {
             String username = securityService.getCurrentUsername(request);
             Player jukeboxPlayer = jukeboxService.getPlayer();
             boolean controlsJukebox = jukeboxPlayer != null && jukeboxPlayer.getId().equals(player.getId());
-            Playlist playlist = player.getPlaylist();
+            PlayQueue playQueue = player.getPlayQueue();
 
             List<Attribute> attrs = new ArrayList<Attribute>(Arrays.asList(
-                    new Attribute("currentIndex", controlsJukebox && !playlist.isEmpty() ? playlist.getIndex() : -1),
-                    new Attribute("playing", controlsJukebox && !playlist.isEmpty() && playlist.getStatus() == Playlist.Status.PLAYING),
+                    new Attribute("currentIndex", controlsJukebox && !playQueue.isEmpty() ? playQueue.getIndex() : -1),
+                    new Attribute("playing", controlsJukebox && !playQueue.isEmpty() && playQueue.getStatus() == PlayQueue.Status.PLAYING),
                     new Attribute("gain", jukeboxService.getGain()),
-                    new Attribute("position", controlsJukebox && !playlist.isEmpty() ? jukeboxService.getPosition() : 0)));
+                    new Attribute("position", controlsJukebox && !playQueue.isEmpty() ? jukeboxService.getPosition() : 0)));
 
             if (returnPlaylist) {
                 builder.add("jukeboxPlaylist", attrs, false);
                 List<MediaFile> result;
-                synchronized (playlist) {
-                    result = playlist.getFiles();
+                synchronized (playQueue) {
+                    result = playQueue.getFiles();
                 }
                 for (MediaFile mediaFile : result) {
                     AttributeSet attributes = createAttributesForMediaFile(player, mediaFile, username);
@@ -665,14 +665,14 @@ public class RESTController extends MultiActionController {
                 return;
             }
 
-            Playlist playlist = new Playlist();
-            playlist.setName(playlistId != null ? StringUtil.utf8HexDecode(playlistId) : name);
+            PlayQueue playQueue = new PlayQueue();
+            playQueue.setName(playlistId != null ? StringUtil.utf8HexDecode(playlistId) : name);
 
             int[] ids = ServletRequestUtils.getIntParameters(request, "songId");
             for (int id : ids) {
-                playlist.addFiles(true, mediaFileService.getMediaFile(id));
+                playQueue.addFiles(true, mediaFileService.getMediaFile(id));
             }
-            playlistService.savePlaylist(playlist);
+            playlistService.savePlaylist(playQueue);
 
             XMLBuilder builder = createXMLBuilder(request, response, true);
             builder.endAll();
