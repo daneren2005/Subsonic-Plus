@@ -49,7 +49,7 @@ import net.sourceforge.subsonic.util.StringUtil;
  *
  * @author Sindre Mehus
  */
-public class PlaylistService {
+public class PlayQueueService {
 
     private PlayerService playerService;
     private JukeboxService jukeboxService;

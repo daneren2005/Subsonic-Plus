@@ -33,6 +33,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 
+import net.sourceforge.subsonic.ajax.PlayQueueService;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.web.bind.ServletRequestBindingException;
@@ -114,7 +115,7 @@ public class RESTController extends MultiActionController {
     private PlaylistService playlistService;
     private ChatService chatService;
     private LyricsService lyricsService;
-    private net.sourceforge.subsonic.ajax.PlaylistService playlistControlService;
+    private PlayQueueService playQueueService;
     private JukeboxService jukeboxService;
     private AudioScrobblerService audioScrobblerService;
     private PodcastService podcastService;
@@ -577,26 +578,26 @@ public class RESTController extends MultiActionController {
             boolean returnPlaylist = false;
             String action = ServletRequestUtils.getRequiredStringParameter(request, "action");
             if ("start".equals(action)) {
-                playlistControlService.doStart(request, response);
+                playQueueService.doStart(request, response);
             } else if ("stop".equals(action)) {
-                playlistControlService.doStop(request, response);
+                playQueueService.doStop(request, response);
             } else if ("skip".equals(action)) {
                 int index = ServletRequestUtils.getRequiredIntParameter(request, "index");
                 int offset = ServletRequestUtils.getIntParameter(request, "offset", 0);
-                playlistControlService.doSkip(request, response, index, offset);
+                playQueueService.doSkip(request, response, index, offset);
             } else if ("add".equals(action)) {
                 int[] ids = ServletRequestUtils.getIntParameters(request, "id");
-                playlistControlService.doAdd(request, response, ids);
+                playQueueService.doAdd(request, response, ids);
             } else if ("set".equals(action)) {
                 int[] ids = ServletRequestUtils.getIntParameters(request, "id");
-                playlistControlService.doSet(request, response, ids);
+                playQueueService.doSet(request, response, ids);
             } else if ("clear".equals(action)) {
-                playlistControlService.doClear(request, response);
+                playQueueService.doClear(request, response);
             } else if ("remove".equals(action)) {
                 int index = ServletRequestUtils.getRequiredIntParameter(request, "index");
-                playlistControlService.doRemove(request, response, index);
+                playQueueService.doRemove(request, response, index);
             } else if ("shuffle".equals(action)) {
-                playlistControlService.doShuffle(request, response);
+                playQueueService.doShuffle(request, response);
             } else if ("setGain".equals(action)) {
                 float gain = ServletRequestUtils.getRequiredFloatParameter(request, "gain");
                 jukeboxService.setGain(gain);
@@ -1770,8 +1771,8 @@ public class RESTController extends MultiActionController {
         this.lyricsService = lyricsService;
     }
 
-    public void setPlaylistControlService(net.sourceforge.subsonic.ajax.PlaylistService playlistControlService) {
-        this.playlistControlService = playlistControlService;
+    public void setPlayQueueService(PlayQueueService playQueueService) {
+        this.playQueueService = playQueueService;
     }
 
     public void setJukeboxService(JukeboxService jukeboxService) {
