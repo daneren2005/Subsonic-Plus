@@ -74,7 +74,7 @@ public class HomeController extends ParameterizableViewController {
             return new ModelAndView(new RedirectView("gettingStarted.view"));
         }
         int listOffset = getIntParameter(request, "listOffset", 0);
-        String listType = getStringParameter(request, "listType", "random");
+        String listType = getStringParameter(request, "listType", "newest");
 
         Map<String, Object> map = new HashMap<String, Object>();
         List<Album> albums = Collections.emptyList();
