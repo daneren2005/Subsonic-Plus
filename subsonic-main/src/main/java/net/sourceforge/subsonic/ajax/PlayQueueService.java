@@ -115,7 +115,7 @@ public class PlayQueueService {
         Player player = getCurrentPlayer(request, response);
         MediaFile file = mediaFileService.getMediaFile(id);
 
-        if (file.isFile()) {
+        if (/*file.isFile()*/ false) {
             MediaFile dir = mediaFileService.getParentOf(file);
             List<MediaFile> songs = mediaFileService.getChildrenOf(dir, true, false, true);
             if (!songs.isEmpty()) {
