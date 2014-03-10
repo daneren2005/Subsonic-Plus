@@ -12,8 +12,8 @@ if (!chrome.cast || !chrome.cast.isAvailable) {
 
 function initializeCastApi() {
 //    var applicationID = chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID;
-//    var applicationID = "4FBFE470";  // Styled receiver
-    var applicationID = "644BA8AC"; // Custom receiver
+    var applicationID = "4FBFE470";  // Styled receiver
+//    var applicationID = "644BA8AC"; // Custom receiver
     var sessionRequest = new chrome.cast.SessionRequest(applicationID);
     var apiConfig = new chrome.cast.ApiConfig(sessionRequest, sessionListener, receiverListener);
 
@@ -34,7 +34,18 @@ function sessionListener(s) {
     castSession.addMediaListener(onMediaDiscovered.bind(this, 'addMediaListener'));
     castSession.addUpdateListener(sessionUpdateListener.bind(this));
     syncControls();
+    play();
 }
+
+function incrementProgress() {
+    var playing = mediaSession && mediaSession.playerState === chrome.cast.media.PlayerState.PLAYING;
+    if (playing) {
+        position += 1;
+        updatePosition();
+    }
+}
+
+// TODO: Rename progress/position/time
 
 /**
  * receiver listener during initialization
@@ -76,6 +87,10 @@ function setCastControlsVisible(visible) {
         $("#flashPlayer").hide();
         $("#castPlayer").show();
         setImage("castIcon", "<spring:theme code="castOnImage"/>");
+
+        // TODO: Clear?
+        setInterval(incrementProgress, 1000);
+
     } else {
         $("#castPlayer").hide();
         $("#flashPlayer").show();
@@ -109,38 +124,35 @@ function onRequestSessionSuccess(s) {
     syncControls();
 
     // Continue song at same position?
-    if (position != -1) {
-        skip(getCurrentSongIndex(), position);
-    }
+//    if (position != -1) {
+//        skip(getCurrentSongIndex(), position);
+//    }
 }
 
 function onLaunchError() {
     log("launch error");
 }
 
-function loadCastMedia(song, position) {
+function loadCastMedia(video) {
     if (!castSession) {
         log("no session");
         return;
     }
-    log("loading..." + song.remoteStreamUrl);
-    var mediaInfo = new chrome.cast.media.MediaInfo(song.remoteStreamUrl);
-    mediaInfo.contentType = song.contentType;
-    mediaInfo.streamType = chrome.cast.media.StreamType.BUFFERED;
-    mediaInfo.duration = song.duration;
-    mediaInfo.metadata = new chrome.cast.media.MusicTrackMediaMetadata();
-    mediaInfo.metadata.metadataType = chrome.cast.media.MetadataType.MUSIC_TRACK;
-    mediaInfo.metadata.songName = song.title;
-    mediaInfo.metadata.title = song.title;
-    mediaInfo.metadata.albumName = song.album;
-    mediaInfo.metadata.artist = song.artist;
-    mediaInfo.metadata.trackNumber = song.trackNumber;
-    mediaInfo.metadata.images = [new chrome.cast.Image(song.remoteCoverArtUrl + "&size=384")];
-    mediaInfo.metadata.releaseYear = song.year;
+    log("loading..." + video.remoteStreamUrl);
+    var mediaInfo = new chrome.cast.media.MediaInfo(video.remoteStreamUrl);
+    mediaInfo.contentType = video.contentType;
+//    mediaInfo.streamType = chrome.cast.media.StreamType.BUFFERED;  //TODO: Use LIVE?
+    mediaInfo.streamType = chrome.cast.media.StreamType.LIVE;  //TODO: Use LIVE?
+    mediaInfo.duration = video.duration;
+    mediaInfo.metadata = new chrome.cast.media.MovieMediaMetadata();
+    mediaInfo.metadata.metadataType = chrome.cast.media.MetadataType.MOVIE;
+    mediaInfo.metadata.title = video.title;
+//    mediaInfo.metadata.images = [new chrome.cast.Image(video.remoteCoverArtUrl + "&size=384")];
+    mediaInfo.metadata.releaseYear = video.year;
 
     var request = new chrome.cast.media.LoadRequest(mediaInfo);
     request.autoplay = true;
-    request.currentTime = position;
+    request.currentTime = 0;
 
     castSession.loadMedia(request,
             onMediaDiscovered.bind(this, 'loadMedia'),
@@ -172,14 +184,16 @@ function onMediaError(e) {
  */
 function onMediaStatusUpdate(isAlive) {
     log(mediaSession.playerState);
-    if (mediaSession.playerState === chrome.cast.media.PlayerState.IDLE && mediaSession.idleReason === "FINISHED") {
-        onNext(repeatEnabled);
-    }
+
+    position = mediaSession.currentTime;
+    updatePosition();
+
     syncControls();
 }
 
 function playPauseCast() {
     if (!mediaSession) {
+        log("No session");
         return;
     }
     if (playing) {
@@ -233,7 +247,7 @@ function syncControls() {
         setImage("castMute", muted ? "<spring:theme code="muteImage"/>" : "<spring:theme code="volumeImage"/>");
         document.getElementById("castVolume").value = volume * 100;
     }
-    playing = castSession.media.length > 0 && castSession.media[0].playerState === chrome.cast.media.PlayerState.PLAYING;
+    playing = mediaSession && mediaSession.playerState === chrome.cast.media.PlayerState.PLAYING;
     setImage("castPlayPause", playing ? "<spring:theme code="castPauseImage"/>" : "<spring:theme code="castPlayImage"/>");
 }
 

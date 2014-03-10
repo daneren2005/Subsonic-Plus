@@ -14,6 +14,8 @@
 
     <script type="text/javascript" src="<c:url value="/script/scripts.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/script/jwplayer-5.10.min.js"/>"></script>
+    <script type="text/javascript" src="<c:url value="/script/cast_sender-v1.js"/>"></script>
+    <%@ include file="videoPlayerCast.jsp" %>
     <script type="text/javascript" language="javascript">
 
         var position;
@@ -26,7 +28,7 @@
                 flashplayer: "<c:url value="/flash/jw-player-5.10.swf"/>",
                 height: "${model.popout ? '85%' : '360'}",
                 width: "${model.popout ? '100%' : '600'}",
-                skin:"<c:url value="/flash/whotube.zip"/>",
+                skin:"<c:url value="/flash/jw-player-subsonic-skin.zip"/>",
                 screencolor:"000000",
                 controlbar:"over",
                 autostart:"false",
@@ -51,12 +53,26 @@
         }
 
         function play() {
-            jwplayer().load({
-                file:"${streamUrl}&maxBitRate=" + maxBitRate + "&timeOffset=" + timeOffset + "&player=${model.player}",
-                duration:${model.duration} - timeOffset,
-                provider:"video"
-            });
-            jwplayer().play();
+            position = 0;
+            updatePosition();
+            console.log("play: " + castSession);
+            if (castSession) {
+                loadCastMedia({
+                    remoteStreamUrl: "${model.remoteStreamUrl}&maxBitRate=" + maxBitRate + "&timeOffset=" + timeOffset + "&player=${model.player}&format=mkv",
+                    title: "${model.video.title}",
+                 //   year: "${model.video.year}", // TODO, year can be null
+                    duration: ${model.duration} - timeOffset,
+                    contentType: "video/x-matroska"
+                });
+            } else {
+
+                jwplayer().load({
+                    file:"${streamUrl}&maxBitRate=" + maxBitRate + "&timeOffset=" + timeOffset + "&player=${model.player}",
+                    duration:${model.duration} - timeOffset,
+                    provider:"video"
+                });
+                jwplayer().play();
+            }
         }
 
         function updatePosition() {
@@ -112,8 +128,19 @@
 
 <c:if test="${licenseInfo.licenseOrTrialValid}">
 
-    <div style="padding-top:1em">
+    <div id="flashPlayer" style="padding-top:1em">
         <div id="jwplayer"><a href="http://www.adobe.com/go/getflashplayer" target="_blank"><fmt:message key="playlist.getflash"/></a></div>
+    </div>
+
+    <div id="castPlayer" style="display: none">
+        <div style="float:left">
+            <a href="#" onclick="playPauseCast(); return false;"><img id="castPlayPause" src="<spring:theme code="castPlayImage"/>"></a>
+            <a href="#" onclick="toggleCastMute(); return false;"><img id="castMute" src="<spring:theme code="volumeImage"/>" alt=""></a>
+        </div>
+        <div style="float:left">
+            <input id="castVolume" type="range" min="0" max="100" step="1" style="width: 80px; margin-left: 10px; margin-right: 10px"
+                   onchange="setCastVolume(this.value/100, false);">
+        </div>
     </div>
 
     <div style="padding-top:0.7em;padding-bottom:0.7em">
@@ -132,6 +159,9 @@
             </c:forEach>
         </select>
 
+        <input id="positionSlider" type="range" min="0" max="100" step="1" style="width: 200px; margin-left: 10px; margin-right: 10px"
+               onchange="setCastVolume(this.value/100, false);">
+
         <select id="maxBitRate" onchange="changeBitRate();" style="padding-left:0.25em;padding-right:0.25em;margin-right:0.5em">
             <c:forEach items="${model.bitRates}" var="bitRate">
                 <c:choose>
@@ -144,7 +174,9 @@
                 </c:choose>
             </c:forEach>
         </select>
+        <a href="#" onclick="launchCastApp(); return false;"><img id="castIcon"></a>
     </div>
+
 
     <c:choose>
         <c:when test="${model.popout}">
@@ -157,6 +189,12 @@
     </c:choose>
 
 </c:if>
+<div style="clear: both"></div>
+
+<div style="margin:10px;">
+    <textarea rows="10" cols="100" id="debugmessage">
+    </textarea>
+</div>
 
 </body>
 </html>
