@@ -4,6 +4,10 @@ Differences from 4.9 (mine):
 Fixed mixed content error when changing cover art
 Set Recently Added to be the default album type
 Revert change to adding the whole album when clicking play on a single song
+Fix DLNA infinite recursion
 
 Merged changes from 4.9:
 External Player doesn't auto advance
+Upgraded ffmpeg
+HTML5 inputs
+HTML5 browser notifications
