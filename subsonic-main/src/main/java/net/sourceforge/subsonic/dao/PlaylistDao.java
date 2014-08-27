@@ -64,7 +64,14 @@ public class PlaylistDao extends AbstractDao {
         for (Playlist playlist : result3) {
             map.put(playlist.getId(), playlist);
         }
-        return new ArrayList<Playlist>(map.values());
+        List<Playlist> sortedPlaylists = new ArrayList<Playlist>(map.values());
+        Collections.sort(sortedPlaylists, new Comparator<Playlist>() {
+            @Override
+            public int compare(Playlist left, Playlist right) {
+                return left.getName().compareToIgnoreCase(right.getName());
+            }
+        });
+        return sortedPlaylists;
     }
 
     public List<Playlist> getWritablePlaylistsForUser(String username) {
