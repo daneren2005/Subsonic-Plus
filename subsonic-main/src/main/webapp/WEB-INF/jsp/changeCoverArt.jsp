@@ -50,8 +50,8 @@
                     var result = results[i];
                     var node = $("template").cloneNode(true);
 
-					// Rename results to https
-					result.tbUrl = result.tbUrl.replace('http', 'https');
+                    // Rename results to https to avoid mixed contents.
+                    result.tbUrl = result.tbUrl.replace('http://', 'https://');
 
                     var link = node.getElementsByClassName("search-result-link")[0];
                     link.href = "javascript:setImage('" + result.url + "');";
