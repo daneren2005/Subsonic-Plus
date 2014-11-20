@@ -17,6 +17,16 @@
         <div id="main-col">
             <h1 class="bottomspace">Subsonic Change Log</h1>
 
+            <a name="5.0"><h2 class="div">Subsonic 5.0 - Sep 21, 2014</h2></a>
+            <ul>
+                <li><span class="bugid">Bugfix: </span>Use UTF-8 encoding for filenames in ZIP archives. (Requires Java 7+)</li>
+                <li><span class="bugid">Bugfix: </span>Fixed problem with unresponsive dialogs in web interface.</li>
+                <li><span class="bugid">Bugfix: </span>Use 2000 kbps as default video bitrate.</li>
+                <li><span class="bugid">Bugfix: </span>Sort playlists alphabetically.</li>
+                <li><span class="bugid">Bugfix: </span>Fixed some sorting issues (e.g., for same artist found in multiple media folders).</li>
+                <li><span class="bugid">Bugfix: </span>Make password recovery work with https.</li>
+            </ul>
+
             <a name="5.0.beta2"><h2 class="div">Subsonic 5.0.beta2 - Aug 26, 2014</h2></a>
             <ul>
                 <li><span class="bugid">New: </span>Support casting to remote Chromecasts (requires *.subsonic.org address)</li>
@@ -27,7 +37,7 @@
                 <li><span class="bugid">New: </span>Set X-Content-Duration to support opus encoding.</li>
                 <li><span class="bugid">Bugfix: </span>Fixed problem with whole tab being sent to Chromecast rather than just the video.</li>
                 <li><span class="bugid">Bugfix: </span>Access-Control-Allow-Origin header sometimes missing in REST responses.</li>
-                <li><span class="bugid">Bugfix: </span>Fix DLNA recursion bug.</li>
+                <li><span class="bugid">Bugfix: </span>Fixed DLNA recursion bug.</li>
                 <li><span class="bugid">Bugfix: </span>Fixed mixed content errors when changing cover art, and using https (courtesy of daneren2005)</li>
                 <li><span class="bugid">Bugfix: </span>Fixed errors on certain podcast feeds where they were being incorrectly labeled as video files (courtesy of daneren2005)</li>
                 <li><span class="bugid">Bugfix: </span>Updated ffmpeg commands to fix some transcoding issues.</li>
@@ -186,6 +196,7 @@
             <div class="sidebox">
                 <h2>Releases</h2>
                 <ul class="list">
+                    <li><a href="#5.0">Subsonic 5.0</a></li>
                     <li><a href="#5.0.beta2">Subsonic 5.0.beta2</a></li>
                     <li><a href="#5.0.beta1">Subsonic 5.0.beta1</a></li>
                     <li><a href="#4.9">Subsonic 4.9</a></li>

@@ -33,7 +33,7 @@
             <select name="bitrate_menu" id="bitrate_menu">
                 <c:forEach items="${model.bitRates}" var="bitRate">
                     <c:choose>
-                        <c:when test="${bitRate eq model.maxBitRate}">
+                        <c:when test="${bitRate eq model.defaultBitRate}">
                             <option selected="selected" value="${bitRate}">${bitRate} Kbps</option>
                         </c:when>
                         <c:otherwise>
@@ -42,6 +42,8 @@
                     </c:choose>
                 </c:forEach>
             </select>
+            <div id="share"></div>
+            <div id="download"></div>
             <div id="casticonactive"></div>
             <div id="casticonidle"></div>
         </div>
@@ -57,13 +59,8 @@
 
 <sub:url value="main.view" var="backUrl"><sub:param name="id" value="${model.video.id}"/></sub:url>
 
-<div id="back" class="back" style="float:left;padding-right:2em"><a href="${backUrl}"><fmt:message key="common.back"/></a></div>
+<div class="back" style="float:left;padding-right:2em"><a href="${backUrl}"><fmt:message key="common.back"/></a></div>
 <div style="clear: both"></div>
-
-<script type="text/javascript">
-    var showBackButton = top.playQueue != null && !top.playQueue.CastPlayer.receiverFound;
-    $("#back").toggle(showBackButton);
-</script>
 
 </body>
 </html>

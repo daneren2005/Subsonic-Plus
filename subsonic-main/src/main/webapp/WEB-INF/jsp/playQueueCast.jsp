@@ -7,12 +7,14 @@
         this.castSession = null;
         this.mediaSession = null;
         this.volume = 1.0;
-        this.receiverFound = false;
 
         this.initializeCastPlayer();
     };
 
     CastPlayer.prototype.initializeCastPlayer = function () {
+        if (!window.chrome) {
+            return;
+        }
         if (!chrome.cast || !chrome.cast.isAvailable) {
             setTimeout(this.initializeCastPlayer.bind(this), 1000);
             return;
@@ -47,13 +49,11 @@
     CastPlayer.prototype.receiverListener = function (e) {
         if (e === 'available') {
             this.log("receiver found");
-            this.receiverFound = true;
             $("#castOn").show();
             $("#castOff").hide();
         }
         else {
             this.log("receiver list empty");
-            this.receiverFound = false;
             $("#castOn").hide();
             $("#castOff").hide();
         }

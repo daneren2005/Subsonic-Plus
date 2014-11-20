@@ -176,6 +176,10 @@
         <th class="param-heading">REST API version</th>
     </tr>
     <tr class="table-altrow">
+        <td>5.1</td>
+        <td><a href="https://sourceforge.net/p/subsonic/code/HEAD/tree/tags/release-5.1/subsonic-site/src/main/webapp/inc/api/subsonic-rest-api.xsd">1.11.0</a></td>
+    </tr>
+    <tr class="table-altrow">
         <td>4.9</td>
         <td><a href="https://sourceforge.net/p/subsonic/code/HEAD/tree/tags/release-4.9/subsonic-site/src/main/webapp/inc/api/subsonic-rest-api.xsd">1.10.2</a></td>
     </tr>
@@ -264,7 +268,11 @@
             <code><a href="#getArtist">getArtist</a></code>,
             <code><a href="#getAlbum">getAlbum</a></code>,
             <code><a href="#getSong">getSong</a></code>,
-            <code><a href="#getVideos">getVideos</a></code>
+            <code><a href="#getVideos">getVideos</a></code>,
+            <code><a href="#getArtistInfo">getArtistInfo</a></code>,
+            <code><a href="#getArtistInfo2">getArtistInfo2</a></code>,
+            <code><a href="#getSimilarSongs">getSimilarSongs</a></code>,
+            <code><a href="#getSimilarSongs2">getSimilarSongs2</a></code>
         </td>
     </tr>
     <tr class="table-altrow">
@@ -389,6 +397,10 @@
 <%@ include file="api-getAlbum.jsp" %>
 <%@ include file="api-getSong.jsp" %>
 <%@ include file="api-getVideos.jsp" %>
+<%@ include file="api-getArtistInfo.jsp" %>
+<%@ include file="api-getArtistInfo2.jsp" %>
+<%@ include file="api-getSimilarSongs.jsp" %>
+<%@ include file="api-getSimilarSongs2.jsp" %>
 
 <%@ include file="api-getAlbumList.jsp" %>
 <%@ include file="api-getAlbumList2.jsp" %>
