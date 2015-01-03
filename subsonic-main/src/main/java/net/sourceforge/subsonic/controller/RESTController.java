@@ -36,6 +36,7 @@ import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
+import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 import org.subsonic.restapi.AlbumID3;
@@ -426,6 +427,7 @@ public class RESTController extends MultiActionController {
 
         int id = getRequiredIntParameter(request, "id");
         int count = getIntParameter(request, "count", 20);
+        boolean includeNotPresent = ServletRequestUtils.getBooleanParameter(request, "includeNotPresent", false);
 
         ArtistInfo result = new ArtistInfo();
 
@@ -434,7 +436,7 @@ public class RESTController extends MultiActionController {
             error(request, response, ErrorCode.NOT_FOUND, "Media file not found.");
             return;
         }
-        List<MediaFile> similarArtists = lastFmService.getSimilarArtists(mediaFile, count);
+        List<MediaFile> similarArtists = lastFmService.getSimilarArtists(mediaFile, count, includeNotPresent);
         for (MediaFile similarArtist : similarArtists) {
             result.getSimilarArtist().add(createJaxbArtist(similarArtist, username));
         }
@@ -460,6 +462,7 @@ public class RESTController extends MultiActionController {
 
         int id = getRequiredIntParameter(request, "id");
         int count = getIntParameter(request, "count", 20);
+        boolean includeNotPresent = ServletRequestUtils.getBooleanParameter(request, "includeNotPresent", false);
 
         ArtistInfo2 result = new ArtistInfo2();
 
@@ -469,7 +472,7 @@ public class RESTController extends MultiActionController {
             return;
         }
 
-        List<Artist> similarArtists = lastFmService.getSimilarArtists(artist, count);
+        List<Artist> similarArtists = lastFmService.getSimilarArtists(artist, count, includeNotPresent);
         for (Artist similarArtist : similarArtists) {
             result.getSimilarArtist().add(createJaxbArtist(new ArtistID3(), similarArtist, username));
         }
@@ -502,7 +505,7 @@ public class RESTController extends MultiActionController {
     private org.subsonic.restapi.Artist createJaxbArtist(MediaFile artist, String username) {
         org.subsonic.restapi.Artist result = new org.subsonic.restapi.Artist();
         result.setId(String.valueOf(artist.getId()));
-        result.setName(artist.getName());
+        result.setName(artist.getArtist());
         Date starred = mediaFileDao.getMediaFileStarredDate(artist.getId(), username);
         result.setStarred(jaxbWriter.convertDate(starred));
         return result;
@@ -560,6 +563,7 @@ public class RESTController extends MultiActionController {
         jaxbPlaylist.setSongCount(playlist.getFileCount());
         jaxbPlaylist.setDuration(playlist.getDurationSeconds());
         jaxbPlaylist.setCreated(jaxbWriter.convertDate(playlist.getCreated()));
+        jaxbPlaylist.setCoverArt(CoverArtController.PLAYLIST_COVERART_PREFIX + playlist.getId());
 
         for (String username : playlistService.getPlaylistUsers(playlist.getId())) {
             jaxbPlaylist.getAllowedUser().add(username);
@@ -1028,31 +1032,34 @@ public class RESTController extends MultiActionController {
 
         int size = getIntParameter(request, "size", 10);
         int offset = getIntParameter(request, "offset", 0);
+        Integer musicFolderId = getIntParameter(request, "musicFolderId");
+        MusicFolder musicFolder = musicFolderId == null ? null : settingsService.getMusicFolderById(musicFolderId);
+
         size = Math.max(0, Math.min(size, 500));
         String type = getRequiredStringParameter(request, "type");
 
         List<MediaFile> albums;
         if ("highest".equals(type)) {
-            albums = ratingService.getHighestRatedAlbums(offset, size);
+            albums = ratingService.getHighestRatedAlbums(offset, size, musicFolder);
         } else if ("frequent".equals(type)) {
-            albums = mediaFileService.getMostFrequentlyPlayedAlbums(offset, size);
+            albums = mediaFileService.getMostFrequentlyPlayedAlbums(offset, size, musicFolder);
         } else if ("recent".equals(type)) {
-            albums = mediaFileService.getMostRecentlyPlayedAlbums(offset, size);
+            albums = mediaFileService.getMostRecentlyPlayedAlbums(offset, size, musicFolder);
         } else if ("newest".equals(type)) {
-            albums = mediaFileService.getNewestAlbums(offset, size);
+            albums = mediaFileService.getNewestAlbums(offset, size, musicFolder);
         } else if ("starred".equals(type)) {
-            albums = mediaFileService.getStarredAlbums(offset, size, username);
+            albums = mediaFileService.getStarredAlbums(offset, size, username, musicFolder);
         } else if ("alphabeticalByArtist".equals(type)) {
-            albums = mediaFileService.getAlphabeticalAlbums(offset, size, true);
+            albums = mediaFileService.getAlphabeticalAlbums(offset, size, true, musicFolder);
         } else if ("alphabeticalByName".equals(type)) {
-            albums = mediaFileService.getAlphabeticalAlbums(offset, size, false);
+            albums = mediaFileService.getAlphabeticalAlbums(offset, size, false, musicFolder);
         } else if ("byGenre".equals(type)) {
-            albums = mediaFileService.getAlbumsByGenre(offset, size, getRequiredStringParameter(request, "genre"));
+            albums = mediaFileService.getAlbumsByGenre(offset, size, getRequiredStringParameter(request, "genre"), musicFolder);
         } else if ("byYear".equals(type)) {
             albums = mediaFileService.getAlbumsByYear(offset, size, getRequiredIntParameter(request, "fromYear"),
-                    getRequiredIntParameter(request, "toYear"));
+                    getRequiredIntParameter(request, "toYear"), musicFolder);
         } else if ("random".equals(type)) {
-            albums = searchService.getRandomAlbums(size);
+            albums = searchService.getRandomAlbums(size, musicFolder);
         } else {
             throw new Exception("Invalid list type: " + type);
         }
@@ -1443,7 +1450,7 @@ public class RESTController extends MultiActionController {
         for (MediaFile artist : mediaFileDao.getStarredDirectories(0, Integer.MAX_VALUE, username)) {
             result.getArtist().add(createJaxbArtist(artist, username));
         }
-        for (MediaFile album : mediaFileDao.getStarredAlbums(0, Integer.MAX_VALUE, username)) {
+        for (MediaFile album : mediaFileDao.getStarredAlbums(0, Integer.MAX_VALUE, username, null)) {
             result.getAlbum().add(createJaxbChild(player, album, username));
         }
         for (MediaFile song : mediaFileDao.getStarredFiles(0, Integer.MAX_VALUE, username)) {

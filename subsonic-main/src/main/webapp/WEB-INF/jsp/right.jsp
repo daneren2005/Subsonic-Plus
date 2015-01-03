@@ -21,6 +21,23 @@
     }
 </script>
 
+<c:if test="${not model.licenseInfo.licenseValid}">
+    <div class="detail" style="text-align: center;padding-bottom: 1em">
+        <a href="premium.view" target="main"><img src="<spring:theme code="donateSmallImage"/>" alt="">
+            <fmt:message key="top.getpremium"/></a>
+        <c:if test="${model.licenseInfo.trialDaysLeft gt 0}">
+            <br>
+            <a href="premium.view" target="main"><fmt:message key="top.trialdaysleft"><fmt:param value="${model.licenseInfo.trialDaysLeft}"/></fmt:message></a>
+        </c:if>
+    </div>
+</c:if>
+
+<c:if test="${model.newVersionAvailable}">
+    <div class="warning" style="padding-bottom: 1em">
+        <fmt:message key="top.upgrade"><fmt:param value="${model.brand}"/><fmt:param value="${model.latestVersion}"/></fmt:message>
+    </div>
+</c:if>
+
 <div id="scanningStatus" style="display: none;" class="warning">
     <img src="<spring:theme code="scanningImage"/>" title="" alt=""> <fmt:message key="main.scanning"/> <span id="scanCount"></span>
 </div>
@@ -61,7 +78,7 @@
                 }
                 html += "</td><td>" +
                         "<a title='" + nowPlaying[i].tooltip + "' target='main' href='" + nowPlaying[i].albumUrl + "'>" +
-                        "<img src='" + nowPlaying[i].coverArtUrl + "' height='60' width='60'></a>" +
+                        "<img src='" + nowPlaying[i].coverArtUrl + "' class='dropshadow' height='60' width='60'></a>" +
                         "</td></tr>";
 
                 var minutesAgo = nowPlaying[i].minutesAgo;
@@ -167,7 +184,7 @@
 
     <h2><fmt:message key="main.chat"/></h2>
     <div style="padding-top:0.3em;padding-bottom:0.3em">
-        <input id="message" value=" <fmt:message key="main.message"/>" style="width:100%" onclick="dwr.util.setValue('message', null);" onkeypress="dwr.util.onReturn(event, addMessage)"/>
+        <input type="text" id="message" value=" <fmt:message key="main.message"/>" style="width:100%" onclick="dwr.util.setValue('message', null);" onkeypress="dwr.util.onReturn(event, addMessage)"/>
     </div>
 
     <table>

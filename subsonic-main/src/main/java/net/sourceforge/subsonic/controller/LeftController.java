@@ -125,7 +125,7 @@ public class LeftController extends ParameterizableViewController {
 
     @Override
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        saveSelectedMusicFolder(request);
+        boolean mediaFolderChanged = saveSelectedMusicFolder(request);
         Map<String, Object> map = new HashMap<String, Object>();
 
         MediaLibraryStatistics statistics = mediaScannerService.getStatistics();
@@ -146,9 +146,9 @@ public class LeftController extends ParameterizableViewController {
         map.put("selectedMusicFolder", selectedMusicFolder);
         map.put("radios", settingsService.getAllInternetRadios());
         map.put("shortcuts", getShortcuts(musicFoldersToUse, shortcuts));
-        map.put("captionCutoff", userSettings.getMainVisibility().getCaptionCutoff());
         map.put("partyMode", userSettings.isPartyModeEnabled());
         map.put("organizeByFolderStructure", settingsService.isOrganizeByFolderStructure());
+        map.put("mediaFolderChanged", mediaFolderChanged);
 
         if (statistics != null) {
             map.put("statistics", statistics);
@@ -168,9 +168,9 @@ public class LeftController extends ParameterizableViewController {
         return result;
     }
 
-    private void saveSelectedMusicFolder(HttpServletRequest request) {
+    private boolean saveSelectedMusicFolder(HttpServletRequest request) {
         if (request.getParameter("musicFolderId") == null) {
-            return;
+            return false;
         }
         int musicFolderId = Integer.parseInt(request.getParameter("musicFolderId"));
 
@@ -179,6 +179,8 @@ public class LeftController extends ParameterizableViewController {
         UserSettings settings = settingsService.getUserSettings(securityService.getCurrentUsername(request));
         settings.setSelectedMusicFolderId(musicFolderId);
         settingsService.updateUserSettings(settings);
+
+        return true;
     }
 
     /**

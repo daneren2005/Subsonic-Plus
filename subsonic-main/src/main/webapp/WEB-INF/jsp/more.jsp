@@ -48,7 +48,7 @@
 
 <c:if test="${model.user.streamRole}">
     <h2>
-        <img src="<spring:theme code="randomImage"/>" alt=""/>
+        <img src="<spring:theme code="shuffleImage"/>" alt=""/>
         <span style="vertical-align: middle"><fmt:message key="more.random.title"/></span>
     </h2>
 
@@ -136,6 +136,12 @@
     <span style="vertical-align: middle"><fmt:message key="more.jamstash.title"/></span>
 </h2>
 <fmt:message key="more.jamstash.text"><fmt:param>${model.jamstashUrl}</fmt:param></fmt:message>
+
+<h2>
+    <img src="<spring:theme code="statusSmallImage"/>" alt=""/>
+    <span style="vertical-align: middle"><fmt:message key="more.status.title"/></span>
+</h2>
+<fmt:message key="more.status.text"/>
 
 <h2>
     <img src="<spring:theme code="podcastImage"/>" alt=""/>
