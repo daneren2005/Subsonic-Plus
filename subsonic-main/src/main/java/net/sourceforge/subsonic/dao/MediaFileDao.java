@@ -20,6 +20,8 @@ package net.sourceforge.subsonic.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -178,8 +180,16 @@ public class MediaFileDao extends AbstractDao {
     }
 
     public List<Genre> getGenres(boolean sortByAlbum) {
-        String orderBy = sortByAlbum ? "album_count" : "song_count";
-        return query("select " + GENRE_COLUMNS + " from genre order by " + orderBy + " desc", genreRowMapper);
+        List<Genre> genres = query("select " + GENRE_COLUMNS + " from genre order by name asc", genreRowMapper);
+		
+		Collections.sort(genres, new Comparator<Genre>() {
+            @Override
+            public int compare(Genre left, Genre right) {
+                return left.getName().compareToIgnoreCase(right.getName());
+            }
+        });
+		
+		return genres;
     }
 
     public void updateGenres(List<Genre> genres) {

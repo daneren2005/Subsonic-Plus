@@ -27,6 +27,8 @@ import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.SortedMap;
@@ -64,7 +66,14 @@ public class PlaylistDao extends AbstractDao {
         for (Playlist playlist : result3) {
             map.put(playlist.getId(), playlist);
         }
-        return new ArrayList<Playlist>(map.values());
+        List<Playlist> sortedPlaylists = new ArrayList<Playlist>(map.values());
+        Collections.sort(sortedPlaylists, new Comparator<Playlist>() {
+            @Override
+            public int compare(Playlist left, Playlist right) {
+                return left.getName().compareToIgnoreCase(right.getName());
+            }
+        });
+        return sortedPlaylists;
     }
 
     public List<Playlist> getWritablePlaylistsForUser(String username) {

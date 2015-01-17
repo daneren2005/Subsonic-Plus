@@ -487,7 +487,11 @@ public class PodcastService {
                 podcastDao.updateEpisode(episode);
                 LOG.info("Downloaded " + bytesDownloaded + " bytes from Podcast " + episode.getUrl());
                 IOUtils.closeQuietly(out);
-                updateTags(file, episode);
+		try {
+	                updateTags(file, episode);
+		} catch(Exception x) {
+			LOG.warn("Failed to update tags for podcast " + episode.getUrl(), x);
+		}
                 episode.setStatus(PodcastStatus.COMPLETED);
                 podcastDao.updateEpisode(episode);
                 deleteObsoleteEpisodes(channel);

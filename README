@@ -1,0 +1,13 @@
+This is to be a fork which closely follows the main Subsonic trunk.  Only minor bug fixes and changes will be allowed.
+
+Differences from 4.9 (mine):
+Fixed mixed content error when changing cover art
+Set Recently Added to be the default album type
+Revert change to adding the whole album when clicking play on a single song
+Fix DLNA infinite recursion
+
+Merged changes from 4.9:
+External Player doesn't auto advance
+Upgraded ffmpeg
+HTML5 inputs
+HTML5 browser notifications
