@@ -1,2 +1,1 @@
-/subsonic-main/target/
-/subsonic-booter/target/
+/subsonic-*/target/
