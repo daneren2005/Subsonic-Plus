@@ -66,7 +66,7 @@ public class MultiController extends MultiActionController {
 
     private static final Logger LOG = Logger.getLogger(MultiController.class);
 
-    private static final String SUBSONIC_VERSION = "5.2.1";
+    private static final String SUBSONIC_VERSION = "5.3";
     private static final String SUBSONIC_BETA_VERSION = "5.3.beta2";
 
     private static final Date LICENSE_DATE_THRESHOLD;
@@ -233,10 +233,11 @@ public class MultiController extends MultiActionController {
 
         String email = request.getParameter("email");
 
-        boolean valid = licenseService.getLicenseInfo(email).isLicenseValid();
+        LicenseInfo licenseInfo = licenseService.getLicenseInfo(email);
+        boolean valid = licenseInfo.isLicenseValid();
         if (valid) {
             EmailSession session = new EmailSession();
-            licenseGenerator.sendLicenseTo(email, session);
+            licenseGenerator.sendLicenseTo(licenseInfo.getFirstName(), email, session);
         }
 
         Map<String, Object> map = new HashMap<String, Object>();

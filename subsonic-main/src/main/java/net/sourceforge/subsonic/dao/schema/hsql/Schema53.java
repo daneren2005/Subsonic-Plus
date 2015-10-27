@@ -67,5 +67,17 @@ public class Schema53 extends Schema {
             template.execute("alter table podcast_channel add image_url varchar");
             LOG.info("Database column 'podcast_channel.image_url' was added successfully.");
         }
+
+        if (!columnExists(template, "show_side_bar", "user_settings")) {
+            LOG.info("Database column 'user_settings.show_side_bar' not found.  Creating it.");
+            template.execute("alter table user_settings add show_side_bar boolean default true not null");
+            LOG.info("Database column 'user_settings.show_side_bar' was added successfully.");
+        }
+
+        if (!columnExists(template, "folder_id", "artist")) {
+            LOG.info("Database column 'artist.folder_id' not found.  Creating it.");
+            template.execute("alter table artist add folder_id int");
+            LOG.info("Database column 'artist.folder_id' was added successfully.");
+        }
     }
 }

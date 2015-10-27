@@ -283,7 +283,7 @@ public class LastFmService {
             if (info == null) {
                 return null;
             }
-            return new ArtistBio(processWikiText(info.getWikiText()),
+            return new ArtistBio(processWikiText(info.getWikiSummary()),
                                  info.getMbid(),
                                  info.getUrl(),
                                  info.getImageURL(ImageSize.MEDIUM),
@@ -306,7 +306,7 @@ public class LastFmService {
                 return null;
             }
 
-            String biography = processWikiText(info.getWikiText());
+            String biography = processWikiText(info.getWikiSummary());
             String redirectedArtistName = getRedirectedArtist(biography);
             return redirectedArtistName != null ? redirectedArtistName : artistName;
         } catch (Throwable x) {
