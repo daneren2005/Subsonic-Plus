@@ -113,12 +113,46 @@ public class RESTRequestParameterProcessingFilter implements Filter {
             chain.doFilter(request, response);
         } else {
             if (errorCode == RESTController.ErrorCode.NOT_AUTHENTICATED) {
-                loginFailureLogger.log(request.getRemoteAddr(), username);
+
+				String remoteAddress;
+				if(request instanceof HttpServletRequest) {
+					remoteAddress = getProxyAddress((HttpServletRequest) request);
+				} else {
+                    remoteAddress = request.getRemoteAddr();
+                }
+
+                loginFailureLogger.log(remoteAddress, username);
             }
             SecurityContextHolder.getContext().setAuthentication(null);
             sendErrorXml(httpRequest, httpResponse, errorCode);
         }
     }
+
+	private String getProxyAddress(HttpServletRequest request) {
+        String ip = request.getRemoteAddr();
+
+        // Only grab proxy headers if we are on localhost
+        if("127.0.0.1".equals(ip) || "localhost".equals(ip) || "::1".equals(ip) || "0:0:0:0:0:0:0:1".equals(ip)) {
+            ip = request.getHeader("X-Forwarded-For");
+            if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+                ip = request.getHeader("Proxy-Client-IP");
+            }
+            if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+                ip = request.getHeader("WL-Proxy-Client-IP");
+            }
+            if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+                ip = request.getHeader("HTTP_CLIENT_IP");
+            }
+            if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+                ip = request.getHeader("HTTP_X_FORWARDED_FOR");
+            }
+            if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+                ip = request.getRemoteAddr();
+            }
+        }
+
+        return ip;
+	}
 
     private RESTController.ErrorCode checkAPIVersion(String version) {
         Version serverVersion = new Version(jaxbWriter.getRestProtocolVersion());
