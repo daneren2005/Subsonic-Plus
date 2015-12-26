@@ -38,6 +38,7 @@ import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 import org.subsonic.restapi.AlbumID3;
+import org.subsonic.restapi.AlbumInfo;
 import org.subsonic.restapi.AlbumList;
 import org.subsonic.restapi.AlbumList2;
 import org.subsonic.restapi.AlbumWithSongsID3;
@@ -95,6 +96,7 @@ import net.sourceforge.subsonic.dao.BookmarkDao;
 import net.sourceforge.subsonic.dao.MediaFileDao;
 import net.sourceforge.subsonic.dao.PlayQueueDao;
 import net.sourceforge.subsonic.domain.Album;
+import net.sourceforge.subsonic.domain.AlbumNotes;
 import net.sourceforge.subsonic.domain.Artist;
 import net.sourceforge.subsonic.domain.ArtistBio;
 import net.sourceforge.subsonic.domain.Bookmark;
@@ -525,6 +527,60 @@ public class RESTController extends MultiActionController {
         jaxbWriter.writeResponse(request, response, res);
     }
 
+    @SuppressWarnings("UnusedDeclaration")
+    public void getAlbumInfo(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        request = wrapRequest(request);
+
+        int id = getRequiredIntParameter(request, "id");
+        MediaFile mediaFile = mediaFileService.getMediaFile(id);
+        if (mediaFile == null) {
+            error(request, response, ErrorCode.NOT_FOUND, "Media file not found.");
+            return;
+        }
+
+        AlbumInfo result = new AlbumInfo();
+        AlbumNotes albumNotes = lastFmService.getAlbumNotes(mediaFile);
+        if (albumNotes != null) {
+            result.setNotes(albumNotes.getNotes());
+            result.setMusicBrainzId(albumNotes.getMusicBrainzId());
+            result.setLastFmUrl(albumNotes.getLastFmUrl());
+            result.setSmallImageUrl(albumNotes.getSmallImageUrl());
+            result.setMediumImageUrl(albumNotes.getMediumImageUrl());
+            result.setLargeImageUrl(albumNotes.getLargeImageUrl());
+        }
+
+        Response res = createResponse();
+        res.setAlbumInfo(result);
+        jaxbWriter.writeResponse(request, response, res);
+    }
+
+    @SuppressWarnings("UnusedDeclaration")
+    public void getAlbumInfo2(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        request = wrapRequest(request);
+
+        int id = getRequiredIntParameter(request, "id");
+        Album album = albumDao.getAlbum(id);
+        if (album == null) {
+            error(request, response, ErrorCode.NOT_FOUND, "Album not found.");
+            return;
+        }
+
+        AlbumInfo result = new AlbumInfo();
+        AlbumNotes albumNotes = lastFmService.getAlbumNotes(album);
+        if (albumNotes != null) {
+            result.setNotes(albumNotes.getNotes());
+            result.setMusicBrainzId(albumNotes.getMusicBrainzId());
+            result.setLastFmUrl(albumNotes.getLastFmUrl());
+            result.setSmallImageUrl(albumNotes.getSmallImageUrl());
+            result.setMediumImageUrl(albumNotes.getMediumImageUrl());
+            result.setLargeImageUrl(albumNotes.getLargeImageUrl());
+        }
+
+        Response res = createResponse();
+        res.setAlbumInfo(result);
+        jaxbWriter.writeResponse(request, response, res);
+    }
+
     private <T extends ArtistID3> T createJaxbArtist(T jaxbArtist, Artist artist, String username) {
         jaxbArtist.setId(String.valueOf(artist.getId()));
         jaxbArtist.setName(artist.getName());
@@ -584,6 +640,7 @@ public class RESTController extends MultiActionController {
         jaxbAlbum.setDuration(album.getDurationSeconds());
         jaxbAlbum.setCreated(jaxbWriter.convertDate(album.getCreated()));
         jaxbAlbum.setStarred(jaxbWriter.convertDate(albumDao.getAlbumStarredDate(album.getId(), username)));
+        jaxbAlbum.setPlayCount((long) album.getPlayCount());
         jaxbAlbum.setYear(album.getYear());
         jaxbAlbum.setGenre(album.getGenre());
         return jaxbAlbum;
@@ -685,6 +742,7 @@ public class RESTController extends MultiActionController {
         if (dir.isAlbum()) {
             directory.setAverageRating(ratingService.getAverageRating(dir));
             directory.setUserRating(ratingService.getRatingForUser(username, dir));
+            directory.setPlayCount((long) dir.getPlayCount());
         }
 
         for (MediaFile child : mediaFileService.getChildrenOf(dir, true, true, true)) {
@@ -1282,6 +1340,7 @@ public class RESTController extends MultiActionController {
         child.setStarred(jaxbWriter.convertDate(mediaFileDao.getMediaFileStarredDate(mediaFile.getId(), username)));
         child.setUserRating(ratingService.getRatingForUser(username, mediaFile));
         child.setAverageRating(ratingService.getAverageRating(mediaFile));
+        child.setPlayCount((long) mediaFile.getPlayCount());
 
         if (mediaFile.isFile()) {
             child.setDuration(mediaFile.getDurationSeconds());

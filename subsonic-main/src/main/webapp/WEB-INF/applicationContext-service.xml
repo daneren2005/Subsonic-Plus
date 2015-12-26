@@ -201,6 +201,7 @@
 
     <bean id="lastFmService" class="net.sourceforge.subsonic.service.LastFmService" init-method="init">
         <property name="mediaFileService" ref="mediaFileService"/>
+        <property name="settingsService" ref="settingsService"/>
         <property name="mediaFileDao" ref="mediaFileDao"/>
         <property name="artistDao" ref="artistDao"/>
     </bean>
@@ -212,6 +213,7 @@
         <property name="settingsService" ref="settingsService"/>
         <property name="playlistService" ref="playlistService"/>
         <property name="upnpService" ref="upnpService"/>
+        <property name="lastFmService" ref="lastFmService"/>
     </bean>
 
     <bean id="metaDataParserFactory" class="net.sourceforge.subsonic.service.metadata.MetaDataParserFactory">
@@ -274,6 +276,7 @@
     <bean id="ajaxCoverArtService" class="net.sourceforge.subsonic.ajax.CoverArtService">
         <property name="securityService" ref="securityService"/>
         <property name="mediaFileService" ref="mediaFileService"/>
+        <property name="lastFmService" ref="lastFmService"/>
     </bean>
 
     <bean id="ajaxStarService" class="net.sourceforge.subsonic.ajax.StarService">

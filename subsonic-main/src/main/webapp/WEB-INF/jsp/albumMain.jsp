@@ -34,13 +34,15 @@
             }});
 
         <c:if test="${model.showArtistInfo}">
-        loadArtistInfo();
+        loadAlbumInfo();
         </c:if>
     }
 
-    function loadArtistInfo() {
-        multiService.getArtistInfo(${model.dir.id}, 8, 0, function (artistInfo) {
+    function loadAlbumInfo() {
+        multiService.getAlbumInfo(${model.dir.id}, 8, function (albumInfo) {
+            var artistInfo = albumInfo.artistInfo;
             if (artistInfo.similarArtists.length > 0) {
+
                 var html = "";
                 for (var i = 0; i < artistInfo.similarArtists.length; i++) {
                     html += "<a href='main.view?id=" + artistInfo.similarArtists[i].mediaFileId + "' target='main'>" +
@@ -53,6 +55,21 @@
                 $("#similarArtists").show();
                 $("#similarArtistsTitle").show();
                 $("#similarArtistsRadio").show();
+                $("#albumInfoTable").show();
+            }
+
+            if (artistInfo.artistBio && artistInfo.artistBio.largeImageUrl) {
+                $("#artistImage").attr("src", artistInfo.artistBio.largeImageUrl);
+                $("#artistImageZoom").attr("href", artistInfo.artistBio.largeImageUrl);
+                $("#artistImage").show();
+            }
+            if (artistInfo.artistBio && artistInfo.artistBio.mediumImageUrl) {
+                $("#artistThumbImage").attr("src", artistInfo.artistBio.mediumImageUrl);
+                $("#artistThumbImage").show();
+            }
+            if (albumInfo.notes) {
+                $("#artistBio").append(albumInfo.notes);
+                $("#albumInfoTable").show();
             }
         });
     }
@@ -161,17 +178,16 @@
     }
 </script>
 
+<img id="artistThumbImage" alt="" class="circle dropshadow" style="float:left;display:none;width:4em;height:4em;margin-right:1em">
+
 <div style="float:left">
     <h1>
-        <img id="starImage" src="<spring:theme code="${not empty model.dir.starredDate ? 'ratingOnImage' : 'ratingOffImage'}"/>"
-             onclick="toggleStar(${model.dir.id}, '#starImage'); return false;" style="cursor:pointer" alt="">
-
         <span style="vertical-align: middle">
             <c:forEach items="${model.ancestors}" var="ancestor">
                 <sub:url value="main.view" var="ancestorUrl">
                     <sub:param name="id" value="${ancestor.id}"/>
                 </sub:url>
-                <a href="${ancestorUrl}">${fn:escapeXml(ancestor.name)}</a> &raquo;
+                <a href="${ancestorUrl}">${fn:escapeXml(ancestor.name)}</a> &nbsp;&bull;&nbsp;
             </c:forEach>
             ${fn:escapeXml(model.dir.name)}
         </span>
@@ -185,51 +201,58 @@
         </c:if>
     </h1>
 
-    <c:if test="${not model.partyMode}">
-        <h2>
-            <c:if test="${model.navigateUpAllowed}">
-                <sub:url value="main.view" var="upUrl">
-                    <sub:param name="id" value="${model.parent.id}"/>
-                </sub:url>
-                <span class="header"><a href="${upUrl}"><fmt:message key="main.up"/></a></span>
-                <c:set var="needSep" value="true"/>
-            </c:if>
+    <div class="detail" style="padding-top:1.0em;padding-bottom:0">
+        <c:if test="${not empty model.dir.year}">
+            ${model.dir.year}&nbsp;&nbsp;&bull;&nbsp;&nbsp;
+        </c:if>
+        ${fn:length(model.files)} <fmt:message key="playlist2.songs"/>&nbsp;&nbsp;&bull;&nbsp;&nbsp;${model.duration}
+        <c:if test="${not empty model.dir.genre}">
+            &nbsp;&nbsp;&bull;&nbsp;&nbsp;${model.dir.genre}
+        </c:if>
+    </div>
 
-            <c:if test="${model.user.streamRole}">
-                <c:if test="${needSep}">|</c:if>
-                <span class="header"><a href="javascript:playAll()"><fmt:message key="main.playall"/></a></span> |
-                <span class="header"><a href="javascript:playRandom()"><fmt:message key="main.playrandom"/></a></span> |
-                <span class="header"><a href="javascript:addAll()"><fmt:message key="main.addall"/></a></span>
-                <c:set var="needSep" value="true"/>
-            </c:if>
-
-            <c:if test="${model.user.downloadRole}">
-                <c:if test="${needSep}">|</c:if>
-                <span class="header"><a href="${downloadUrl}"><fmt:message key="main.downloadall"/></a></span>
-                <c:set var="needSep" value="true"/>
-            </c:if>
-
-            <c:if test="${model.user.coverArtRole}">
-                <sub:url value="editTags.view" var="editTagsUrl">
-                    <sub:param name="id" value="${model.dir.id}"/>
-                </sub:url>
-                <c:if test="${needSep}">|</c:if>
-                <span class="header"><a href="${editTagsUrl}"><fmt:message key="main.tags"/></a></span>
-                <c:set var="needSep" value="true"/>
-            </c:if>
-
-            <c:if test="${model.user.commentRole}">
-                <c:if test="${needSep}">|</c:if>
-                <span class="header"><a href="javascript:toggleComment()"><fmt:message key="main.comment"/></a></span>
-            </c:if>
-        </h2>
-    </c:if>
 </div>
 
 <%@ include file="viewSelector.jsp" %>
 <div style="clear:both"></div>
 
-<div class="detail">
+<c:if test="${not model.partyMode}">
+    <h2>
+        <img id="starImage" src="<spring:theme code="${not empty model.dir.starredDate ? 'ratingOnImage' : 'ratingOffImage'}"/>"
+             onclick="toggleStar(${model.dir.id}, '#starImage'); return false;" style="cursor:pointer;padding-right:0.25em" alt="">
+        <c:set var="needSep" value="true"/>
+
+        <c:if test="${model.user.streamRole}">
+            <c:if test="${needSep}">|</c:if>
+            <span class="header"><a href="javascript:playAll()"><fmt:message key="main.playall"/></a></span> |
+            <span class="header"><a href="javascript:playRandom()"><fmt:message key="main.playrandom"/></a></span> |
+            <span class="header"><a href="javascript:addAll()"><fmt:message key="main.addall"/></a></span>
+            <c:set var="needSep" value="true"/>
+        </c:if>
+
+        <c:if test="${model.user.downloadRole}">
+            <c:if test="${needSep}">|</c:if>
+            <span class="header"><a href="${downloadUrl}"><fmt:message key="main.downloadall"/></a></span>
+            <c:set var="needSep" value="true"/>
+        </c:if>
+
+        <c:if test="${model.user.coverArtRole}">
+            <sub:url value="editTags.view" var="editTagsUrl">
+                <sub:param name="id" value="${model.dir.id}"/>
+            </sub:url>
+            <c:if test="${needSep}">|</c:if>
+            <span class="header"><a href="${editTagsUrl}"><fmt:message key="main.tags"/></a></span>
+            <c:set var="needSep" value="true"/>
+        </c:if>
+
+        <c:if test="${model.user.commentRole}">
+            <c:if test="${needSep}">|</c:if>
+            <span class="header"><a href="javascript:toggleComment()"><fmt:message key="main.comment"/></a></span>
+        </c:if>
+    </h2>
+</c:if>
+
+<div class="detail" style="padding-top:0.5em;padding-bottom:0.5em">
     <c:if test="${model.user.commentRole}">
         <c:import url="rating.jsp">
             <c:param name="id" value="${model.dir.id}"/>
@@ -490,15 +513,24 @@
     </div>
 </c:if>
 
-<table style="width: 90%">
-    <tr><td>
+<table id="albumInfoTable" style="padding:2em;clear:both;display:none" class="bgcolor2 dropshadow">
+    <tr>
+        <td rowspan="5" style="vertical-align: top">
+            <a id="artistImageZoom" rel="zoom" href="void">
+                <img id="artistImage" class="dropshadow" alt="" style="margin-right:2em; display:none; max-width:300px; max-height:300px">
+            </a>
+        </td>
+        <td style="text-align:center"><h2>${fn:escapeXml(model.dir.name)}</h2></td>
+    </tr>
+    <tr>
+        <td id="artistBio" style="padding-bottom: 0.5em"></td>
+    </tr>
+    <tr><td style="padding-bottom: 0.5em">
         <span id="similarArtistsTitle" style="padding-right: 0.5em; display: none"><fmt:message key="main.similarartists"/>:</span>
         <span id="similarArtists"></span>
     </td></tr>
-    <tr><td style="padding-bottom: 0.5em">
-        <div id="similarArtistsRadio" class="forward" style="display: none">
-            <a href="javascript:playSimilar()"><fmt:message key="main.startradio"/></a>
-        </div>
+    <tr><td style="text-align:center">
+        <input id="similarArtistsRadio" style="display:none;margin-top:1em;margin-right:0.3em;cursor:pointer" type="button" value="<fmt:message key="main.startradio"/>" onclick="playSimilar()">
     </td></tr>
     <tr><td style="height: 100%"></td></tr>
 </table>

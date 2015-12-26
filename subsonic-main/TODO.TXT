@@ -1,10 +1,52 @@
-TODO IN 5.3
+DONE IN 5.4
+-----------
+Artist thumbnail image
+Show album year, song count, genre and duration
+Show album notes
+Sonos: Star/unstar tracks
+Sonos: Artist bio and album notes
+Sonos: Improved radio feature
+Sonos: Artist top songs
+Sonos: Nicer presentation on Android and iOS controllers
+Sonos: Show artist image, if cached.
+REST: Added getAlbumInfo and getAlbumInfo2
+REST: Added playCount
+Bugfix: Reimplemented cover art search using Last.fm
+Bugfix: Ensure changed cover art is displayed
+
+TODO IN 5.4
 ------------
-Review forum comments.
+HTML5 player?
+  http://forum.subsonic.org/forum/viewtopic.php?f=6&t=16239&p=69649
+Google image search broken?
+  Ensure https
+  Cover art caching
+Review scanning algorithm. Always visit children?
+Ensure cover art is refreshed when changed.
+REST: Artist image url?
+Sonos: Star button missing on ipad
+Don't queue following songs when playing from search results / starred songs.
+  https://mail.google.com/mail/ca/u/0/?zx=nmcjqt3dyrzj#inbox/15169f6c8b06cc1b
+Remove Thumper?
+  https://mail.google.com/mail/ca/u/0/?zx=nmcjqt3dyrzj#inbox/151634428b1feffc
+
+Last.fm song matching and playlists
+  http://forum.subsonic.org/forum/viewtopic.php?f=3&t=16126
+Keyboard shortcuts
+  http://forum.subsonic.org/forum/viewtopic.php?f=3&t=15926
+Status and log should only be available for admin.
+
+Content length of FLAC transcoded to WAV incorrect
+  http://sourceforge.net/p/subsonic/bugs/121/
+REST authentication not supported for LDAP users.
+  https://mail.google.com/mail/ca/u/0/#inbox/14fc35534d00d8e4
+  https://sourceforge.net/p/subsonic/bugs/158/
 New server:
   subsonic.canaca.com: 66.49.215.227
   backup: forum -> subsonic.org
 
+Site: Update SubStreamer
+  https://mail.google.com/mail/ca/u/0/#inbox/1505f8232760c3bf
 Support ID3 lyrics
   https://mail.google.com/mail/ca/u/0/#inbox/150960f1fc7133ac
 Google Chart API
@@ -28,7 +70,6 @@ Port-forward https port also
 Outdated SSL
   https://mail.google.com/mail/ca/u/0/?zx=8dc6yomg8opi#inbox/14ef975868d1aaa5
 Test with Windows 10
-Status and log should only be available for admin.
 Problem with updating "deep" folders?
   https://mail.google.com/mail/ca/u/0/?zx=8dc6yomg8opi#inbox/14ee79c0a22dc5ed
 Integrate with iTunes playlists
@@ -37,7 +78,6 @@ Make logout float right
 Check jwplayer in external player
   https://mail.google.com/mail/ca/u/0/?zx=8dc6yomg8opi#inbox/14ec51aec7f9f483
 Change chromecast background.
-Custom Sonos texts for starring.
 Upgrade sonos wsdl.
   AbstractMedia.summary
   AbstractMedia.isFavorite
@@ -969,16 +1009,17 @@ order by n desc
 
 Update subsonic.org
 -----------------------------------
-mkdir /var/lib/tomcat/webapps-2015-08-17/
-scp subsonic-backend/target/subsonic-backend-*.war root@subsonic.org:/var/lib/tomcat/webapps-2015-08-17/ROOT.war
-scp subsonic-site/target/pages.war root@subsonic.org:/var/lib/tomcat/webapps-2015-08-17/pages.war
+mkdir /var/lib/tomcat/webapps-2015-10-25/
+scp subsonic-backend/target/subsonic-backend-*.war root@subsonic.org:/var/lib/tomcat/webapps-2015-10-25/ROOT.war
+scp subsonic-site/target/pages.war root@subsonic.org:/var/lib/tomcat/webapps-2015-10-25/pages.war
 
-Checkpoint database (db.view)
 cd /var/lib/tomcat
+chown -R tomcat:tomcat webapps-2015-10-25
+Checkpoint database (db.view)
 ps -elf | grep tomcat
 systemctl stop tomcat
 rm webapps
-ln -s webapps-2015-08-17 webapps
+ln -s webapps-2015-10-25 webapps
 ln -s /var/lib/tomcat/download webapps/download
 ll webapps/
 rm -rf work logs/*
@@ -987,13 +1028,13 @@ tail -f /var/subsonic-backend/subsonic-backend.log
 
 Update demo.subsonic.org (192.157.241.116)
 ------------------------------------------
-mkdir /var/lib/tomcat6/webapps-2015-08-17/
-scp subsonic-main/target/subsonic.war root@demo.subsonic.org:/var/lib/tomcat6/webapps-2015-08-17/ROOT.war
+mkdir /var/lib/tomcat6/webapps-2015-10-25/
+scp subsonic-main/target/subsonic.war root@demo.subsonic.org:/var/lib/tomcat6/webapps-2015-10-25/ROOT.war
 service tomcat6 stop
 cd /var/lib/tomcat6/
 rm -rf work/Catalina logs/*
 rm webapps
-ln -s webapps-2015-08-17 webapps
+ln -s webapps-2015-10-25 webapps
 ll webapps/
 service tomcat6 start
 tail -f /var/subsonic/subsonic.log
