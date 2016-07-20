@@ -1685,6 +1685,10 @@ public class RESTController extends MultiActionController {
         String path = episode.getPath();
         if (path != null) {
             MediaFile mediaFile = mediaFileService.getMediaFile(path);
+			if(mediaFile == null) {
+				LOG.warn("File for PodcastEpisode not found or not readable: " + path);
+				return null;
+			}
             e = createJaxbChild(new org.subsonic.restapi.PodcastEpisode(), player, mediaFile, username);
             e.setStreamId(String.valueOf(mediaFile.getId()));
         }
